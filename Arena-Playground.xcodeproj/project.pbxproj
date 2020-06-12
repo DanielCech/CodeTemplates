@@ -1,0 +1,1858 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		OBJ_100 /* FileSmith.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "FileSmith::FileSmith::Product" /* FileSmith.framework */; };
+		OBJ_101 /* ScriptToolkit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "ScriptToolkit::ScriptToolkit::Product" /* ScriptToolkit.framework */; };
+		OBJ_102 /* Moderator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Moderator::Moderator::Product" /* Moderator.framework */; };
+		OBJ_103 /* SwiftShell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftShell::SwiftShell::Product" /* SwiftShell.framework */; };
+		OBJ_104 /* Files.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Files::Files::Product" /* Files.framework */; };
+		OBJ_105 /* Stencil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Stencil::Stencil::Product" /* Stencil.framework */; };
+		OBJ_106 /* PathKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "PathKit::PathKit::Product" /* PathKit.framework */; };
+		OBJ_126 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
+		OBJ_131 /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Attributes.swift */; };
+		OBJ_132 /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Directory.swift */; };
+		OBJ_133 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Errors.swift */; };
+		OBJ_134 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* File.swift */; };
+		OBJ_135 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* General.swift */; };
+		OBJ_136 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* Paths.swift */; };
+		OBJ_137 /* SymbolicLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* SymbolicLinks.swift */; };
+		OBJ_139 /* SwiftShell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftShell::SwiftShell::Product" /* SwiftShell.framework */; };
+		OBJ_146 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* Package.swift */; };
+		OBJ_151 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_58 /* Files.swift */; };
+		OBJ_158 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_57 /* Package.swift */; };
+		OBJ_163 /* Moderator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_37 /* Moderator.swift */; };
+		OBJ_164 /* Parsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_38 /* Parsers.swift */; };
+		OBJ_165 /* SwiftCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* SwiftCompat.swift */; };
+		OBJ_172 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* Package.swift */; };
+		OBJ_177 /* PathKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_83 /* PathKit.swift */; };
+		OBJ_184 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_82 /* Package.swift */; };
+		OBJ_189 /* FileExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* FileExtension.swift */; };
+		OBJ_190 /* FileManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* FileManagerExtension.swift */; };
+		OBJ_191 /* FolderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* FolderExtension.swift */; };
+		OBJ_192 /* NSColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* NSColorExtension.swift */; };
+		OBJ_193 /* NSImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* NSImageExtension.swift */; };
+		OBJ_194 /* ParameterProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* ParameterProcessing.swift */; };
+		OBJ_195 /* ScriptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* ScriptError.swift */; };
+		OBJ_196 /* ScriptToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_31 /* ScriptToolkit.swift */; };
+		OBJ_197 /* String+Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* String+Paths.swift */; };
+		OBJ_198 /* String+Substrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* String+Substrings.swift */; };
+		OBJ_200 /* Moderator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Moderator::Moderator::Product" /* Moderator.framework */; };
+		OBJ_201 /* SwiftShell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftShell::SwiftShell::Product" /* SwiftShell.framework */; };
+		OBJ_202 /* Files.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Files::Files::Product" /* Files.framework */; };
+		OBJ_211 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* Package.swift */; };
+		OBJ_216 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_61 /* Context.swift */; };
+		OBJ_217 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_62 /* Environment.swift */; };
+		OBJ_218 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_63 /* Errors.swift */; };
+		OBJ_219 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_64 /* Expression.swift */; };
+		OBJ_220 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_65 /* Extension.swift */; };
+		OBJ_221 /* FilterTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* FilterTag.swift */; };
+		OBJ_222 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_67 /* Filters.swift */; };
+		OBJ_223 /* ForTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_68 /* ForTag.swift */; };
+		OBJ_224 /* IfTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_69 /* IfTag.swift */; };
+		OBJ_225 /* Include.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_70 /* Include.swift */; };
+		OBJ_226 /* Inheritence.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_71 /* Inheritence.swift */; };
+		OBJ_227 /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_72 /* KeyPath.swift */; };
+		OBJ_228 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_73 /* Lexer.swift */; };
+		OBJ_229 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_74 /* Loader.swift */; };
+		OBJ_230 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_75 /* Node.swift */; };
+		OBJ_231 /* NowTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_76 /* NowTag.swift */; };
+		OBJ_232 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_77 /* Parser.swift */; };
+		OBJ_233 /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_78 /* Template.swift */; };
+		OBJ_234 /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_79 /* Tokenizer.swift */; };
+		OBJ_235 /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_80 /* Variable.swift */; };
+		OBJ_237 /* PathKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "PathKit::PathKit::Product" /* PathKit.framework */; };
+		OBJ_244 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_60 /* Package.swift */; };
+		OBJ_249 /* Bash.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_43 /* Bash.swift */; };
+		OBJ_250 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* Command.swift */; };
+		OBJ_251 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_45 /* Context.swift */; };
+		OBJ_252 /* FileHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_46 /* FileHandle.swift */; };
+		OBJ_253 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_47 /* Files.swift */; };
+		OBJ_254 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_49 /* Array.swift */; };
+		OBJ_255 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_50 /* Process.swift */; };
+		OBJ_256 /* Lazy-split.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_52 /* Lazy-split.swift */; };
+		OBJ_257 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_53 /* Stream.swift */; };
+		OBJ_258 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_54 /* String.swift */; };
+		OBJ_265 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_55 /* Package.swift */; };
+		OBJ_98 /* Arena_Playground.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Arena_Playground.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		275A21832494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "FileSmith::FileSmith";
+			remoteInfo = FileSmith;
+		};
+		275A21842494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "SwiftShell::SwiftShell";
+			remoteInfo = SwiftShell;
+		};
+		275A21852494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "ScriptToolkit::ScriptToolkit";
+			remoteInfo = ScriptToolkit;
+		};
+		275A21862494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Moderator::Moderator";
+			remoteInfo = Moderator;
+		};
+		275A21872494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "SwiftShell::SwiftShell";
+			remoteInfo = SwiftShell;
+		};
+		275A21882494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Files::Files";
+			remoteInfo = Files;
+		};
+		275A21892494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Moderator::Moderator";
+			remoteInfo = Moderator;
+		};
+		275A218A2494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "SwiftShell::SwiftShell";
+			remoteInfo = SwiftShell;
+		};
+		275A218B2494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Files::Files";
+			remoteInfo = Files;
+		};
+		275A218C2494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Stencil::Stencil";
+			remoteInfo = Stencil;
+		};
+		275A218D2494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "PathKit::PathKit";
+			remoteInfo = PathKit;
+		};
+		275A218E2494282400259F73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "PathKit::PathKit";
+			remoteInfo = PathKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		"Arena-Playground::Arena-Playground::Product" /* Arena_Playground.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Arena_Playground.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"FileSmith::FileSmith::Product" /* FileSmith.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FileSmith.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Files::Files::Product" /* Files.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Files.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Moderator::Moderator::Product" /* Moderator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Moderator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_14 /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
+		OBJ_15 /* Directory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
+		OBJ_16 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		OBJ_17 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		OBJ_18 /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
+		OBJ_19 /* Paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paths.swift; sourceTree = "<group>"; };
+		OBJ_20 /* SymbolicLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolicLinks.swift; sourceTree = "<group>"; };
+		OBJ_21 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/FileSmith/Package.swift"; sourceTree = "<group>"; };
+		OBJ_24 /* FileExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExtension.swift; sourceTree = "<group>"; };
+		OBJ_25 /* FileManagerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerExtension.swift; sourceTree = "<group>"; };
+		OBJ_26 /* FolderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderExtension.swift; sourceTree = "<group>"; };
+		OBJ_27 /* NSColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColorExtension.swift; sourceTree = "<group>"; };
+		OBJ_28 /* NSImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImageExtension.swift; sourceTree = "<group>"; };
+		OBJ_29 /* ParameterProcessing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterProcessing.swift; sourceTree = "<group>"; };
+		OBJ_30 /* ScriptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptError.swift; sourceTree = "<group>"; };
+		OBJ_31 /* ScriptToolkit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptToolkit.swift; sourceTree = "<group>"; };
+		OBJ_32 /* String+Paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Paths.swift"; sourceTree = "<group>"; };
+		OBJ_33 /* String+Substrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Substrings.swift"; sourceTree = "<group>"; };
+		OBJ_34 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/ScriptToolkit/Package.swift"; sourceTree = "<group>"; };
+		OBJ_37 /* Moderator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moderator.swift; sourceTree = "<group>"; };
+		OBJ_38 /* Parsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parsers.swift; sourceTree = "<group>"; };
+		OBJ_39 /* SwiftCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCompat.swift; sourceTree = "<group>"; };
+		OBJ_40 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/Moderator/Package.swift"; sourceTree = "<group>"; };
+		OBJ_43 /* Bash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bash.swift; sourceTree = "<group>"; };
+		OBJ_44 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		OBJ_45 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		OBJ_46 /* FileHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHandle.swift; sourceTree = "<group>"; };
+		OBJ_47 /* Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
+		OBJ_49 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		OBJ_50 /* Process.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Process.swift; sourceTree = "<group>"; };
+		OBJ_52 /* Lazy-split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Lazy-split.swift"; sourceTree = "<group>"; };
+		OBJ_53 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		OBJ_54 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		OBJ_55 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/SwiftShell/Package.swift"; sourceTree = "<group>"; };
+		OBJ_57 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/Files/Package.swift"; sourceTree = "<group>"; };
+		OBJ_58 /* Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
+		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		OBJ_60 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/Stencil/Package.swift"; sourceTree = "<group>"; };
+		OBJ_61 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		OBJ_62 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		OBJ_63 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		OBJ_64 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
+		OBJ_65 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		OBJ_66 /* FilterTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTag.swift; sourceTree = "<group>"; };
+		OBJ_67 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
+		OBJ_68 /* ForTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForTag.swift; sourceTree = "<group>"; };
+		OBJ_69 /* IfTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IfTag.swift; sourceTree = "<group>"; };
+		OBJ_70 /* Include.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Include.swift; sourceTree = "<group>"; };
+		OBJ_71 /* Inheritence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inheritence.swift; sourceTree = "<group>"; };
+		OBJ_72 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
+		OBJ_73 /* Lexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lexer.swift; sourceTree = "<group>"; };
+		OBJ_74 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
+		OBJ_75 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		OBJ_76 /* NowTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowTag.swift; sourceTree = "<group>"; };
+		OBJ_77 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		OBJ_78 /* Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Template.swift; sourceTree = "<group>"; };
+		OBJ_79 /* Tokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokenizer.swift; sourceTree = "<group>"; };
+		OBJ_80 /* Variable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
+		OBJ_82 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Arena-Playground/.build/checkouts/PathKit/Package.swift"; sourceTree = "<group>"; };
+		OBJ_83 /* PathKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathKit.swift; sourceTree = "<group>"; };
+		OBJ_9 /* Arena_Playground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arena_Playground.swift; sourceTree = "<group>"; };
+		"PathKit::PathKit::Product" /* PathKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PathKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"ScriptToolkit::ScriptToolkit::Product" /* ScriptToolkit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ScriptToolkit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Stencil::Stencil::Product" /* Stencil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Stencil.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"SwiftShell::SwiftShell::Product" /* SwiftShell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftShell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		OBJ_138 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_139 /* SwiftShell.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_152 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_166 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_178 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_199 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_200 /* Moderator.framework in Frameworks */,
+				OBJ_201 /* SwiftShell.framework in Frameworks */,
+				OBJ_202 /* Files.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_236 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_237 /* PathKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_259 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_99 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_100 /* FileSmith.framework in Frameworks */,
+				OBJ_101 /* ScriptToolkit.framework in Frameworks */,
+				OBJ_102 /* Moderator.framework in Frameworks */,
+				OBJ_103 /* SwiftShell.framework in Frameworks */,
+				OBJ_104 /* Files.framework in Frameworks */,
+				OBJ_105 /* Stencil.framework in Frameworks */,
+				OBJ_106 /* PathKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		OBJ_10 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Tests;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_11 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_12 /* FileSmith 0.3.0 */,
+				OBJ_22 /* ScriptToolkit */,
+				OBJ_35 /* Moderator */,
+				OBJ_41 /* SwiftShell */,
+				OBJ_56 /* Files */,
+				OBJ_59 /* Stencil 0.13.1 */,
+				OBJ_81 /* PathKit 0.9.2 */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		OBJ_12 /* FileSmith 0.3.0 */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_13 /* FileSmith */,
+				OBJ_21 /* Package.swift */,
+			);
+			name = "FileSmith 0.3.0";
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_13 /* FileSmith */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_14 /* Attributes.swift */,
+				OBJ_15 /* Directory.swift */,
+				OBJ_16 /* Errors.swift */,
+				OBJ_17 /* File.swift */,
+				OBJ_18 /* General.swift */,
+				OBJ_19 /* Paths.swift */,
+				OBJ_20 /* SymbolicLinks.swift */,
+			);
+			name = FileSmith;
+			path = .build/checkouts/FileSmith/Sources/FileSmith;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_22 /* ScriptToolkit */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_23 /* ScriptToolkit */,
+				OBJ_34 /* Package.swift */,
+			);
+			name = ScriptToolkit;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_23 /* ScriptToolkit */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_24 /* FileExtension.swift */,
+				OBJ_25 /* FileManagerExtension.swift */,
+				OBJ_26 /* FolderExtension.swift */,
+				OBJ_27 /* NSColorExtension.swift */,
+				OBJ_28 /* NSImageExtension.swift */,
+				OBJ_29 /* ParameterProcessing.swift */,
+				OBJ_30 /* ScriptError.swift */,
+				OBJ_31 /* ScriptToolkit.swift */,
+				OBJ_32 /* String+Paths.swift */,
+				OBJ_33 /* String+Substrings.swift */,
+			);
+			name = ScriptToolkit;
+			path = .build/checkouts/ScriptToolkit/Sources/ScriptToolkit;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_35 /* Moderator */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_36 /* Moderator */,
+				OBJ_40 /* Package.swift */,
+			);
+			name = Moderator;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_36 /* Moderator */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_37 /* Moderator.swift */,
+				OBJ_38 /* Parsers.swift */,
+				OBJ_39 /* SwiftCompat.swift */,
+			);
+			name = Moderator;
+			path = .build/checkouts/Moderator/Sources/Moderator;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_41 /* SwiftShell */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_42 /* SwiftShell */,
+				OBJ_55 /* Package.swift */,
+			);
+			name = SwiftShell;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_42 /* SwiftShell */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_43 /* Bash.swift */,
+				OBJ_44 /* Command.swift */,
+				OBJ_45 /* Context.swift */,
+				OBJ_46 /* FileHandle.swift */,
+				OBJ_47 /* Files.swift */,
+				OBJ_48 /* General */,
+				OBJ_50 /* Process.swift */,
+				OBJ_51 /* Stream */,
+				OBJ_54 /* String.swift */,
+			);
+			name = SwiftShell;
+			path = .build/checkouts/SwiftShell/Sources/SwiftShell;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_48 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_49 /* Array.swift */,
+			);
+			path = General;
+			sourceTree = "<group>";
+		};
+		OBJ_5 /*  */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_6 /* Package.swift */,
+				OBJ_7 /* Sources */,
+				OBJ_10 /* Tests */,
+				OBJ_11 /* Dependencies */,
+				OBJ_84 /* Products */,
+			);
+			name = "";
+			sourceTree = "<group>";
+		};
+		OBJ_51 /* Stream */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_52 /* Lazy-split.swift */,
+				OBJ_53 /* Stream.swift */,
+			);
+			path = Stream;
+			sourceTree = "<group>";
+		};
+		OBJ_56 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_57 /* Package.swift */,
+				OBJ_58 /* Files.swift */,
+			);
+			name = Files;
+			path = .build/checkouts/Files/Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_59 /* Stencil 0.13.1 */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_60 /* Package.swift */,
+				OBJ_61 /* Context.swift */,
+				OBJ_62 /* Environment.swift */,
+				OBJ_63 /* Errors.swift */,
+				OBJ_64 /* Expression.swift */,
+				OBJ_65 /* Extension.swift */,
+				OBJ_66 /* FilterTag.swift */,
+				OBJ_67 /* Filters.swift */,
+				OBJ_68 /* ForTag.swift */,
+				OBJ_69 /* IfTag.swift */,
+				OBJ_70 /* Include.swift */,
+				OBJ_71 /* Inheritence.swift */,
+				OBJ_72 /* KeyPath.swift */,
+				OBJ_73 /* Lexer.swift */,
+				OBJ_74 /* Loader.swift */,
+				OBJ_75 /* Node.swift */,
+				OBJ_76 /* NowTag.swift */,
+				OBJ_77 /* Parser.swift */,
+				OBJ_78 /* Template.swift */,
+				OBJ_79 /* Tokenizer.swift */,
+				OBJ_80 /* Variable.swift */,
+			);
+			name = "Stencil 0.13.1";
+			path = .build/checkouts/Stencil/Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_8 /* Arena-Playground */,
+			);
+			name = Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_8 /* Arena-Playground */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_9 /* Arena_Playground.swift */,
+			);
+			name = "Arena-Playground";
+			path = "Sources/Arena-Playground";
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_81 /* PathKit 0.9.2 */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_82 /* Package.swift */,
+				OBJ_83 /* PathKit.swift */,
+			);
+			name = "PathKit 0.9.2";
+			path = .build/checkouts/PathKit/Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_84 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				"PathKit::PathKit::Product" /* PathKit.framework */,
+				"FileSmith::FileSmith::Product" /* FileSmith.framework */,
+				"Stencil::Stencil::Product" /* Stencil.framework */,
+				"Files::Files::Product" /* Files.framework */,
+				"SwiftShell::SwiftShell::Product" /* SwiftShell.framework */,
+				"ScriptToolkit::ScriptToolkit::Product" /* ScriptToolkit.framework */,
+				"Moderator::Moderator::Product" /* Moderator.framework */,
+				"Arena-Playground::Arena-Playground::Product" /* Arena_Playground.framework */,
+			);
+			name = Products;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		"Arena-Playground::Arena-Playground" /* Arena-Playground */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_94 /* Build configuration list for PBXNativeTarget "Arena-Playground" */;
+			buildPhases = (
+				OBJ_97 /* Sources */,
+				OBJ_99 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				OBJ_107 /* PBXTargetDependency */,
+				OBJ_109 /* PBXTargetDependency */,
+				OBJ_111 /* PBXTargetDependency */,
+				OBJ_113 /* PBXTargetDependency */,
+				OBJ_115 /* PBXTargetDependency */,
+				OBJ_117 /* PBXTargetDependency */,
+				OBJ_119 /* PBXTargetDependency */,
+			);
+			name = "Arena-Playground";
+			productName = Arena_Playground;
+			productReference = "Arena-Playground::Arena-Playground::Product" /* Arena_Playground.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"Arena-Playground::SwiftPMPackageDescription" /* Arena-PlaygroundPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_122 /* Build configuration list for PBXNativeTarget "Arena-PlaygroundPackageDescription" */;
+			buildPhases = (
+				OBJ_125 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Arena-PlaygroundPackageDescription";
+			productName = "Arena-PlaygroundPackageDescription";
+			productType = "com.apple.product-type.framework";
+		};
+		"FileSmith::FileSmith" /* FileSmith */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_127 /* Build configuration list for PBXNativeTarget "FileSmith" */;
+			buildPhases = (
+				OBJ_130 /* Sources */,
+				OBJ_138 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				OBJ_140 /* PBXTargetDependency */,
+			);
+			name = FileSmith;
+			productName = FileSmith;
+			productReference = "FileSmith::FileSmith::Product" /* FileSmith.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"FileSmith::SwiftPMPackageDescription" /* FileSmithPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_142 /* Build configuration list for PBXNativeTarget "FileSmithPackageDescription" */;
+			buildPhases = (
+				OBJ_145 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FileSmithPackageDescription;
+			productName = FileSmithPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"Files::Files" /* Files */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_147 /* Build configuration list for PBXNativeTarget "Files" */;
+			buildPhases = (
+				OBJ_150 /* Sources */,
+				OBJ_152 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Files;
+			productName = Files;
+			productReference = "Files::Files::Product" /* Files.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"Files::SwiftPMPackageDescription" /* FilesPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_154 /* Build configuration list for PBXNativeTarget "FilesPackageDescription" */;
+			buildPhases = (
+				OBJ_157 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FilesPackageDescription;
+			productName = FilesPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"Moderator::Moderator" /* Moderator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_159 /* Build configuration list for PBXNativeTarget "Moderator" */;
+			buildPhases = (
+				OBJ_162 /* Sources */,
+				OBJ_166 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Moderator;
+			productName = Moderator;
+			productReference = "Moderator::Moderator::Product" /* Moderator.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"Moderator::SwiftPMPackageDescription" /* ModeratorPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_168 /* Build configuration list for PBXNativeTarget "ModeratorPackageDescription" */;
+			buildPhases = (
+				OBJ_171 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ModeratorPackageDescription;
+			productName = ModeratorPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"PathKit::PathKit" /* PathKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_173 /* Build configuration list for PBXNativeTarget "PathKit" */;
+			buildPhases = (
+				OBJ_176 /* Sources */,
+				OBJ_178 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PathKit;
+			productName = PathKit;
+			productReference = "PathKit::PathKit::Product" /* PathKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"PathKit::SwiftPMPackageDescription" /* PathKitPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_180 /* Build configuration list for PBXNativeTarget "PathKitPackageDescription" */;
+			buildPhases = (
+				OBJ_183 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PathKitPackageDescription;
+			productName = PathKitPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"ScriptToolkit::ScriptToolkit" /* ScriptToolkit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_185 /* Build configuration list for PBXNativeTarget "ScriptToolkit" */;
+			buildPhases = (
+				OBJ_188 /* Sources */,
+				OBJ_199 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				OBJ_203 /* PBXTargetDependency */,
+				OBJ_204 /* PBXTargetDependency */,
+				OBJ_205 /* PBXTargetDependency */,
+			);
+			name = ScriptToolkit;
+			productName = ScriptToolkit;
+			productReference = "ScriptToolkit::ScriptToolkit::Product" /* ScriptToolkit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"ScriptToolkit::SwiftPMPackageDescription" /* ScriptToolkitPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_207 /* Build configuration list for PBXNativeTarget "ScriptToolkitPackageDescription" */;
+			buildPhases = (
+				OBJ_210 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScriptToolkitPackageDescription;
+			productName = ScriptToolkitPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"Stencil::Stencil" /* Stencil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_212 /* Build configuration list for PBXNativeTarget "Stencil" */;
+			buildPhases = (
+				OBJ_215 /* Sources */,
+				OBJ_236 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				OBJ_238 /* PBXTargetDependency */,
+			);
+			name = Stencil;
+			productName = Stencil;
+			productReference = "Stencil::Stencil::Product" /* Stencil.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		"Stencil::SwiftPMPackageDescription" /* StencilPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_240 /* Build configuration list for PBXNativeTarget "StencilPackageDescription" */;
+			buildPhases = (
+				OBJ_243 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StencilPackageDescription;
+			productName = StencilPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"SwiftShell::SwiftPMPackageDescription" /* SwiftShellPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_261 /* Build configuration list for PBXNativeTarget "SwiftShellPackageDescription" */;
+			buildPhases = (
+				OBJ_264 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftShellPackageDescription;
+			productName = SwiftShellPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"SwiftShell::SwiftShell" /* SwiftShell */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_245 /* Build configuration list for PBXNativeTarget "SwiftShell" */;
+			buildPhases = (
+				OBJ_248 /* Sources */,
+				OBJ_259 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftShell;
+			productName = SwiftShell;
+			productReference = "SwiftShell::SwiftShell::Product" /* SwiftShell.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		OBJ_1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftMigration = 9999;
+				LastUpgradeCheck = 9999;
+			};
+			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Arena-Playground" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = OBJ_5 /*  */;
+			productRefGroup = OBJ_84 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				"Arena-Playground::Arena-Playground" /* Arena-Playground */,
+				"Arena-Playground::SwiftPMPackageDescription" /* Arena-PlaygroundPackageDescription */,
+				"FileSmith::FileSmith" /* FileSmith */,
+				"FileSmith::SwiftPMPackageDescription" /* FileSmithPackageDescription */,
+				"Files::Files" /* Files */,
+				"Files::SwiftPMPackageDescription" /* FilesPackageDescription */,
+				"Moderator::Moderator" /* Moderator */,
+				"Moderator::SwiftPMPackageDescription" /* ModeratorPackageDescription */,
+				"PathKit::PathKit" /* PathKit */,
+				"PathKit::SwiftPMPackageDescription" /* PathKitPackageDescription */,
+				"ScriptToolkit::ScriptToolkit" /* ScriptToolkit */,
+				"ScriptToolkit::SwiftPMPackageDescription" /* ScriptToolkitPackageDescription */,
+				"Stencil::Stencil" /* Stencil */,
+				"Stencil::SwiftPMPackageDescription" /* StencilPackageDescription */,
+				"SwiftShell::SwiftShell" /* SwiftShell */,
+				"SwiftShell::SwiftPMPackageDescription" /* SwiftShellPackageDescription */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		OBJ_125 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_126 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_130 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_131 /* Attributes.swift in Sources */,
+				OBJ_132 /* Directory.swift in Sources */,
+				OBJ_133 /* Errors.swift in Sources */,
+				OBJ_134 /* File.swift in Sources */,
+				OBJ_135 /* General.swift in Sources */,
+				OBJ_136 /* Paths.swift in Sources */,
+				OBJ_137 /* SymbolicLinks.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_145 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_146 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_150 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_151 /* Files.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_157 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_158 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_162 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_163 /* Moderator.swift in Sources */,
+				OBJ_164 /* Parsers.swift in Sources */,
+				OBJ_165 /* SwiftCompat.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_171 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_172 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_176 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_177 /* PathKit.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_183 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_184 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_188 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_189 /* FileExtension.swift in Sources */,
+				OBJ_190 /* FileManagerExtension.swift in Sources */,
+				OBJ_191 /* FolderExtension.swift in Sources */,
+				OBJ_192 /* NSColorExtension.swift in Sources */,
+				OBJ_193 /* NSImageExtension.swift in Sources */,
+				OBJ_194 /* ParameterProcessing.swift in Sources */,
+				OBJ_195 /* ScriptError.swift in Sources */,
+				OBJ_196 /* ScriptToolkit.swift in Sources */,
+				OBJ_197 /* String+Paths.swift in Sources */,
+				OBJ_198 /* String+Substrings.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_210 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_211 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_215 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_216 /* Context.swift in Sources */,
+				OBJ_217 /* Environment.swift in Sources */,
+				OBJ_218 /* Errors.swift in Sources */,
+				OBJ_219 /* Expression.swift in Sources */,
+				OBJ_220 /* Extension.swift in Sources */,
+				OBJ_221 /* FilterTag.swift in Sources */,
+				OBJ_222 /* Filters.swift in Sources */,
+				OBJ_223 /* ForTag.swift in Sources */,
+				OBJ_224 /* IfTag.swift in Sources */,
+				OBJ_225 /* Include.swift in Sources */,
+				OBJ_226 /* Inheritence.swift in Sources */,
+				OBJ_227 /* KeyPath.swift in Sources */,
+				OBJ_228 /* Lexer.swift in Sources */,
+				OBJ_229 /* Loader.swift in Sources */,
+				OBJ_230 /* Node.swift in Sources */,
+				OBJ_231 /* NowTag.swift in Sources */,
+				OBJ_232 /* Parser.swift in Sources */,
+				OBJ_233 /* Template.swift in Sources */,
+				OBJ_234 /* Tokenizer.swift in Sources */,
+				OBJ_235 /* Variable.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_243 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_244 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_248 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_249 /* Bash.swift in Sources */,
+				OBJ_250 /* Command.swift in Sources */,
+				OBJ_251 /* Context.swift in Sources */,
+				OBJ_252 /* FileHandle.swift in Sources */,
+				OBJ_253 /* Files.swift in Sources */,
+				OBJ_254 /* Array.swift in Sources */,
+				OBJ_255 /* Process.swift in Sources */,
+				OBJ_256 /* Lazy-split.swift in Sources */,
+				OBJ_257 /* Stream.swift in Sources */,
+				OBJ_258 /* String.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_264 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_265 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_98 /* Arena_Playground.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		OBJ_107 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "FileSmith::FileSmith" /* FileSmith */;
+			targetProxy = 275A21832494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_109 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "ScriptToolkit::ScriptToolkit" /* ScriptToolkit */;
+			targetProxy = 275A21852494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_111 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Moderator::Moderator" /* Moderator */;
+			targetProxy = 275A21892494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_113 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "SwiftShell::SwiftShell" /* SwiftShell */;
+			targetProxy = 275A218A2494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_115 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Files::Files" /* Files */;
+			targetProxy = 275A218B2494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_117 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Stencil::Stencil" /* Stencil */;
+			targetProxy = 275A218C2494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_119 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "PathKit::PathKit" /* PathKit */;
+			targetProxy = 275A218E2494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_140 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "SwiftShell::SwiftShell" /* SwiftShell */;
+			targetProxy = 275A21842494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_203 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Moderator::Moderator" /* Moderator */;
+			targetProxy = 275A21862494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_204 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "SwiftShell::SwiftShell" /* SwiftShell */;
+			targetProxy = 275A21872494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_205 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Files::Files" /* Files */;
+			targetProxy = 275A21882494282400259F73 /* PBXContainerItemProxy */;
+		};
+		OBJ_238 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "PathKit::PathKit" /* PathKit */;
+			targetProxy = 275A218D2494282400259F73 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		OBJ_123 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.2.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		OBJ_124 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.2.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		OBJ_128 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/FileSmith_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = FileSmith;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = FileSmith;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		OBJ_129 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/FileSmith_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = FileSmith;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = FileSmith;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		OBJ_143 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		OBJ_144 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		OBJ_148 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Files_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Files;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = Files;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		OBJ_149 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Files_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Files;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = Files;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		OBJ_155 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		OBJ_156 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		OBJ_160 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Moderator_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Moderator;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = Moderator;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		OBJ_161 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Moderator_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Moderator;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = Moderator;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		OBJ_169 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		OBJ_170 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		OBJ_174 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/PathKit_Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = PathKit;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 4.2;
+				TARGET_NAME = PathKit;
+			};
+			name = Debug;
+		};
+		OBJ_175 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/PathKit_Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = PathKit;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 4.2;
+				TARGET_NAME = PathKit;
+			};
+			name = Release;
+		};
+		OBJ_181 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4.2 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 4.2.0";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		OBJ_182 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4.2 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 4.2.0";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		OBJ_186 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/ScriptToolkit_Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = ScriptToolkit;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 4.2;
+				TARGET_NAME = ScriptToolkit;
+			};
+			name = Debug;
+		};
+		OBJ_187 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/ScriptToolkit_Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = ScriptToolkit;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 4.2;
+				TARGET_NAME = ScriptToolkit;
+			};
+			name = Release;
+		};
+		OBJ_208 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4.2 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 4.2.0";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		OBJ_209 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4.2 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 4.2.0";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		OBJ_213 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Stencil_Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Stencil;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 4.2;
+				TARGET_NAME = Stencil;
+			};
+			name = Debug;
+		};
+		OBJ_214 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Stencil_Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Stencil;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 4.2;
+				TARGET_NAME = Stencil;
+			};
+			name = Release;
+		};
+		OBJ_241 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4.2 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 4.2.0";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		OBJ_242 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4.2 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 4.2.0";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		OBJ_246 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/SwiftShell_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = SwiftShell;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = SwiftShell;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		OBJ_247 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/SwiftShell_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = SwiftShell;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = SwiftShell;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		OBJ_262 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		OBJ_263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -package-description-version 5.0.0";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		OBJ_3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SWIFT_PACKAGE=1",
+					"DEBUG=1",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE DEBUG";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				USE_HEADERMAP = NO;
+			};
+			name = Debug;
+		};
+		OBJ_4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SWIFT_PACKAGE=1",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				USE_HEADERMAP = NO;
+			};
+			name = Release;
+		};
+		OBJ_95 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Arena_Playground_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "Arena-Playground";
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = "Arena-Playground";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		OBJ_96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "Arena-Playground.xcodeproj/Arena_Playground_Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "Arena-Playground";
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGET_NAME = "Arena-Playground";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		OBJ_122 /* Build configuration list for PBXNativeTarget "Arena-PlaygroundPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_123 /* Debug */,
+				OBJ_124 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_127 /* Build configuration list for PBXNativeTarget "FileSmith" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_128 /* Debug */,
+				OBJ_129 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_142 /* Build configuration list for PBXNativeTarget "FileSmithPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_143 /* Debug */,
+				OBJ_144 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_147 /* Build configuration list for PBXNativeTarget "Files" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_148 /* Debug */,
+				OBJ_149 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_154 /* Build configuration list for PBXNativeTarget "FilesPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_155 /* Debug */,
+				OBJ_156 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_159 /* Build configuration list for PBXNativeTarget "Moderator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_160 /* Debug */,
+				OBJ_161 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_168 /* Build configuration list for PBXNativeTarget "ModeratorPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_169 /* Debug */,
+				OBJ_170 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_173 /* Build configuration list for PBXNativeTarget "PathKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_174 /* Debug */,
+				OBJ_175 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_180 /* Build configuration list for PBXNativeTarget "PathKitPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_181 /* Debug */,
+				OBJ_182 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_185 /* Build configuration list for PBXNativeTarget "ScriptToolkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_186 /* Debug */,
+				OBJ_187 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_2 /* Build configuration list for PBXProject "Arena-Playground" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_3 /* Debug */,
+				OBJ_4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_207 /* Build configuration list for PBXNativeTarget "ScriptToolkitPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_208 /* Debug */,
+				OBJ_209 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_212 /* Build configuration list for PBXNativeTarget "Stencil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_213 /* Debug */,
+				OBJ_214 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_240 /* Build configuration list for PBXNativeTarget "StencilPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_241 /* Debug */,
+				OBJ_242 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_245 /* Build configuration list for PBXNativeTarget "SwiftShell" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_246 /* Debug */,
+				OBJ_247 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_261 /* Build configuration list for PBXNativeTarget "SwiftShellPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_262 /* Debug */,
+				OBJ_263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		OBJ_94 /* Build configuration list for PBXNativeTarget "Arena-Playground" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_95 /* Debug */,
+				OBJ_96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = OBJ_1 /* Project object */;
+}
