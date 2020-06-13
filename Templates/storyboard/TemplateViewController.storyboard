@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="JmO-xe-2y7">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SFProText-Bold.ttf">
+            <string>SFProText-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Item-->
+        <scene sceneID="T4r-JI-9Pv">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="JmO-xe-2y7" customClass="LibraryViewController" customModule="Harbor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7gN-ag-HZR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YXc-0P-bSo">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
+                                <color key="backgroundColor" name="App Colors/dashboardBackground"/>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8l5-ag-Rzg">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="92"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u2W-fs-E7Q">
+                                        <rect key="frame" x="0.0" y="91" width="414" height="1"/>
+                                        <color key="backgroundColor" red="0.39607843139999999" green="0.44705882349999998" blue="0.4823529412" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="7Ke-d4-ddU"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dpH-88-tJj">
+                                        <rect key="frame" x="186" y="58" width="42" height="20"/>
+                                        <fontDescription key="fontDescription" name="SFProText-Bold" family="SF Pro Text" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="dpH-88-tJj" secondAttribute="bottom" constant="14" id="2o0-gh-4bA"/>
+                                    <constraint firstAttribute="height" constant="92" id="75c-FB-UvF"/>
+                                    <constraint firstItem="u2W-fs-E7Q" firstAttribute="leading" secondItem="8l5-ag-Rzg" secondAttribute="leading" id="Of6-b3-FHY"/>
+                                    <constraint firstItem="dpH-88-tJj" firstAttribute="centerX" secondItem="8l5-ag-Rzg" secondAttribute="centerX" id="Wzf-B3-xe9"/>
+                                    <constraint firstAttribute="bottom" secondItem="u2W-fs-E7Q" secondAttribute="bottom" id="Xr5-eh-F1f"/>
+                                    <constraint firstAttribute="trailing" secondItem="u2W-fs-E7Q" secondAttribute="trailing" id="lKH-CD-xOM"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" name="App Colors/dashboardBackground"/>
+                        <constraints>
+                            <constraint firstItem="8l5-ag-Rzg" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" id="6EV-bh-4MS"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" id="MNA-aa-vzy"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="trailing" secondItem="AoL-UG-IwY" secondAttribute="trailing" id="UWd-vg-d3p"/>
+                            <constraint firstItem="8l5-ag-Rzg" firstAttribute="top" secondItem="7gN-ag-HZR" secondAttribute="top" id="ZD2-Va-hgv"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="top" secondItem="7gN-ag-HZR" secondAttribute="top" id="hPr-og-R2e"/>
+                            <constraint firstItem="AoL-UG-IwY" firstAttribute="trailing" secondItem="8l5-ag-Rzg" secondAttribute="trailing" id="nSH-7W-GJJ"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="bottom" secondItem="AoL-UG-IwY" secondAttribute="bottom" id="sFY-xb-1I7"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="AoL-UG-IwY"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" image="dashboardTabBarIconGrayed" selectedImage="dashboardTabBarIconSelected" id="c12-uN-0SK"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="fakeNavbar" destination="8l5-ag-Rzg" id="DTJ-La-fAZ"/>
+                        <outlet property="fakeNavbarTitleLabel" destination="dpH-88-tJj" id="Fo4-Rh-Kkl"/>
+                        <outlet property="fakeNavbarTopConstraint" destination="ZD2-Va-hgv" id="SNW-iD-qBo"/>
+                        <outlet property="libraryTableView" destination="YXc-0P-bSo" id="RNs-Lq-BUa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kdE-uS-H20" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-72" y="106"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="dashboardTabBarIconGrayed" width="24" height="24"/>
+        <image name="dashboardTabBarIconSelected" width="23" height="23"/>
+        <namedColor name="App Colors/dashboardBackground">
+            <color red="0.97647058823529409" green="0.96862745098039216" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

@@ -1,7 +1,7 @@
 import XCTest
 
-import Arena_PlaygroundTests
+import CodeTemplatesTests
 
 var tests = [XCTestCaseEntry]()
-tests += Arena_PlaygroundTests.allTests()
+tests += CodeTemplatesTests.allTests()
 XCTMain(tests)

@@ -1,2 +1,3 @@
 # CodeTemplates
-Templates for generating iOS code
+
+A description of this package.
