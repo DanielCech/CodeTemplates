@@ -1,8 +1,8 @@
 import Stencil
 import ScriptToolkit
 
-let projectPath = "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor/Scenes/LibraryScene"
-var context: Context = ["name": "library"]
+let projectPath = "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor/Scenes/HouseholdScene/EmergencyContacts"
+var context: Context = ["name": "emergencyContacts"]
 
 // Project setup
 context["author"] = "Daniel Cech"
