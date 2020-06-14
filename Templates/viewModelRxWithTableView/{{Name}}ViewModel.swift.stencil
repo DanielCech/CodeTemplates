@@ -1,0 +1,59 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+
+typealias {{Name}}SectionModel = SectionModel<String?, {{Name}}Section>
+
+final class {{Name}}ViewModel: ViewModelType {
+    // MARK: Private properties
+    private let apiService: AppServicing
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(apiService: AppServicing) {
+        self.apiService = apiService
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {
+        let viewWillAppear: Observable<Void>
+    }
+
+    struct Output {
+        let {{name}}Sections: Driver<[{{Name}}SectionModel]>
+    }
+
+    func transform(input: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+        let {{name}}Output = input.viewWillAppear
+            .flatMap {
+                self.apiService.fetch{{Name}}()
+            }
+            .map { response -> [{{Name}}SectionModel] in
+                let sections: [{{Name}}SectionModel] = [
+                    SectionModel(model: nil, items: [.header]),
+                    SectionModel(model: R.string.localizable.{{name}}Recommended(), items: [.eventList(response.recommended)]),
+                    SectionModel(model: R.string.localizable.{{name}}ForFamilies(), items: response.forFamilies.map { .event($0) }),
+                    SectionModel(model: R.string.localizable.{{name}}OtherRisks(), items: response.otherRisks.map { .event($0) }),
+                ]
+                return sections
+            }
+            .asDriverLogError()
+
+        return Output({{name}}Sections: {{name}}Output)
+    }
+}

@@ -1,34 +1,35 @@
 import Stencil
+import ScriptToolkit
 
-struct Article {
-    let title: String
-    let author: String
-}
+var context: Context = ["name": "emergencyContacts"]
 
-let name = "example"
+// Project setup
+context["author"] = "Daniel Cech"
+context["projectName"] = "Harbor"
+context["copyright"] = "Copyright © 2020 25MP Corp. All rights reserved."
 
-var context: Context = [
-    "name": "example",
-    "articles": [
-        Article(title: "Migrating from OCUnit to XCTest", author: "Kyle Fuller"),
-        Article(title: "Memory Management with ARC", author: "Kyle Fuller"),
-    ],
-    "cases": [
-        "blue", "green", "yellow"
-    ]
+context["cases"] = [
+    "blue", "green", "yellow"
 ]
 
-//context["name"] = name.decapitalizingFirstLetter()
-//context["Name"] = name.capitalizingFirstLetter()
 
 
 
-
+print("⌚️ Processing")
 
 // Code generation
-try generate(template: .viewControllerRxSwift, context: context)
 
+do {
+    //try generate(template: .viewControllerRxSwift, context: context)
+    try generate(combo: .sceneControllerRxSwiftWithTableView, context: context)
+}
+catch {
+    print("Error: generation failed: \(error)")
+}
 
+let command = "\"/Applications/Araxis Merge.app/Contents/Utilities/compare\" \"" + generatedPath + "\" \"" + targetPath + "\""
+shell(command)
 
+print("✅ Done")
 
 

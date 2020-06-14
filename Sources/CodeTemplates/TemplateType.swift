@@ -8,6 +8,7 @@
 import Foundation
 
 public enum TemplateType: String {
+    
     // View Controllers
     case viewControllerBasic
     case viewControllerRxSwift
@@ -35,4 +36,20 @@ public enum TemplateType: String {
     // Collection View Cell View Models
     case collectionViewCellViewModel
     case collectionViewCellViewModelRxSwift
+    
+    // Storyboards
+    case storyboardViewController
+    case storyboardViewControllerWithTableView
+    case storyboardViewControllerWithCollectionView
+    
+    // Views
+    case view
+    
+    // XIBs
+    case xibView
+    
+    // Coordinators
+    case coordinator
+    case coordinatorNavigation
+    
 }
