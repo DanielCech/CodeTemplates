@@ -19,18 +19,18 @@ public enum TemplateCombo: String {
         switch self {
             
         case .scene:
-            try generate(template: .viewControllerBasic, context: context, deleteGenerated: true)
-            try generate(template: .viewModelBasic, context: context, deleteGenerated: false)
-            try generate(template: .storyboardViewController, context: context, deleteGenerated: false)
+            try Generator.shared.generate(template: .viewControllerBasic, context: context, deleteGenerated: true)
+            try Generator.shared.generate(template: .viewModelBasic, context: context, deleteGenerated: false)
+            try Generator.shared.generate(template: .storyboardViewController, context: context, deleteGenerated: false)
             
             
         case .sceneControllerRxSwift:
             break
             
         case .sceneControllerRxSwiftWithTableView:
-            try generate(template: .viewControllerRxSwiftWithTableView, context: context, deleteGenerated: true)
-            try generate(template: .viewModelRxWithTableView, context: context, deleteGenerated: false)
-            try generate(template: .storyboardViewControllerWithTableView, context: context, deleteGenerated: false)
+            try Generator.shared.generate(template: .viewControllerRxSwiftWithTableView, context: context, deleteGenerated: true)
+            try Generator.shared.generate(template: .viewModelRxWithTableView, context: context, deleteGenerated: false)
+            try Generator.shared.generate(template: .storyboardViewControllerWithTableView, context: context, deleteGenerated: false)
             
         case .sceneControllerRxSwiftWithCollectionView:
             break

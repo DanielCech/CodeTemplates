@@ -10,71 +10,70 @@ import Stencil
 import PathKit
 import Files
 
-let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd/MM/YYYY"
-    return formatter
-}()
-
-func capitalizeContext(_ context: Context) -> Context {
-    var modifiedContext = context
-    for key in context.keys {
-        guard let stringValue = context[key] as? String else { continue }
-        modifiedContext[key.capitalizingFirstLetter()] = stringValue.capitalizingFirstLetter()
-    }
+class Generator {
+    static let shared = Generator()
     
-    modifiedContext["date"] = dateFormatter.string(from: Date())
-    
-    return modifiedContext
-}
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/YYYY"
+        return formatter
+    }()
 
-func modifyName(_ name: String, context: Context) -> String {
-    var newName = name.replacingOccurrences(of: ".stencil", with: "")
-    for key in context.keys {
-        guard let stringValue = context[key] as? String else { continue }
-        newName = newName.replacingOccurrences(of: "{{\(key)}}", with: stringValue)
-    }
-    return newName
-}
-
-func traverse(templateFolder: Folder, generatedFolder: Folder, context: Context) throws {
-    var modifiedContext = context
-    
-    // Process files in folder
-    for file in templateFolder.files {
-        let environment = Environment(loader: FileSystemLoader(paths: [Path(templateFolder.path)]))
+    func generate(template: TemplateType, context: Context, deleteGenerated: Bool = true) throws {
+        let modifiedContext = capitalizeContext(context)
         
-        let outputFileName = modifyName(file.name, context: context)
-        modifiedContext["fileName"] = outputFileName
-        let outputFile = try generatedFolder.createFile(named: outputFileName)
+        // Delete contents of Generated folder
+        let generatedFolder = try Folder(path: generatedPath)
+        if deleteGenerated {
+            try generatedFolder.empty(includingHidden: true)
+        }
         
-        let rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
-    
-        try outputFile.write(rendered)
+        let templateFolder = try Folder(path: templatePath).subfolder(at: template.rawValue)
+        
+        try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, context: modifiedContext)
     }
-    
-    // Process subfolders
-    for folder in templateFolder.subfolders {
-        let outputFolder = modifyName(folder.name, context: context)
-        let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
-        try traverse(templateFolder: folder, generatedFolder: generatedSubFolder, context: context)
+
+    func generate(combo: TemplateCombo, context: Context) throws {
+        try combo.perform(context: context)
     }
 }
 
-func generate(template: TemplateType, context: Context, deleteGenerated: Bool = true) throws {
-    let modifiedContext = capitalizeContext(context)
-    
-    // Delete contents of Generated folder
-    let generatedFolder = try Folder(path: generatedPath)
-    if deleteGenerated {
-        try generatedFolder.empty(includingHidden: true)
+private extension Generator {
+    func capitalizeContext(_ context: Context) -> Context {
+        var modifiedContext = context
+        for key in context.keys {
+            guard let stringValue = context[key] as? String else { continue }
+            modifiedContext[key.capitalizingFirstLetter()] = stringValue.capitalizingFirstLetter()
+        }
+        
+        modifiedContext["date"] = dateFormatter.string(from: Date())
+        
+        return modifiedContext
     }
-    
-    let templateFolder = try Folder(path: templatePath).subfolder(at: template.rawValue)
-    
-    try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, context: modifiedContext)
+
+    func traverse(templateFolder: Folder, generatedFolder: Folder, context: Context) throws {
+        var modifiedContext = context
+        
+        // Process files in folder
+        for file in templateFolder.files {
+            let environment = Environment(loader: FileSystemLoader(paths: [Path(templateFolder.path)]))
+            
+            let outputFileName = file.name.modifyName(context: context)
+            modifiedContext["fileName"] = outputFileName
+            let outputFile = try generatedFolder.createFile(named: outputFileName)
+            
+            let rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
+        
+            try outputFile.write(rendered)
+        }
+        
+        // Process subfolders
+        for folder in templateFolder.subfolders {
+            let outputFolder = folder.name.modifyName(context: context)
+            let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
+            try traverse(templateFolder: folder, generatedFolder: generatedSubFolder, context: context)
+        }
+    }
 }
 
-func generate(combo: TemplateCombo, context: Context) throws {
-    try combo.perform(context: context)
-}
+

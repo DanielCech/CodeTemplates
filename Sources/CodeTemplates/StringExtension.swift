@@ -27,4 +27,13 @@ public extension String {
     mutating func decapitalizeFirstLetter() {
         self = self.decapitalizingFirstLetter()
     }
+    
+    func modifyName(context: Context) -> String {
+        var newName = self.replacingOccurrences(of: ".stencil", with: "")
+        for key in context.keys {
+            guard let stringValue = context[key] as? String else { continue }
+            newName = newName.replacingOccurrences(of: "{{\(key)}}", with: stringValue)
+        }
+        return newName
+    }
 }

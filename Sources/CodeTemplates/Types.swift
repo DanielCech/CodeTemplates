@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias Context = [String: Any]
+public typealias Context = [String: Any]
 
-enum ReviewMode {
+public enum ReviewMode {
     case overall
     case individual
 }

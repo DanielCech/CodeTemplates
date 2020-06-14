@@ -21,8 +21,8 @@ print("⌚️ Processing")
 
 do {
     //try generate(template: .viewControllerRxSwift, context: context)
-    try generate(combo: .sceneControllerRxSwiftWithTableView, context: context)
-    try review(mode: .individual)
+    try Generator.shared.generate(combo: .sceneControllerRxSwiftWithTableView, context: context)
+    try Reviewer.shared.review(mode: .individual, context: context)
 }
 catch {
     print("Error: generation failed: \(error)")
