@@ -62,6 +62,7 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
     }
 }
 
+{% if sectionHeaders %}
 // MARK: - Table headers
 
 extension {{Name}}ViewController: UITableViewDelegate {
@@ -83,6 +84,7 @@ extension {{Name}}ViewController: UITableViewDelegate {
         return 52
     }
 }
+{% endif %}
 
 // MARK: - Binding
 
@@ -101,10 +103,11 @@ extension {{Name}}ViewController {
                 })
             .disposed(by: disposeBag)
 {% endif %}
-
+{% if sectionHeaders %}
         {{name}}TableView
             .rx.setDelegate(self)
             .disposed(by: disposeBag)
+{% endif %}
     }
 
     func bindToViewModel() {

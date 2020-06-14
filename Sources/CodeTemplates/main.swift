@@ -9,6 +9,9 @@ context["author"] = "Daniel Cech"
 context["projectName"] = "Harbor"
 context["copyright"] = "Copyright © 2020 25MP Corp. All rights reserved."
 
+context["fakeNavbar"] = true
+context["sectionHeaders"] = true
+
 context["oldTableCells"] = [
     "blue", "green", "yellow"
 ]
