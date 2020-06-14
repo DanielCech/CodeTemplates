@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum TemplateCombo: String {
+public enum TemplateCombo {
     
     // Scenes
     case scene
@@ -19,18 +19,18 @@ public enum TemplateCombo: String {
         switch self {
             
         case .scene:
-            try Generator.shared.generate(template: .viewControllerBasic, context: context, deleteGenerated: true)
-            try Generator.shared.generate(template: .viewModelBasic, context: context, deleteGenerated: false)
-            try Generator.shared.generate(template: .storyboardViewController, context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.viewControllerBasic), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template(.viewModelBasic), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.storyboardViewController), context: context, deleteGenerated: false)
             
             
         case .sceneControllerRxSwift:
             break
             
-        case .sceneControllerRxSwiftWithTableView:
-            try Generator.shared.generate(template: .viewControllerRxSwiftWithTableView, context: context, deleteGenerated: true)
-            try Generator.shared.generate(template: .viewModelRxWithTableView, context: context, deleteGenerated: false)
-            try Generator.shared.generate(template: .storyboardViewControllerWithTableView, context: context, deleteGenerated: false)
+        case .sceneControllerRxSwiftWithTableView:            
+            try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithTableView), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template(.viewModelRxWithTableView), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.storyboardViewControllerWithTableView), context: context, deleteGenerated: false)
             
         case .sceneControllerRxSwiftWithCollectionView:
             break

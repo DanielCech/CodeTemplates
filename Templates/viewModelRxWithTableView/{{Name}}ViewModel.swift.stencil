@@ -45,10 +45,7 @@ extension {{Name}}ViewModel {
             }
             .map { response -> [{{Name}}SectionModel] in
                 let sections: [{{Name}}SectionModel] = [
-                    SectionModel(model: nil, items: [.header]),
-                    SectionModel(model: R.string.localizable.{{name}}Recommended(), items: [.eventList(response.recommended)]),
-                    SectionModel(model: R.string.localizable.{{name}}ForFamilies(), items: response.forFamilies.map { .event($0) }),
-                    SectionModel(model: R.string.localizable.{{name}}OtherRisks(), items: response.otherRisks.map { .event($0) }),
+                 
                 ]
                 return sections
             }

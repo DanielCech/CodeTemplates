@@ -1,14 +1,19 @@
 import Stencil
 import ScriptToolkit
 
-var context: Context = ["name": "emergencyContacts"]
+let projectPath = "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor/Scenes/LibraryScene"
+var context: Context = ["name": "library"]
 
 // Project setup
 context["author"] = "Daniel Cech"
 context["projectName"] = "Harbor"
 context["copyright"] = "Copyright © 2020 25MP Corp. All rights reserved."
 
-context["cases"] = [
+context["oldTableCells"] = [
+    "blue", "green", "yellow"
+]
+
+context["newTableCells"] = [
     "blue", "green", "yellow"
 ]
 
@@ -20,9 +25,11 @@ print("⌚️ Processing")
 // Code generation
 
 do {
-    //try generate(template: .viewControllerRxSwift, context: context)
-    try Generator.shared.generate(combo: .sceneControllerRxSwiftWithTableView, context: context)
-    try Reviewer.shared.review(mode: .individual, context: context)
+    try Generator.shared.generate(
+        generationMode: .combo(.sceneControllerRxSwiftWithTableView),
+        context: context,
+        reviewMode: .individual
+    )
 }
 catch {
     print("Error: generation failed: \(error)")

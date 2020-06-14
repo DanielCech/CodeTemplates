@@ -13,9 +13,11 @@ import UIKit
 
 final class {{Name}}ViewController: UIViewController, ViewModelContaining {
     // MARK: IBOutlets
+{% if fakeNavbar %}
     @IBOutlet private var fakeNavbar: UIView!
     @IBOutlet private var fakeNavbarTitleLabel: UILabel!
     @IBOutlet private var fakeNavbarTopConstraint: NSLayoutConstraint!
+{% endif %}
     @IBOutlet private var {{name}}TableView: UITableView!
 
     // MARK: Public Properties
@@ -86,6 +88,7 @@ extension {{Name}}ViewController: UITableViewDelegate {
 
 extension {{Name}}ViewController {
     func bindToView() {
+{% if fakeNavbar %}    
         {{name}}TableView.rx.contentOffset.map { $0.y > 100 }.distinctUntilChanged()
             .withUnretained(self)
             .bind(onNext: { _, scrolled in
@@ -97,6 +100,7 @@ extension {{Name}}ViewController {
                 animator.startAnimation()
                 })
             .disposed(by: disposeBag)
+{% endif %}
 
         {{name}}TableView
             .rx.setDelegate(self)
@@ -137,8 +141,10 @@ private extension {{Name}}ViewController {
     }
 
     func setupIBOutlets() {
+{% if fakeNavbar %}
         fakeNavbarTitleLabel.attributedText = R.string.localizable.{{name}}Title().styled(with: .dashboardActivityTitle)
         fakeNavbar.apply(style: .shadow)
+{% endif %}
 
         {{name}}TableView.separatorStyle = .none
         {{name}}TableView.rowHeight = UITableView.automaticDimension
