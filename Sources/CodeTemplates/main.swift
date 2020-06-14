@@ -22,13 +22,13 @@ print("⌚️ Processing")
 do {
     //try generate(template: .viewControllerRxSwift, context: context)
     try generate(combo: .sceneControllerRxSwiftWithTableView, context: context)
+    try review(mode: .individual)
 }
 catch {
     print("Error: generation failed: \(error)")
 }
 
-let command = "\"/Applications/Araxis Merge.app/Contents/Utilities/compare\" \"" + generatedPath + "\" \"" + targetPath + "\""
-shell(command)
+
 
 print("✅ Done")
 

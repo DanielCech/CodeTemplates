@@ -8,3 +8,8 @@
 import Foundation
 
 typealias Context = [String: Any]
+
+enum ReviewMode {
+    case overall
+    case individual
+}
