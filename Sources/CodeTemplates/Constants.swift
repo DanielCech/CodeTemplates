@@ -7,5 +7,6 @@
 
 import Foundation
 
-let templatePath = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Templates/"
-let generatedPath = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates/Generated/"
+let scriptPath = "/Users/danielcech/Documents/[Development]/[Projects]/CodeTemplates"
+let templatePath = scriptPath + "/Templates/"
+let generatedPath = scriptPath + "/Generated/"

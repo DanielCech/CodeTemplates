@@ -5,16 +5,17 @@
 //  Created by Daniel Cech on 13/06/2020.
 //
 
-import Foundation
-import Stencil
-import PathKit
 import Files
+import Foundation
+import PathKit
+import ScriptToolkit
+import Stencil
 
 class Generator {
     static let shared = Generator()
-    
+
     var processedFiles = [ProcessedFile]()
-    
+
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/YYYY"
@@ -27,90 +28,95 @@ class Generator {
         reviewMode: ReviewMode = .none,
         deleteGenerated: Bool = true
     ) throws {
-        
         switch generationMode {
         case let .template(templateType):
-            
-            let modifiedContext = capitalizeContext(context)
-            
+
+            let modifiedContext = updateContext(context)
+
             // Delete contents of Generated folder
             let generatedFolder = try Folder(path: generatedPath)
             if deleteGenerated {
                 try generatedFolder.empty(includingHidden: true)
             }
-            
+
             let templateFolder = try Folder(path: templatePath).subfolder(at: templateType.rawValue)
-            
+
             let projectFolder = try Folder(path: projectPath)
-            
+
             try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, projectFolder: projectFolder, context: modifiedContext)
-            
+
         case let .combo(comboType):
             try comboType.perform(context: context)
         }
-        
+
+        shell("/usr/local/bin/swiftformat \"\(scriptPath)\"")
+
         try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
     }
 }
 
 private extension Generator {
-    func capitalizeContext(_ context: Context) -> Context {
+    func updateContext(_ context: Context) -> Context {
         var modifiedContext = context
         for key in context.keys {
             guard let stringValue = context[key] as? String else { continue }
             modifiedContext[key.capitalizingFirstLetter()] = stringValue.capitalizingFirstLetter()
         }
-        
+
         modifiedContext["date"] = dateFormatter.string(from: Date())
+
+        if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String], let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
+            modifiedContext["tableViewCells"] = unwrappedOldTableViewCells + unwrappedNewTableViewCells
+        }
         
+        if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String], let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
+            modifiedContext["collectionViewCells"] = unwrappedOldCollectionViewCells + unwrappedNewCollectionViewCells
+        }
+
         return modifiedContext
     }
 
     func traverse(templateFolder: Folder, generatedFolder: Folder, projectFolder: Folder?, context: Context) throws {
         var modifiedContext = context
-        
+
         // Process files in folder
         for file in templateFolder.files {
             let environment = Environment(loader: FileSystemLoader(paths: [Path(templateFolder.path)]))
-            
+
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
             let outputFile = try generatedFolder.createFile(named: outputFileName)
-            
+
             let rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
-        
+
             try outputFile.write(rendered)
-            
+
             let templateFile = templateFolder.path + "/" + file.name
             let generatedFile = generatedFolder.path + "/" + outputFileName
-            
+
             let projectFile: String?
             if let unwrappedProjectFolder = projectFolder {
                 projectFile = unwrappedProjectFolder.path + "/" + outputFileName
-            }
-            else {
+            } else {
                 projectFile = nil
             }
-            
+
             processedFiles.append((templateFile: templateFile, generatedFile: generatedFile, projectFile: projectFile))
         }
-        
+
         // Process subfolders
         for folder in templateFolder.subfolders {
             let outputFolder = folder.name.modifyName(context: context)
             let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
-            
+
             let projectSubFolder: Folder?
             if let unwrappedProjectFolder = projectFolder {
                 projectSubFolder = try? Folder(path: unwrappedProjectFolder.path + "/" + outputFolder)
-            }
-            else {
+            } else {
                 projectSubFolder = nil
             }
-            
+
             try traverse(templateFolder: folder, generatedFolder: generatedSubFolder, projectFolder: projectSubFolder,context: context)
         }
     }
 }
-
-

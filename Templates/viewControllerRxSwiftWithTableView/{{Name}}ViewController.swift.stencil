@@ -32,20 +32,11 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
     // MARK: Private Properties
     private lazy var dataSource = RxTableViewSectionedReloadDataSource<{{Name}}SectionModel>(configureCell: { _, tableView, indexPath, item -> UITableViewCell in
         switch item {
-        case .header:
-            let cell: {{Name}}HeaderTableViewCell = tableView.dequeueReusableCell(for: indexPath)
-//            cell.set(with: text, eventCount: eventCount)
+{% for cell in tableViewCells %}
+        case .{{cell}}:
+            let cell: {{cell|capitalize}}TableViewCell = tableView.dequeueReusableCell(for: indexPath)
             return cell
-        case let .eventList(events):
-            let cell: {{Name}}EventListTableViewCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.set(with: events, selectedEvent: { [weak self] event in
-                self?.showEvent(event)
-            })
-            return cell
-        case let .event(event):
-            let cell: {{Name}}EventTableViewCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.set(with: event)
-            return cell
+{% endfor %}
         }
         })
 
@@ -90,7 +81,7 @@ extension {{Name}}ViewController: UITableViewDelegate {
 
 extension {{Name}}ViewController {
     func bindToView() {
-{% if fakeNavbar %}    
+{% if fakeNavbar %}
         {{name}}TableView.rx.contentOffset.map { $0.y > 100 }.distinctUntilChanged()
             .withUnretained(self)
             .bind(onNext: { _, scrolled in
@@ -151,10 +142,11 @@ private extension {{Name}}ViewController {
 
         {{name}}TableView.separatorStyle = .none
         {{name}}TableView.rowHeight = UITableView.automaticDimension
-        {{name}}TableView.register({{Name}}HeaderTableViewCell.self)
-        {{name}}TableView.register({{Name}}EventTableViewCell.self)
-        {{name}}TableView.register({{Name}}EventListTableViewCell.self)
-        {{name}}TableView.registerHeaderFooterView(SimpleSectionHeader.self)
+{% for cell in tableViewCells %}
+        {{name}}TableView.register({{Name}}{{cell|capitalize}}TableViewCell.self) {% endfor %}
+{% if sectionHeader %}
+        TableView.registerHeaderFooterView(SimpleSectionHeader.self)
+{% endif %}
     }
 
     func showEvent(_ event: {{Name}}Response.Event) {
