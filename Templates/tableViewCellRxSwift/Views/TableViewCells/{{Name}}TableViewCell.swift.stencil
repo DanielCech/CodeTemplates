@@ -13,6 +13,12 @@ class {{Name}}TableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+
+{% if whiteCellSelection %}
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = .white
+        selectedBackgroundView = backgroundView
+{% endif %}
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

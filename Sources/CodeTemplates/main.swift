@@ -15,6 +15,7 @@ import Stencil
  oldCollectionViewCells - already defined collection view cells
  newCollectionViewCells - collection view cells that need to be generated
  collectionViewCells - all collection view cells together
+ whiteCellSelection - table views has white selected state (touch is not visible)
 */
 
 let projectPath = "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor/Scenes/HouseholdScene/EmergencyContacts"
