@@ -31,8 +31,6 @@ class Generator {
         switch generationMode {
         case let .template(templateType):
 
-            let modifiedContext = updateContext(context)
-
             // Delete contents of Generated folder
             let generatedFolder = try Folder(path: generatedPath)
             if deleteGenerated {
@@ -41,9 +39,9 @@ class Generator {
 
             let templateFolder = try Folder(path: templatePath).subfolder(at: templateType.rawValue)
 
-            let projectFolder = try Folder(path: projectPath)
+            let projectFolder = try Folder(path: templateType.basePath())
 
-            try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, projectFolder: projectFolder, context: modifiedContext)
+            try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, projectFolder: projectFolder, context: context)
 
         case let .combo(comboType):
             try comboType.perform(context: context)
@@ -53,14 +51,12 @@ class Generator {
 
         try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
     }
-}
 
-private extension Generator {
     func updateContext(_ context: Context) -> Context {
         var modifiedContext = context
         for key in context.keys {
             guard let stringValue = context[key] as? String else { continue }
-            modifiedContext[key.capitalizingFirstLetter()] = stringValue.capitalizingFirstLetter()
+            modifiedContext[key.pascalCased()] = stringValue.pascalCased()
         }
 
         modifiedContext["date"] = dateFormatter.string(from: Date())
@@ -68,21 +64,48 @@ private extension Generator {
         if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String], let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
             modifiedContext["tableViewCells"] = unwrappedOldTableViewCells + unwrappedNewTableViewCells
         }
-        
+
         if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String], let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
             modifiedContext["collectionViewCells"] = unwrappedOldCollectionViewCells + unwrappedNewCollectionViewCells
         }
 
+        modifiedContext["Screen"] = modifiedContext["Name"]
+
         return modifiedContext
+    }
+}
+
+private extension Generator {
+    func stencilEnvironment(templateFolder: Folder) -> Environment {
+        let ext = Extension()
+
+        ext.registerFilter("camelCased") { (value: Any?) in
+            if let value = value as? String {
+                return value.camelCased()
+            }
+
+            return value
+        }
+
+        ext.registerFilter("pascalCased") { (value: Any?) in
+            if let value = value as? String {
+                return value.pascalCased()
+            }
+
+            return value
+        }
+
+        let environment = Environment(loader: FileSystemLoader(paths: [Path(templateFolder.path)]), extensions: [ext])
+        return environment
     }
 
     func traverse(templateFolder: Folder, generatedFolder: Folder, projectFolder: Folder?, context: Context) throws {
         var modifiedContext = context
 
+        let environment = stencilEnvironment(templateFolder: templateFolder)
+
         // Process files in folder
         for file in templateFolder.files {
-            let environment = Environment(loader: FileSystemLoader(paths: [Path(templateFolder.path)]))
-
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
             let outputFile = try generatedFolder.createFile(named: outputFileName)

@@ -16,9 +16,10 @@ import Stencil
  newCollectionViewCells - collection view cells that need to be generated
  collectionViewCells - all collection view cells together
  whiteCellSelection - table views has white selected state (touch is not visible)
-*/
+ */
 
-let projectPath = "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor/Scenes/HouseholdScene/EmergencyContacts"
+let projectPath = "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor"
+let scenePath = projectPath.appendingPathComponent(path: "Scenes/HouseholdScene/EmergencyContacts/AddContactSheet")
 var context: Context = ["name": "addContactSheet"]
 
 // Project setup
@@ -29,22 +30,26 @@ context["copyright"] = "Copyright © 2020 25MP Corp. All rights reserved."
 context["fakeNavbar"] = false
 context["sectionHeaders"] = false
 
+// Table and Collection view cells
 context["oldTableViewCells"] = [
-    "blue", "green", "yellow"
+    //    "blue", "green", "yellow"
 ]
 
 context["newTableViewCells"] = [
-    "blue", "green", "yellow"
+    "contact"
 ]
+
+context["whiteCellSelection"] = true
 
 print("⌚️ Processing")
 
 // Code generation
 
 do {
+    let modifiedContext = Generator.shared.updateContext(context)
     try Generator.shared.generate(
         generationMode: .combo(.sceneControllerRxSwiftWithTableView),
-        context: context,
+        context: modifiedContext,
         reviewMode: .individual
     )
 } catch {

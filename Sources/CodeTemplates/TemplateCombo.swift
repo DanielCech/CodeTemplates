@@ -27,12 +27,17 @@ public enum TemplateCombo {
         case .sceneControllerRxSwiftWithTableView:
             try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithTableView), context: context, deleteGenerated: true)
             try Generator.shared.generate(generationMode: .template(.viewModelRxSwiftWithTableView), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.viewModelAssembly), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.tableViewSectionType), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template(.storyboardViewControllerWithTableView), context: context, deleteGenerated: false)
+
+            if context["sectionHeader"] != nil {
+                try Generator.shared.generate(generationMode: .template(.tableViewSectionHeader), context: context, deleteGenerated: false)
+            }
 
             if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
                 for cell in unwrappedNewCells {
-                    var modifiedContext = context
-                    modifiedContext["name"] = cell
+                    let modifiedContext = updateComboContext(context, name: cell)
                     try Generator.shared.generate(generationMode: .template(.tableViewCellRxSwift), context: modifiedContext, deleteGenerated: false)
                 }
             }
@@ -40,15 +45,27 @@ public enum TemplateCombo {
         case .sceneControllerRxSwiftWithCollectionView:
             try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithCollectionView), context: context, deleteGenerated: true)
             try Generator.shared.generate(generationMode: .template(.viewModelRxSwiftWithCollectionView), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.viewModelAssembly), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.collectionViewSectionType), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template(.storyboardViewControllerWithCollectionView), context: context, deleteGenerated: false)
+
+            if context["sectionHeader"] != nil {
+                try Generator.shared.generate(generationMode: .template(.tableViewSectionHeader), context: context, deleteGenerated: false)
+            }
 
             if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
                 for cell in unwrappedNewCells {
-                    var modifiedContext = context
-                    modifiedContext["name"] = cell
+                    let modifiedContext = updateComboContext(context, name: cell)
                     try Generator.shared.generate(generationMode: .template(.collectionViewCellRxSwift), context: modifiedContext, deleteGenerated: false)
                 }
             }
         }
+    }
+
+    func updateComboContext(_ context: Context, name: String) -> Context {
+        var modifiedContext = context
+        modifiedContext["name"] = name
+        modifiedContext["Name"] = name.pascalCased()
+        return modifiedContext
     }
 }

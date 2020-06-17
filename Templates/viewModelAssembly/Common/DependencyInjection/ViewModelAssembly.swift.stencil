@@ -1,0 +1,16 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//  
+
+import Swinject
+import SwinjectAutoregistration
+
+final class ViewModelAssembly: Assembly {
+    func assemble(container: Container) {
+        container.autoregister({{Name}}ViewModel.self, initializer: {{Name}}ViewModel.init).inObjectScope(.graph)
+    }
+}

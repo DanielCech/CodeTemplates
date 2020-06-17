@@ -11,8 +11,8 @@ import PathKit
 import ScriptToolkit
 import Stencil
 
-func compareTwoItems(first _: String, second _: String) {
-    let command = "\"/Applications/Araxis Merge.app/Contents/Utilities/compare\" \"" + generatedPath + "\" \"" + projectPath + "\""
+func compareTwoItems(first: String, second: String) {
+    let command = "\"/Applications/Araxis Merge.app/Contents/Utilities/compare\" \"" + first + "\" \"" + second + "\""
     shell(command)
 }
 
@@ -34,7 +34,7 @@ class Reviewer {
             break
 
         case .overall:
-            compareTwoItems(first: generatedPath, second: projectPath)
+            compareTwoItems(first: generatedPath, second: scenePath)
 
         case .individual:
             for processedFile in processedFiles {

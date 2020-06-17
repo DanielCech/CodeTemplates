@@ -8,24 +8,24 @@
 import Foundation
 
 public extension String {
-    func capitalizingFirstLetter() -> String {
+    func pascalCased() -> String {
         let first = String(prefix(1)).uppercased()
         let other = String(dropFirst())
         return first + other
     }
 
-    mutating func capitalizeFirstLetter() {
-        self = capitalizingFirstLetter()
+    mutating func pascalCase() {
+        self = pascalCased()
     }
 
-    func decapitalizingFirstLetter() -> String {
+    func camelCased() -> String {
         let first = String(prefix(1)).lowercased()
         let other = String(dropFirst())
         return first + other
     }
 
-    mutating func decapitalizeFirstLetter() {
-        self = decapitalizingFirstLetter()
+    mutating func camelCase() {
+        self = camelCased()
     }
 
     func modifyName(context: Context) -> String {

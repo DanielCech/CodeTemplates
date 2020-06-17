@@ -24,6 +24,9 @@ public enum TemplateType: String {
     case tableViewCell
     case tableViewCellRxSwift
 
+    // Table View Section Header
+    case tableViewSectionHeader
+
     // Table View Cell View Models
     case tableViewCellViewModel
     case tableViewCellViewModelRxSwift
@@ -50,4 +53,20 @@ public enum TemplateType: String {
     // Coordinators
     case coordinator
     case coordinatorNavigation
+
+    // Section types
+    case tableViewSectionType
+    case collectionViewSectionType
+
+    // Common parts
+    case viewModelAssembly
+
+    func basePath() -> String {
+        switch self {
+        case .viewModelAssembly:
+            return projectPath
+        default:
+            return scenePath
+        }
+    }
 }
