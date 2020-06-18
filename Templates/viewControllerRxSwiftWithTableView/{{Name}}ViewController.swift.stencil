@@ -114,10 +114,10 @@ extension {{Name}}ViewController {
         {{name}}TableView.rx.modelSelected({{Name}}Section.self)
             .bind(onNext: { [weak self] section in
                 switch section {
-                case let .event(event):
-                    self?.showEvent(event)
-                default:
+{% for cell in tableViewCells %}
+                case .{{cell}}:
                     break
+{% endfor %}
                 }
 
             }).disposed(by: disposeBag)
@@ -147,12 +147,5 @@ private extension {{Name}}ViewController {
 {% if sectionHeader %}
         TableView.registerHeaderFooterView({{Name}}SectionHeader.self)
 {% endif %}
-    }
-
-    func showEvent(_ event: {{Name}}Response.Event) {
-        // TODO: this is temporary conversion between event types. We are using two mocked API response types for event. It will be unified with changes on API side.
-        let dashboardEvent = DashboardResponse.Event(id: event.id, name: event.name, iconUrl: event.iconUrl, backgroundUrl: event.backgroundUrl, progressPercentage: 0)
-
-        coordinator.showEvent(dashboardEvent)
     }
 }

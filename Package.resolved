@@ -56,6 +56,15 @@
         }
       },
       {
+        "package": "StencilSwiftKit",
+        "repositoryURL": "https://github.com/SwiftGen/StencilSwiftKit.git",
+        "state": {
+          "branch": null,
+          "revision": "dbf02bd6afe71b65ead2bd250aaf974abc688094",
+          "version": "2.7.2"
+        }
+      },
+      {
         "package": "SwiftShell",
         "repositoryURL": "https://github.com/kareman/SwiftShell.git",
         "state": {

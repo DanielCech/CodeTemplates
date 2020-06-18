@@ -1,7 +1,7 @@
-import class Foundation.Bundle
 import XCTest
+import class Foundation.Bundle
 
-final class CodeTemplatesTests: XCTestCase {
+final class codeTemplateTests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
@@ -12,7 +12,7 @@ final class CodeTemplatesTests: XCTestCase {
             return
         }
 
-        let fooBinary = productsDirectory.appendingPathComponent("CodeTemplates")
+        let fooBinary = productsDirectory.appendingPathComponent("codeTemplate")
 
         let process = Process()
         process.executableURL = fooBinary
@@ -31,14 +31,14 @@ final class CodeTemplatesTests: XCTestCase {
 
     /// Returns path to the built products directory.
     var productsDirectory: URL {
-        #if os(macOS)
-            for bundle in Bundle.allBundles where bundle.bundlePath.hasSuffix(".xctest") {
-                return bundle.bundleURL.deletingLastPathComponent()
-            }
-            fatalError("couldn't find the products directory")
-        #else
-            return Bundle.main.bundleURL
-        #endif
+      #if os(macOS)
+        for bundle in Bundle.allBundles where bundle.bundlePath.hasSuffix(".xctest") {
+            return bundle.bundleURL.deletingLastPathComponent()
+        }
+        fatalError("couldn't find the products directory")
+      #else
+        return Bundle.main.bundleURL
+      #endif
     }
 
     static var allTests = [

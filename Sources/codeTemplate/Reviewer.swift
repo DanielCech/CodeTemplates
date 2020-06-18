@@ -34,7 +34,7 @@ class Reviewer {
             break
 
         case .overall:
-            compareTwoItems(first: generatedPath, second: scenePath)
+            compareTwoItems(first: Paths.generatedPath, second: Paths.scenePath)
 
         case .individual:
             for processedFile in processedFiles {

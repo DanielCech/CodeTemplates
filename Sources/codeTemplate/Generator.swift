@@ -32,12 +32,12 @@ class Generator {
         case let .template(templateType):
 
             // Delete contents of Generated folder
-            let generatedFolder = try Folder(path: generatedPath)
+            let generatedFolder = try Folder(path: Paths.generatedPath)
             if deleteGenerated {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let templateFolder = try Folder(path: templatePath).subfolder(at: templateType.rawValue)
+            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateType.rawValue)
 
             let projectFolder = try Folder(path: templateType.basePath())
 
@@ -47,7 +47,7 @@ class Generator {
             try comboType.perform(context: context)
         }
 
-        shell("/usr/local/bin/swiftformat \"\(scriptPath)\"")
+        shell("/usr/local/bin/swiftformat \"\(Paths.scriptPath)\"")
 
         try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
     }

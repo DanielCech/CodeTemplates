@@ -1,0 +1,68 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import Swinject
+import UIKit
+
+final class {{Name}}NavigationCoordinator {
+    // MARK: Public properties
+    var childCoordinators = [Coordinator]()
+    let assembler: Assembler
+
+    let navigationController: UINavigationController
+
+    var dismissCallback: VoidClosure<Coordinator>?
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(navigationController: UINavigationController, assembler: Assembler) {
+        self.navigationController = navigationController
+        self.assembler = assembler
+    }
+}
+
+// MARK: - {{Name}}NavigationCoordinatoring
+
+extension {{Name}}NavigationCoordinator: {{Name}}NavigationCoordinatoring {
+    func showActivity() {}
+
+    func start() {
+        navigationController.pushViewController(
+            make{{Name}}ViewController(),
+            animated: false
+        )
+    }
+
+    {% for controller in controllers %}
+        func show{{controller|pascalCased}}() {
+          let {{controller}}Controller = make{{controller|pascalCased}}ViewController()
+          navigationController.pushViewController({{controller}}Controller, animated: true)
+      }
+    {% endfor %}
+}
+
+// MARK: - Factories
+
+// Extension is internal to be accessible from test target
+extension {{Name}}NavigationCoordinating {
+  {% for controller in controllers %}
+      func make{{controller|pascalCased}}ViewController() -> {{controller|pascalCased}}ViewController {
+        let viewController = R.storyboard.{{controller|camelCased}}ViewController.instantiateInitialViewController(
+            viewModel: resolve({{controller|pascalCased}}ViewModel.self)
+        )
+
+        viewController.coordinator = self
+
+        return viewController
+    }
+  {% endfor %}
+}
