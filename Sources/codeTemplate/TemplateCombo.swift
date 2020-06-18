@@ -28,7 +28,7 @@ public enum TemplateCombo {
             try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithTableView), context: context, deleteGenerated: true)
             try Generator.shared.generate(generationMode: .template(.viewModelRxSwiftWithTableView), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template(.viewModelAssembly), context: context, deleteGenerated: false)
-            try Generator.shared.generate(generationMode: .template(.tableViewSectionType), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.rxDataSourcesSectionType), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template(.storyboardViewControllerWithTableView), context: context, deleteGenerated: false)
 
             if context["sectionHeader"] != nil {
@@ -46,7 +46,7 @@ public enum TemplateCombo {
             try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithCollectionView), context: context, deleteGenerated: true)
             try Generator.shared.generate(generationMode: .template(.viewModelRxSwiftWithCollectionView), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template(.viewModelAssembly), context: context, deleteGenerated: false)
-            try Generator.shared.generate(generationMode: .template(.collectionViewSectionType), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.rxDataSourcesSectionType), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template(.storyboardViewControllerWithCollectionView), context: context, deleteGenerated: false)
 
             if context["sectionHeader"] != nil {

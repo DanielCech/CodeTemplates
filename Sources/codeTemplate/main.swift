@@ -1,8 +1,8 @@
+import Files
 import Foundation
+import Moderator
 import ScriptToolkit
 import Stencil
-import Moderator
-import Files
 
 /*
  name - the name of created item (decapitalized)
@@ -22,9 +22,6 @@ import Files
  Screen - the name of generated screen; used in combination with cell name
  */
 
-var projectPath: String
-var scenePath: String
-
 // =======================================================
 // MARK: - Main script
 
@@ -32,7 +29,7 @@ let moderator = Moderator(description: "Generates a swift app components from te
 moderator.usageFormText = "codeTemplate <params>"
 
 let description = moderator.add(Argument<String?>
-.optionWithValue("context", name: "Context", description: "JSON file with template context"))
+    .optionWithValue("context", name: "Context", description: "JSON file with template context"))
 
 do {
     try moderator.parse()
@@ -40,37 +37,30 @@ do {
         print(moderator.usagetext)
         exit(0)
     }
-    
+
     print("⌚️ Processing")
-    
+
     let contextFile = try File(path: unwrappedDescription)
     let contextString = try contextFile.readAsString(encodedAs: .utf8)
     let contextData = Data(contextString.utf8)
-   
+
     // make sure this JSON is in the format we expect
     guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
         throw ScriptError.generalError(message: "Deserialization error")
     }
-    
-    if let unwrappedProjectPath = context["projectPath"] as? String,
-        let unwrappedScenePath = context["scenePath"] as? String {
-        Paths.projectPath = unwrappedProjectPath
-        Paths.scenePath = unwrappedProjectPath.appendingPathComponent(path: unwrappedScenePath)
-    }
-    else {
-        throw ScriptError.moreInfoNeeded(message: "projectPath and/or scenePath is missing")
-    }
-    
+
+    try Paths.setupPaths(context: context)
+
     let modifiedContext = Generator.shared.updateContext(context)
     try Generator.shared.generate(
         generationMode: .template(.coordinatorNavigation),
         context: modifiedContext,
         reviewMode: .individual,
-        deleteGenerated: false)
-    
+        deleteGenerated: false
+    )
+
     print("✅ Done")
-}
-catch {
+} catch {
     if let printableError = error as? PrintableError { print(printableError.errorDescription) }
     else {
         print(error.localizedDescription)
@@ -78,4 +68,3 @@ catch {
 
     exit(Int32(error._code))
 }
-

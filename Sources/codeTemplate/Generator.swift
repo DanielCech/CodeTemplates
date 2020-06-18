@@ -37,7 +37,7 @@ class Generator {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateType.rawValue)
+            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateType.category.rawValue).subfolder(at: templateType.rawValue)
 
             let projectFolder = try Folder(path: templateType.basePath())
 

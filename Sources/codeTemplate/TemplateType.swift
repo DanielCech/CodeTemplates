@@ -47,26 +47,65 @@ public enum TemplateType: String {
     // Views
     case view
 
-    // XIBs
-    case xibView
-
     // Coordinators
     case coordinator
     case coordinatorNavigation
 
     // Section types
-    case tableViewSectionType
-    case collectionViewSectionType
+    case rxDataSourcesSectionType
 
     // Common parts
     case viewModelAssembly
 
+    var category: TemplateCategory {
+        switch self {
+        case .viewControllerBasic, .viewControllerRxSwift, .viewControllerRxSwiftWithTableView, .viewControllerRxSwiftWithCollectionView:
+            return .viewController
+
+        case .viewModelBasic, .viewModelRxSwift, .viewModelRxSwiftWithTableView, .viewModelRxSwiftWithCollectionView:
+            return .viewModel
+
+        case .tableViewCell,.tableViewCellRxSwift:
+            return .tableViewCell
+
+        case .tableViewSectionHeader:
+            return .tableViewSectionHeader
+
+        case .tableViewCellViewModel,.tableViewCellViewModelRxSwift:
+            return .tableViewCellViewModel
+
+        case .collectionViewCell, .collectionViewCellRxSwift:
+            return .collectionViewCell
+
+        case .collectionViewCellViewModel, .collectionViewCellViewModelRxSwift:
+            return .collectionViewCellViewModel
+
+        case .storyboardViewController, .storyboardViewControllerWithTableView, .storyboardViewControllerWithCollectionView:
+            return .storyboard
+
+        case .view:
+            return .view
+
+        case .coordinator, .coordinatorNavigation:
+            return .coordinator
+
+        case .rxDataSourcesSectionType:
+            return .rxDataSourcesSectionType
+
+        case .viewModelAssembly:
+            return .viewModelAssembly
+
+        @unknown default:
+            fatalError("Uncategorized template: \(self)")
+        }
+    }
+
     func basePath() -> String {
         switch self {
         case .viewModelAssembly:
-            return projectPath
+            return Paths.projectPath
         default:
-            return scenePath
+            return Paths.scenePath
         }
     }
 }
