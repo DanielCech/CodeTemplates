@@ -18,6 +18,7 @@ import Stencil
  oldCollectionViewCells - already defined collection view cells
  newCollectionViewCells - collection view cells that need to be generated
  collectionViewCells - all collection view cells together
+ tableContentFromAPI - loads table content from API
  whiteCellSelection - table views has white selected state (touch is not visible)
  Screen - the name of generated screen; used in combination with cell name
  */

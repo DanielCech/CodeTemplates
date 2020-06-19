@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,7 +21,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" name="App Colors/dashboardBackground"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="YXc-0P-bSo" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" id="MNA-aa-vzy"/>
                             <constraint firstItem="YXc-0P-bSo" firstAttribute="trailing" secondItem="AoL-UG-IwY" secondAttribute="trailing" id="UWd-vg-d3p"/>
@@ -34,7 +33,7 @@
                     <tabBarItem key="tabBarItem" title="Item" image="dashboardTabBarIconGrayed" selectedImage="dashboardTabBarIconSelected" id="c12-uN-0SK"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="{{Name}}TableView" destination="YXc-0P-bSo" id="8JG-oI-Dxn"/>
+                        <outlet property="{{name}}TableView" destination="YXc-0P-bSo" id="8JG-oI-Dxn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kdE-uS-H20" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -45,8 +44,5 @@
     <resources>
         <image name="dashboardTabBarIconGrayed" width="24" height="24"/>
         <image name="dashboardTabBarIconSelected" width="23" height="23"/>
-        <namedColor name="App Colors/dashboardBackground">
-            <color red="0.97647058823529409" green="0.96862745098039216" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
     </resources>
 </document>

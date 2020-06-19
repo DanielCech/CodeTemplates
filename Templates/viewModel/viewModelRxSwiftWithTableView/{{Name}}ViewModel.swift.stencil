@@ -39,18 +39,26 @@ extension {{Name}}ViewModel {
     }
 
     func transform(input: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+      {% if tableContentFromAPI %}
         let {{name}}Output = input.viewWillAppear
             .flatMap {
                 self.apiService.fetch{{Name}}()
             }
             .map { response -> [{{Name}}SectionModel] in
                 let sections: [{{Name}}SectionModel] = [
-                 
+
                 ]
                 return sections
             }
             .asDriverLogError()
 
         return Output({{name}}Sections: {{name}}Output)
+        {% else %}
+        let items: [{{Name}}Section] = []
+        let models: [{{Name}}SectionModel] = [{{Name}}SectionModel(model: nil, items: items)]
+        let {{name}}Output = Driver<[{{Name}}SectionModel]>.just(models)
+
+        return Output({{name}}Sections: {{name}}Output)
+        {% endif %}
     }
 }
