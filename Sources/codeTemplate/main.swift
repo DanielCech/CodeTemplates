@@ -31,6 +31,9 @@ moderator.usageFormText = "codeTemplate <params>"
 let description = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
 
+let reviewMode = moderator.add(Argument<String?>
+    .optionWithValue("review", name: "Result review mode", description: "Possible values: none, individual, overall"))
+
 do {
     try moderator.parse()
     guard let unwrappedDescription = description.value else {
@@ -49,11 +52,20 @@ do {
         throw ScriptError.generalError(message: "Deserialization error")
     }
 
+    let generationMode: GenerationMode
+    if let unwrappedTemplate = context["template"] as? String, let templateType = TemplateType(rawValue: unwrappedTemplate) {
+        generationMode = .template(templateType)
+    } else if let unwrappedTemplateCombo = context["templateCombo"] as? String, let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) {
+        generationMode = .combo(comboType)
+    } else {
+        throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
+    }
+
     try Paths.setupPaths(context: context)
 
     let modifiedContext = Generator.shared.updateContext(context)
     try Generator.shared.generate(
-        generationMode: .template(.coordinatorNavigation),
+        generationMode: generationMode,
         context: modifiedContext,
         reviewMode: .individual,
         deleteGenerated: false

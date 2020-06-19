@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum TemplateCombo {
+public enum TemplateCombo: String {
     // Scenes
     case scene
     case sceneControllerRxSwift

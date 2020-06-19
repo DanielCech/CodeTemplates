@@ -47,7 +47,7 @@ class Generator {
             try comboType.perform(context: context)
         }
 
-        shell("/usr/local/bin/swiftformat \"\(Paths.scriptPath)\"")
+        shell("/usr/local/bin/swiftformat \"\(Paths.scriptPath)\" > /dev/null 2>&1")
 
         try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
     }

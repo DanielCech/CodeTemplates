@@ -12,8 +12,8 @@ public typealias ProcessedFile = (templateFile: String, generatedFile: String, p
 
 public enum ReviewMode {
     case none
-    case overall
     case individual
+    case overall
 }
 
 public enum GenerationMode {
