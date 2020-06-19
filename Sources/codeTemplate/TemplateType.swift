@@ -94,9 +94,6 @@ public enum TemplateType: String {
 
         case .viewModelAssembly:
             return .viewModelAssembly
-
-        @unknown default:
-            fatalError("Uncategorized template: \(self)")
         }
     }
 
