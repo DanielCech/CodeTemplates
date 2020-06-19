@@ -61,13 +61,33 @@ class Generator {
 
         modifiedContext["date"] = dateFormatter.string(from: Date())
 
-        if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String], let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
-            modifiedContext["tableViewCells"] = unwrappedOldTableViewCells + unwrappedNewTableViewCells
+        // Table view cells
+
+        var tableViewCells = [String]()
+
+        if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String] {
+            tableViewCells.append(contentsOf: unwrappedOldTableViewCells)
         }
 
-        if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String], let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
-            modifiedContext["collectionViewCells"] = unwrappedOldCollectionViewCells + unwrappedNewCollectionViewCells
+        if let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
+            tableViewCells.append(contentsOf: unwrappedNewTableViewCells)
         }
+
+        modifiedContext["tableViewCells"] = tableViewCells
+
+        // Collection view cells
+
+        var collectionViewCells = [String]()
+
+        if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String] {
+            collectionViewCells.append(contentsOf: unwrappedOldCollectionViewCells)
+        }
+
+        if let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
+            collectionViewCells.append(contentsOf: unwrappedNewCollectionViewCells)
+        }
+
+        modifiedContext["collectionViewCells"] = collectionViewCells
 
         modifiedContext["Screen"] = modifiedContext["Name"]
 
