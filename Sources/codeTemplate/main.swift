@@ -32,13 +32,18 @@ let description = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
 
 let reviewMode = moderator.add(Argument<String?>
-    .optionWithValue("review", name: "Result review mode", description: "Possible values: none, individual, overall"))
+    .optionWithValue("review", name: "Result review mode", description: "Possible values: none, individual, overall").default("individual"))
 
 do {
     try moderator.parse()
+
     guard let unwrappedDescription = description.value else {
         print(moderator.usagetext)
         exit(0)
+    }
+
+    guard let reviewMode = ReviewMode(rawValue: reviewMode.value) else {
+        throw ScriptError.argumentError(message: "invalid review mode")
     }
 
     print("⌚️ Processing")
@@ -67,7 +72,7 @@ do {
     try Generator.shared.generate(
         generationMode: generationMode,
         context: modifiedContext,
-        reviewMode: .individual,
+        reviewMode: reviewMode,
         deleteGenerated: false
     )
 

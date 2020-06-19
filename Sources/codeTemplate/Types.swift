@@ -10,7 +10,7 @@ import Foundation
 public typealias Context = [String: Any]
 public typealias ProcessedFile = (templateFile: String, generatedFile: String, projectFile: String?)
 
-public enum ReviewMode {
+public enum ReviewMode: String {
     case none
     case individual
     case overall
