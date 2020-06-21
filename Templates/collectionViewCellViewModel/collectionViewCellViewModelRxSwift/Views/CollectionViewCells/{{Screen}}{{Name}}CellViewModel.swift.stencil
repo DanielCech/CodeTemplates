@@ -1,0 +1,29 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+
+final class {{Name}}ViewModel: ViewModelType {
+    // MARK: Private properties
+    private let apiService: AppServicing
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(apiService: AppServicing) {
+        self.apiService = apiService
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    
+}

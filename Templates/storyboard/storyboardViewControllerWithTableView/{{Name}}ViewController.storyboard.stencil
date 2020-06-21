@@ -11,7 +11,7 @@
         <!--Item-->
         <scene sceneID="T4r-JI-9Pv">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="JmO-xe-2y7" customClass="{{Name}}ViewController" customModule="Harbor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="JmO-xe-2y7" customClass="{{Name}}ViewController" customModule="{{projectName}}" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7gN-ag-HZR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -30,7 +30,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="AoL-UG-IwY"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="dashboardTabBarIconGrayed" selectedImage="dashboardTabBarIconSelected" id="c12-uN-0SK"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="{{name}}TableView" destination="YXc-0P-bSo" id="8JG-oI-Dxn"/>
@@ -41,8 +40,4 @@
             <point key="canvasLocation" x="-72" y="106"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="dashboardTabBarIconGrayed" width="24" height="24"/>
-        <image name="dashboardTabBarIconSelected" width="23" height="23"/>
-    </resources>
 </document>

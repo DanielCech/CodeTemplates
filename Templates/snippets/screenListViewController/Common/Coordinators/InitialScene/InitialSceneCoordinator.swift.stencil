@@ -1,0 +1,133 @@
+//
+//  InitialSceneCoordinator.swift
+//  Harbor
+//
+//  Created by Jan on 01/05/2020.
+//  Copyright © 2020 STRV. All rights reserved.
+//
+
+import Swinject
+import UIKit
+
+final class InitialSceneCoordinator {
+    // MARK: Public properties
+    var childCoordinators = [Coordinator]()
+
+    let assembler: Assembler
+    let window: UIWindow
+
+    var dismissCallback: VoidClosure<Coordinator>?
+
+    // MARK: Lifecycle
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        print("Deinit \(self)")
+    }
+
+    init(window: UIWindow, assembler: Assembler) {
+        self.window = window
+        self.assembler = assembler
+
+        setupNotifications()
+    }
+
+    func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(logoutUser), name: .logoutNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showScreenList), name: .shakeGestureNotification, object: nil)
+    }
+}
+
+// MARK: - SceneCoordinating
+
+extension InitialSceneCoordinator: InitialSceneCoordinating, AuthenticationCoordinating {
+    func start() {
+        let initViewController: UIViewController
+
+        // onboarding first
+        let userDefaultsManager = resolve(UserDefaultsManaging.self)
+
+        if !userDefaultsManager.appOnboardingShown {
+            initViewController = makeAppOnboardingViewController() // app onboarding
+        } else {
+            let keychainManager = resolve(KeychainManaging.self)
+
+            if keychainManager.accessToken == nil {
+                initViewController = makeAuthenticationViewController() // show login screen
+            } else {
+                initViewController = makeMainTabBarViewController() // show main screen
+            }
+        }
+
+        window.rootViewController = initViewController
+        window.makeKeyAndVisible()
+    }
+
+    func showAuthenticationFlow() {
+        window.rootViewController = makeAuthenticationViewController()
+        window.makeKeyAndVisible()
+    }
+}
+
+// MARK: - Factories
+
+private extension InitialSceneCoordinator {
+    func makeMainTabBarViewController() -> MainTabBarController {
+        let mainTabBarController = MainTabBarController()
+
+        let mainTabBarCoordinator = MainTabBarCoordinator(tabBarController: mainTabBarController, assembler: assembler)
+        mainTabBarCoordinator.start()
+        childCoordinators.append(mainTabBarCoordinator)
+
+        return mainTabBarController
+    }
+
+    func makeAppOnboardingViewController() -> UINavigationController {
+        let navigationController = UINavigationController()
+        let appOnboardingCoordinator = AppOnboardingNavigationCoordinator(navigationController: navigationController, assembler: assembler)
+        appOnboardingCoordinator.dismissCallback = { [weak self] coordinator in
+            guard let self = self else {
+                return
+            }
+            self.window.rootViewController = self.makeMainTabBarViewController()
+            self.removeCoordinator(coordinator: coordinator)
+        }
+        appOnboardingCoordinator.start()
+        childCoordinators.append(appOnboardingCoordinator)
+        return navigationController
+    }
+
+    func makeAuthenticationViewController() -> UINavigationController {
+        let authenticationCoordinator = makeAuthenticationNavigationCoordinator { [weak self] coordinator in
+            guard let self = self else {
+                return
+            }
+            self.window.rootViewController = self.makeMainTabBarViewController()
+            self.removeCoordinator(coordinator: coordinator)
+        }
+
+        return authenticationCoordinator.navigationController
+    }
+}
+
+// MARK: - Notifications
+
+private extension InitialSceneCoordinator {
+    @objc func logoutUser() {
+        showAuthenticationFlow()
+    }
+}
+
+// For debug purposes only
+private extension InitialSceneCoordinator {
+    @objc func showScreenList() {
+        let coordinator = DebugNavigationCoordinator(
+            navigationController: UINavigationController(),
+            assembler: assembler
+        )
+        coordinator.start()
+        childCoordinators.append(coordinator)
+        window.rootViewController = coordinator.rootViewController
+        window.makeKeyAndVisible()
+    }
+}

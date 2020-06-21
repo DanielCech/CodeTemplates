@@ -1,0 +1,48 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import Swinject
+import UIKit
+
+protocol DebugNavigationCoordinating: NavigationControllerCoordinator, ShowActivityCoordinating {}
+
+final class DebugNavigationCoordinator {
+    // MARK: Public properties
+    var childCoordinators = [Coordinator]()
+    let assembler: Assembler
+
+    let navigationController: UINavigationController
+
+    var dismissCallback: VoidClosure<Coordinator>?
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(navigationController: UINavigationController, assembler: Assembler) {
+        self.navigationController = navigationController
+        self.assembler = assembler
+    }
+}
+
+extension DebugNavigationCoordinator: DebugNavigationCoordinating {
+    func start() {
+        guard let viewController = createScreenListController() else {
+            return
+        }
+        navigationController.pushViewController(viewController, animated: false)
+    }
+
+    func createScreenListController() -> ScreenListViewController? {
+        let viewController = R.storyboard.screenListViewController().instantiateInitialViewController() as? ScreenListViewController
+        viewController?.coordinator = self
+        return viewController
+    }
+}

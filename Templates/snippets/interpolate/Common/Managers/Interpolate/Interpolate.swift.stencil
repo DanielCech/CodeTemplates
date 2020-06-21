@@ -1,0 +1,51 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import UIKit
+
+/// Interpolate class computes linear interpolation of values between defined points. It can be useful for example when you need to specify different font size for different iPhone screen sizes. Using adaptive fonts in Accessibility framework is quite hard. Autolayout cant be often helpful here. But you can specify the font size `label.font = UIFont.systemFont(ofSize: Interpolate.toWidth(points: [.iPhone5Width: 20, .iPhoneXWidth: 28])` on iPhone5 screen and on iPhoneX screen. The values between will be computed. Sometimes it makes sense to compute the value based on screen with, sometimes is height better.
+enum Interpolate {
+    /// General purpose linear interpolation method
+    public static func interpolateValue(_ value: CGFloat, points: [CGFloat: CGFloat], roundValue: Bool = false) -> CGFloat {
+        var previousX: CGFloat?
+        var previousY: CGFloat?
+
+        let pointsArray = points.enumerated().map { $0.element }.sorted(by: { $0.key < $1.key })
+
+        for (valueX, valueY) in pointsArray {
+            // The value is outside defined bounds from left
+            if valueX > value, previousX == nil {
+                // Fallback to smallest value
+                return pointsArray.first?.value ?? 0
+            }
+
+            if let unwrappedPreviousX = previousX, let unwrappedPreviousY = previousY {
+                if valueX >= value, unwrappedPreviousX <= value {
+                    let result = unwrappedPreviousY + ((valueY - unwrappedPreviousY) / (valueX - unwrappedPreviousX)) * (value - unwrappedPreviousX)
+                    return roundValue ? round(result) : result
+                }
+            }
+
+            previousX = valueX
+            previousY = valueY
+        }
+
+        // Fallback to highest value, if value is outside defined bounds from right
+        return pointsArray.last?.value ?? 0
+    }
+
+    /// Interpolate value in relation to screen height
+    public static func toHeight(points: [CGFloat: CGFloat], roundValue: Bool = false) -> CGFloat {
+        return interpolateValue(UIScreen.screenHeight(), points: points, roundValue: roundValue)
+    }
+
+    /// Interpolate value in relation to screen width
+    public static func toWidth(points: [CGFloat: CGFloat], roundValue: Bool = false) -> CGFloat {
+        return interpolateValue(UIScreen.screenWidth(), points: points, roundValue: roundValue)
+    }
+}

@@ -22,6 +22,37 @@ class Generator {
         return formatter
     }()
 
+    func generateCode(contextFile: String, reviewMode: ReviewMode) throws {
+        let contextFile = try File(path: contextFile)
+            let contextString = try contextFile.readAsString(encodedAs: .utf8)
+            let contextData = Data(contextString.utf8)
+
+            // make sure this JSON is in the format we expect
+            guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
+                throw ScriptError.generalError(message: "Deserialization error")
+            }
+        
+            let generationMode: GenerationMode
+            if let unwrappedTemplate = context["template"] as? String, let templateType = TemplateType(rawValue: unwrappedTemplate) {
+                generationMode = .template(templateType)
+            } else if let unwrappedTemplateCombo = context["templateCombo"] as? String, let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) {
+                generationMode = .combo(comboType)
+            } else {
+                throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
+            }
+            
+            try Paths.setupPaths(context: context)
+
+            let modifiedContext = Generator.shared.updateContext(context)
+            try Generator.shared.generate(
+                generationMode: generationMode,
+                context: modifiedContext,
+                reviewMode: reviewMode,
+                deleteGenerated: false
+            )
+    }
+    
+    
     func generate(
         generationMode: GenerationMode,
         context: Context,

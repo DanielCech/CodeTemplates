@@ -1,0 +1,116 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import BonMot
+import UIKit
+
+// swiftlint:disable force_unwrapping
+
+enum Stylesheet {
+    enum Views {
+      case tamic // translatesAutoresizingMaskIntoConstraints
+
+        var style: ViewStyle {
+            switch self {
+              case .tamic:
+                return autolayoutStyle()
+            }
+        }
+    }
+
+    enum TextViews {
+      case termsOfUsage
+
+        var style: TextViewStyle {
+            switch self {
+            case .termsOfUsage:
+                return dissabledStyle()
+                    <> linkTextAttributesStyle(R.color.appColors.descriptionGray()!)
+            }
+        }
+    }
+
+    enum Labels {
+        case title
+
+        var style: LabelStyle {
+            switch self {
+            case .stepTitle:
+                return fontStyle(R.font.dmSerifDisplayRegular(size: 30)!)
+                    <> textColorStyle(R.color.appColors.harborBlack()!)
+            }
+        }
+    }
+
+    enum Buttons {
+        case base(NSAttributedString)
+
+        var style: ButtonStyle {
+            switch self {
+            case let .base(attributedString):
+                return titleInsetsStyle(insets: defaultTitleInset)
+                    <> backgroundImageStyle(image: R.image.greenButtonBg())
+                    <> tintStyle(color: .white)
+                    <> attributedTextStyle(attributedText: attributedString)
+            }
+        }
+    }
+
+    enum TextFields {
+        case baseInput
+        case emailInput
+        case passwordInput
+
+        var style: TextFieldStyle {
+            switch self {
+            case .baseInput:
+                return keyboardTypeStyle(.default)
+                    <> borderStyle(.none)
+                    <> autocapitalizationStyle(.none)
+                    <> bottomBorder(R.color.appColors.borderGray()!)
+                    <> textColorStyle(R.color.appColors.harborBlack()!)
+                    <> fontStyle(R.font.sfProTextRegular(size: 15)!)
+
+            case .emailInput:
+                return keyboardTypeStyle(.emailAddress)
+                    <> borderStyle(.none)
+                    <> placeholderStyle(R.string.localizable.authEmailPlaceholder())
+                    <> autocapitalizationStyle(.none)
+                    <> bottomBorder(R.color.appColors.borderGray()!)
+                    <> textColorStyle(R.color.appColors.harborBlack()!)
+                    <> fontStyle(R.font.sfProTextRegular(size: 15)!)
+
+            case .passwordInput:
+                return isSecureTextEntryStyle(true)
+                    <> borderStyle(.none)
+                    <> rightViewModeStyle(.always)
+                    <> keyboardTypeStyle(.default)
+                    <> placeholderStyle(R.string.localizable.authPasswordPlaceholder())
+                    <> autocapitalizationStyle(.none)
+                    <> bottomBorder(R.color.appColors.borderGray()!)
+                    <> textColorStyle(R.color.appColors.harborBlack()!)
+                    <> fontStyle(R.font.sfProTextRegular(size: 15)!)
+
+            }
+        }
+    }
+
+    enum TextStyles {
+        case commmonTextStyle
+
+        var style: TextStyle {
+            switch self {
+
+            case .commmonTextStyle:
+                return fontStyle(R.font.sfProTextRegular(size: 17)!)
+                    <> alignmentStyle(.left)
+                    <> colorStyle(R.color.appColors.harborBlack()!)
+            }
+        }
+    }
+}

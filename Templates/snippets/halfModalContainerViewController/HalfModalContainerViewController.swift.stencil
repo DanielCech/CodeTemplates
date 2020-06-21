@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 final class HalfModalContainerViewController: UIViewController {
+    
+    // MARK: Private Properties  
+    
     private lazy var backdropView: UIView = {
         let bdView = UIView(frame: self.view.bounds)
         bdView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
@@ -23,6 +26,8 @@ final class HalfModalContainerViewController: UIViewController {
 
     private let controller: UIViewController
 
+    // MARK: Lifecycle
+    
     init(controller: UIViewController, topCornerRadius: CGFloat = 10, panelHeight: CGFloat? = nil) {
         self.controller = controller
         self.topCornerRadius = topCornerRadius
@@ -50,6 +55,8 @@ final class HalfModalContainerViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
 }
+
+// MARK: - AnimatedTransitioning
 
 extension HalfModalContainerViewController: UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
     func animationController(forPresented _: UIViewController, presenting _: UIViewController, source _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -95,6 +102,8 @@ extension HalfModalContainerViewController: UIViewControllerTransitioningDelegat
         }
     }
 }
+
+// MARK: - Private Methods
 
 private extension HalfModalContainerViewController {
     func setupView() {

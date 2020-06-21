@@ -1,0 +1,42 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxSwift
+import UIKit
+
+class ScreenListViewController: UIViewController {
+    // MARK: IBOutlets
+
+    // MARK: Public Properties
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    weak var coordinator: DebugNavigationCoordinator!
+
+    // MARK: Private Properties
+
+    // MARK: Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupView()
+    }
+
+    // MARK: Button actions
+
+    @IBAction private func showActivityScreen(_: Any) {
+        
+    }
+}
+
+// MARK: Private Methods
+
+private extension ScreenListViewController {
+    func setupView() {}
+}

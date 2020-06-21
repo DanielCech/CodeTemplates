@@ -29,54 +29,44 @@ import Stencil
 let moderator = Moderator(description: "Generates a swift app components from templates")
 moderator.usageFormText = "codeTemplate <params>"
 
-let description = moderator.add(Argument<String?>
+let context = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
 
 let reviewMode = moderator.add(Argument<String?>
     .optionWithValue("review", name: "Result review mode", description: "Possible values: none, individual, overall").default("individual"))
 
+let updateTeplates = moderator.add(Argument<String?>
+    .optionWithValue("updateTemplates", name: "Trigger template updates based on teplate dependencies", description: "Possible values: all, new. Parameter scriptPath needs to be specified too."))
+
+let scriptPath = moderator.add(Argument<String?>
+    .optionWithValue("scriptPath", name: "Path parameter", description: "The path to codeTemplate script with Generated and Templates folder"))
+
+var programMode: ProgramMode
+
 do {
     try moderator.parse()
+    
+    print("⌚️ Processing")
 
-    guard let unwrappedDescription = description.value else {
+    if let contextFile = context.value {
+        guard let reviewMode = ReviewMode(rawValue: reviewMode.value) else {
+            throw ScriptError.argumentError(message: "invalid review mode")
+        }
+        
+        try Generator.shared.generateCode(contextFile: contextFile, reviewMode: reviewMode)
+    }
+    else if
+        let unwrappedUpdateModeString = updateTeplates.value,
+        let updateMode = UpdateTemplateMode(rawValue: unwrappedUpdateModeString),
+        let unwrappedScriptpath = scriptPath.value
+    {
+        try TemplateUpdater.shared.updateTemplates(updateMode: updateMode, scriptPath: unwrappedScriptpath)
+    }
+    else {
         print(moderator.usagetext)
         exit(0)
     }
-
-    guard let reviewMode = ReviewMode(rawValue: reviewMode.value) else {
-        throw ScriptError.argumentError(message: "invalid review mode")
-    }
-
-    print("⌚️ Processing")
-
-    let contextFile = try File(path: unwrappedDescription)
-    let contextString = try contextFile.readAsString(encodedAs: .utf8)
-    let contextData = Data(contextString.utf8)
-
-    // make sure this JSON is in the format we expect
-    guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
-        throw ScriptError.generalError(message: "Deserialization error")
-    }
-
-    let generationMode: GenerationMode
-    if let unwrappedTemplate = context["template"] as? String, let templateType = TemplateType(rawValue: unwrappedTemplate) {
-        generationMode = .template(templateType)
-    } else if let unwrappedTemplateCombo = context["templateCombo"] as? String, let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) {
-        generationMode = .combo(comboType)
-    } else {
-        throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
-    }
-
-    try Paths.setupPaths(context: context)
-
-    let modifiedContext = Generator.shared.updateContext(context)
-    try Generator.shared.generate(
-        generationMode: generationMode,
-        context: modifiedContext,
-        reviewMode: reviewMode,
-        deleteGenerated: false
-    )
-
+    
     print("✅ Done")
 } catch {
     if let printableError = error as? PrintableError { print(printableError.errorDescription) }

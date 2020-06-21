@@ -1,0 +1,63 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxSwift
+import UIKit
+
+final class {{Name}}ViewController: UIViewController, ViewModelContaining {
+    // MARK: IBOutlets
+    @IBOutlet private var button: UIButton!
+
+    // MARK: Public Properties
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    weak var coordinator: {{Name}}NavigationCoordinating!
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var viewModel: {{Name}}ViewModel!
+    var disposeBag: DisposeBag = DisposeBag()
+
+    // MARK: Private Properties
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupView()
+    }
+}
+
+// MARK: - Binding
+
+extension {{Name}}ViewController {
+    func bindToViewModel() {
+        let input = {{Name}}ViewModel.Input()
+        let output = viewModel.transform(input: input)
+    }
+
+    func bindToCoordinator() {
+        button.rx.tap.asObservable().subscribeNext { [weak self] _ in
+
+        }.disposed(by: disposeBag)
+    }
+}
+
+// MARK: - Private Methods
+
+private extension {{Name}}ViewController {
+    func setupView() {
+        bindToViewModel()
+        bindToCoordinator()
+    }
+}
