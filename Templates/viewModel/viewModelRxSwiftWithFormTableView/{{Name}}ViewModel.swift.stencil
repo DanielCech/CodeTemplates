@@ -1,0 +1,135 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+
+typealias {{Name}}SectionModel = SectionModel<String?, {{Name}}Section>
+
+final class {{Name}}ViewModel: ViewModelType {
+    {% if controllerMode %}
+    enum ControllerMode {
+        case addFamilyContact
+        case addOtherContact
+        case editFamilyContact(EmergencyContactResponse)
+        case editOtherContact(EmergencyContactResponse)
+    }
+    {% endif %}
+
+    // MARK: Public properties
+    var updateTableClosure: EmptyClosure?
+
+    // MARK: Private properties
+    private let apiService: AppServicing
+    private let disposeBag = DisposeBag()
+
+    // swiftlint:disable implicitly_unwrapped_optional
+    //private var contactTypeViewModel: TextFieldTableViewCellModel!
+
+    {% if controllerMode %}
+    private(set) var controllerMode: ControllerMode
+    {% endif %}
+
+    private var contact: EmergencyContactResponse?
+    private var emergencyContactType: EmergencyContactType
+
+    private var leaveScreenSubject = PublishSubject<Void>()
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(
+      apiService: AppServicing,
+      {% if controllerMode %}
+      controllerMode: ControllerMode
+      {% endif %}
+    ) {
+        self.apiService = apiService
+        {% if controllerMode %}
+        self.controllerMode = controllerMode
+        {% endif %}
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {
+        let viewWillAppear: Observable<Void>
+        let saveTapped: Observable<Void>
+        let deleteTapped: Observable<Void>
+    }
+
+    struct Output {
+        let {{name}}Sections: Driver<[{{Name}}SectionModel]>
+        let correctInput: Driver<Bool>
+        let leaveScreen: Driver<Void>
+    }
+
+    func transform(input: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+        var viewModels = [
+            firstAndLastNameViewModel
+        ]
+
+        // swiftlint:disable force_unwrapping
+        let items: [{{Name}}Section] = viewModels.map { .textField($0!) }
+
+        let models: [{{Name}}SectionModel] = [{{Name}}SectionModel(model: nil, items: items)]
+        let {{name}}Output = Driver<[{{Name}}SectionModel]>.just(models)
+
+        input.saveTapped
+            .subscribeNext { [weak self] _ in
+                self?.saveChanges()
+            }
+            .disposed(by: disposeBag)
+
+        input.deleteTapped
+            .subscribeNext { [weak self] _ in
+                self?.deleteEmergencyContact()
+            }
+            .disposed(by: disposeBag)
+
+        let correctInput = Observable
+            .combineLatest(viewModels.map { $0!.validationStatus })
+            .map { statuses in
+                statuses.allSatisfy { $0 == .normal || $0 == .validated }
+            }
+
+        return Output(
+            {{name}}Sections: {{name}}Output,
+            correctInput: correctInput.asDriverOnErrorJustComplete(),
+            leaveScreen: leaveScreenSubject.asDriverOnErrorJustComplete()
+        )
+    }
+}
+
+// MARK: Cell view models setup
+
+extension {{Name}}ViewModel {
+    func setupViewModels() {
+
+        var stateName: String?
+        if let unwrappedStateId = contact?.address.stateId {
+            stateName = State.stateName(forId: unwrappedStateId)
+        }
+
+        contactTypeViewModel = TextFieldTableViewCellModel(
+            title: R.string.localizable.editContactContactTypeDescription(),
+            placeholder: R.string.localizable.editContactContactTypeDescriptionPlaceholder(),
+            text: contact?.contactTypeDescription ?? "",
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .none,
+            updateTableClosure: updateTableClosure
+        )
+    }
+}

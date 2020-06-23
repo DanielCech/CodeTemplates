@@ -22,8 +22,8 @@ public enum GenerationMode {
 }
 
 public enum UpdateTemplateMode: String {
-    case all    // update all templates
-    case new    // update only when parent template modification date is newer than child template modification date
+    case all // update all templates
+    case new // update only when parent template modification date is newer than child template modification date
 }
 
 public enum ProgramMode {

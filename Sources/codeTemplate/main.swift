@@ -45,28 +45,25 @@ var programMode: ProgramMode
 
 do {
     try moderator.parse()
-    
+
     print("⌚️ Processing")
 
     if let contextFile = context.value {
         guard let reviewMode = ReviewMode(rawValue: reviewMode.value) else {
             throw ScriptError.argumentError(message: "invalid review mode")
         }
-        
+
         try Generator.shared.generateCode(contextFile: contextFile, reviewMode: reviewMode)
-    }
-    else if
+    } else if
         let unwrappedUpdateModeString = updateTeplates.value,
         let updateMode = UpdateTemplateMode(rawValue: unwrappedUpdateModeString),
-        let unwrappedScriptpath = scriptPath.value
-    {
+        let unwrappedScriptpath = scriptPath.value {
         try TemplateUpdater.shared.updateTemplates(updateMode: updateMode, scriptPath: unwrappedScriptpath)
-    }
-    else {
+    } else {
         print(moderator.usagetext)
         exit(0)
     }
-    
+
     print("✅ Done")
 } catch {
     if let printableError = error as? PrintableError { print(printableError.errorDescription) }

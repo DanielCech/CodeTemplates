@@ -1,4 +1,4 @@
-//
+  //
 //  {{fileName}}
 //  {{projectName}}
 //
@@ -6,6 +6,8 @@
 //  {{copyright}}
 //
 
+import RxCocoa
+import RxSwift
 import UIKit
 
 final class {{Name}}ViewController: UIViewController, ViewModelContaining {
@@ -19,6 +21,7 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var viewModel: {{Name}}ViewModel!
+    var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: Private Properties
 
@@ -39,11 +42,14 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
 
 extension {{Name}}ViewController {
     func bindToViewModel() {
-        
+        let input = {{Name}}ViewModel.Input()
+        let output = viewModel.transform(input: input)
     }
 
     func bindToCoordinator() {
-        
+        button.rx.tap.asObservable().subscribeNext { [weak self] _ in
+
+        }.disposed(by: disposeBag)
     }
 }
 

@@ -10,7 +10,7 @@ import RxCocoa
 import RxSwift
 import UIKit
 
-final class {{Screen}}{{Name}}ViewCell: UICollectionViewCell, NibLoadableView {
+final class { { Screen } } { { Name } } ViewCell: UICollectionViewCell, NibLoadableView {
     // MARK: IBOutlets
 
     override func awakeFromNib() {
@@ -19,8 +19,6 @@ final class {{Screen}}{{Name}}ViewCell: UICollectionViewCell, NibLoadableView {
     }
 }
 
-extension {{Screen}}{{Name}}ViewCell {
-    func setup() {
-
-    }
+extension { { Screen } } { { Name } } ViewCell {
+    func setup() {}
 }

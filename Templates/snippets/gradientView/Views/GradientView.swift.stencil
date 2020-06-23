@@ -1,0 +1,41 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import UIKit
+
+/// common view for simple gradient
+final class GradientView: UIView {
+    private var gradientLayer: CALayer?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer?.frame = bounds
+    }
+
+    func setGradient(color1: UIColor, color2: UIColor) {
+        // reset
+        self.gradientLayer?.removeFromSuperlayer()
+        self.gradientLayer = nil
+
+        // set
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = [color1.cgColor, color2.cgColor]
+        layer.addSublayer(gradientLayer)
+
+        self.gradientLayer = gradientLayer
+    }
+}

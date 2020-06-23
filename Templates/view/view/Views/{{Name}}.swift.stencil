@@ -1,0 +1,20 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import UIKit
+
+final class {{Name}}: UIView, NibLoadableView {
+    // MARK: - IBOutlets
+
+    // MARK: - Lifecycle
+}
+
+// MARK: - Public Methods
+extension {{Name}} {
+    func setup() {}
+}

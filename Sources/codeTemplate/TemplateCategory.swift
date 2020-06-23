@@ -36,7 +36,7 @@ public enum TemplateCategory: String {
 
     // Common parts
     case viewModelAssembly
-    
+
     // Code snippets
     case snippets
 }

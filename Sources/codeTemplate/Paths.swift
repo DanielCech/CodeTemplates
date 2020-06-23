@@ -24,7 +24,12 @@ class Paths {
         }
 
         if let unwrappedScenePath = context["scenePath"] as? String {
-            Paths.scenePath = Paths.projectPath.appendingPathComponent(path: unwrappedScenePath)
+            // If path is absolute
+            if unwrappedScenePath.starts(with: "/") {
+                Paths.scenePath = unwrappedScenePath
+            } else {
+                Paths.scenePath = Paths.projectPath.appendingPathComponent(path: unwrappedScenePath)
+            }
         } else {
             throw ScriptError.moreInfoNeeded(message: "scenePath is missing")
         }

@@ -12,17 +12,20 @@ public enum TemplateType: String, CaseIterable {
     case viewControllerBasic
     case viewControllerRxSwift
     case viewControllerRxSwiftWithTableView
+    case viewControllerRxSwiftWithFormTableView
     case viewControllerRxSwiftWithCollectionView
 
     // View Models
     case viewModelBasic
     case viewModelRxSwift
     case viewModelRxSwiftWithTableView
+    case viewModelRxSwiftWithFormTableView
     case viewModelRxSwiftWithCollectionView
 
     // Table View Cells
     case tableViewCell
     case tableViewCellRxSwift
+    case textFieldTableViewCellRxSwift
 
     // Table View Section Header
     case tableViewSectionHeader
@@ -56,22 +59,23 @@ public enum TemplateType: String, CaseIterable {
 
     // Common parts
     case viewModelAssembly
-    
+
     // Snippets
     case halfModalContainerViewController
+    case halfModalContainerViewControllerRxSwift
     case interpolate
     case screenListViewController
     case stylesheet
 
     var category: TemplateCategory {
         switch self {
-        case .viewControllerBasic, .viewControllerRxSwift, .viewControllerRxSwiftWithTableView, .viewControllerRxSwiftWithCollectionView:
+        case .viewControllerBasic, .viewControllerRxSwift, .viewControllerRxSwiftWithTableView, .viewControllerRxSwiftWithCollectionView, .viewControllerRxSwiftWithFormTableView:
             return .viewController
 
-        case .viewModelBasic, .viewModelRxSwift, .viewModelRxSwiftWithTableView, .viewModelRxSwiftWithCollectionView:
+        case .viewModelBasic, .viewModelRxSwift, .viewModelRxSwiftWithTableView, .viewModelRxSwiftWithFormTableView, .viewModelRxSwiftWithCollectionView:
             return .viewModel
 
-        case .tableViewCell,.tableViewCellRxSwift:
+        case .tableViewCell, .tableViewCellRxSwift, .textFieldTableViewCellRxSwift:
             return .tableViewCell
 
         case .tableViewSectionHeader:
@@ -100,8 +104,8 @@ public enum TemplateType: String, CaseIterable {
 
         case .viewModelAssembly:
             return .viewModelAssembly
-            
-        case .halfModalContainerViewController, .interpolate, .screenListViewController, .stylesheet:
+
+        case .halfModalContainerViewController, .halfModalContainerViewControllerRxSwift, .interpolate, .screenListViewController, .stylesheet:
             return .snippets
         }
     }
@@ -119,21 +123,23 @@ public enum TemplateType: String, CaseIterable {
 var templateDependencies: [TemplateType: [TemplateType]] = [
     // View
     .view: [.tableViewCell, .tableViewSectionHeader, .collectionViewCell],
-    
+
     // View Controllers
-    .viewControllerBasic: [.viewControllerRxSwift, .halfModalContainerViewController, .screenListViewController],
+    .viewControllerBasic: [.viewControllerRxSwift, .halfModalContainerViewController, .halfModalContainerViewControllerRxSwift, .screenListViewController],
     .viewControllerRxSwift: [.viewControllerRxSwiftWithTableView, .viewControllerRxSwiftWithCollectionView],
-    
+    .viewControllerRxSwiftWithTableView: [.viewControllerRxSwiftWithFormTableView],
+
     // View Models
     .viewModelBasic: [.viewModelRxSwift, .tableViewCellViewModel, .collectionViewCellViewModel],
     .viewModelRxSwift: [.viewModelRxSwiftWithTableView, .viewModelRxSwiftWithCollectionView, .tableViewCellViewModelRxSwift, .collectionViewCellViewModelRxSwift],
-    
+
     // Table View Cells
     .tableViewCell: [.tableViewCellRxSwift],
-    
+    .tableViewCellRxSwift: [.textFieldTableViewCellRxSwift],
+
     // Collection View Cells
     .collectionViewCell: [.collectionViewCellRxSwift],
-    
+
     // Coordinators
     .coordinator: [.coordinatorNavigation],
 ]

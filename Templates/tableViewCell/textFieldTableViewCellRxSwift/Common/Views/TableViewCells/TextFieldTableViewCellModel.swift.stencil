@@ -1,0 +1,165 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import Foundation
+import RxCocoa
+import RxSwift
+
+/// Type of cell value
+public enum TextFieldFormCellValueType: Equatable {
+    case text
+    case password
+    case list([String], Int?)
+
+    public static func == (lhs: TextFieldFormCellValueType, rhs: TextFieldFormCellValueType) -> Bool {
+        switch (lhs, rhs) {
+        case (.text, .text):
+            return true
+
+        case (.password, .password):
+            return true
+
+        case let (.list(larray, lindex), .list(rarray, rindex)):
+            return (larray == rarray) && (lindex == rindex)
+
+        default:
+            return false
+        }
+    }
+}
+
+/// Validation used for textfield input
+public enum ValidationType {
+    case none
+    case email
+    case password
+    case zip
+}
+
+/// Current validation status
+public enum ValidationStatus: Equatable {
+    case normal // initial state
+    case validated // user input is ok
+    case error(String) // problem
+
+    public static func == (lhs: ValidationStatus, rhs: ValidationStatus) -> Bool {
+        switch (lhs, rhs) {
+        case (.normal, .normal):
+            return true
+
+        case (.validated, .validated):
+            return true
+
+        case let (.error(leftMessage), .error(rightMessage)):
+            return (leftMessage == rightMessage)
+
+        default:
+            return false
+        }
+    }
+}
+
+/// View model for text field cell
+class TextFieldTableViewCellModel {
+    // MARK: Public properties
+
+    private(set) var title: String
+    private(set) var placeholder: String
+    private(set) var text: String?
+    private(set) var valueType: TextFieldFormCellValueType
+    private(set) var keyboardType: UIKeyboardType
+    private(set) var autocapitalization: UITextAutocapitalizationType
+    private(set) var validation: ValidationType
+    private(set) var updateTableClosure: EmptyClosure?
+
+    var validationStatus: Observable<ValidationStatus> {
+        return _validationStatus.asObservable()
+    }
+
+    // MARK: Private properties
+
+    private var _validationStatus = PublishSubject<ValidationStatus>()
+
+    private let disposeBag = DisposeBag()
+
+    // MARK: Life cycle
+
+    init(
+        title: String,
+        placeholder: String,
+        text: String? = nil,
+        valueType: TextFieldFormCellValueType = .text,
+        keyboardType: UIKeyboardType = .default,
+        autocapitalization: UITextAutocapitalizationType = .none,
+        validation: ValidationType = .none,
+        updateTableClosure: EmptyClosure? = nil
+    ) {
+        self.title = title
+        self.placeholder = placeholder
+        self.text = text
+        self.valueType = valueType
+        self.keyboardType = keyboardType
+        self.autocapitalization = autocapitalization
+        self.validation = validation
+        self.updateTableClosure = updateTableClosure
+    }
+
+    struct Input {
+        let text: Observable<String?>
+    }
+
+    struct Output {
+        let status: Driver<ValidationStatus>
+        let heightCell: Driver<Bool>
+    }
+
+    func transform(input: TextFieldTableViewCellModel.Input) -> TextFieldTableViewCellModel.Output {
+        let status = Observable.just(.normal).concat(
+            input.text.skip(1).map { [weak self] text -> ValidationStatus in
+                guard let self = self else {
+                    return .validated
+                }
+
+                switch self.validation {
+                case .none:
+                    return .validated
+                case .email:
+                    return EmailRule().validate(input: text) ? .validated : .error(R.string.localizable.generalErrorInvalidEmail())
+                case .password:
+                    return PasswordRule().validate(input: text) ? .validated : .error(R.string.localizable.generalErrorInvalidPassword())
+                case .zip:
+                    return ZipRule().validate(input: text) ? .validated : .error(R.string.localizable.generalErrorInvalidZIPCode())
+                }
+            }
+        )
+
+        // We need to expose the validation to be accessible from controller's view model
+        status
+            .subscribe(onNext: { [weak self] in
+                self?._validationStatus.onNext($0)
+            })
+            .disposed(by: disposeBag)
+
+        input.text.asObservable()
+            .subscribeNext { [weak self] text in
+                self?.text = text
+            }
+            .disposed(by: disposeBag)
+
+        let heightCell = status.map { status -> Bool in
+            switch status {
+            case .normal, .validated:
+                return false
+            case .error:
+                return true
+            }
+        }
+
+        return Output(status: status.asDriverOnErrorJustComplete(), heightCell: heightCell.asDriverOnErrorJustComplete())
+    }
+}

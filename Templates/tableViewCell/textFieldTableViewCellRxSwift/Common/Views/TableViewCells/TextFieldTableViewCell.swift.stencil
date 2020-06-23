@@ -1,0 +1,129 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxSwift
+import UIKit
+
+final class TextFieldTableViewCell: UITableViewCell, NibLoadableView {
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var textField: UITextField!
+    @IBOutlet private var validationStatusLabel: UILabel!
+    @IBOutlet private var separatorBottomConstraint: NSLayoutConstraint!
+
+    private var viewModel: TextFieldTableViewCellModel?
+
+    private var disposeBag = DisposeBag()
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = .white
+        selectedBackgroundView = backgroundView
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        disposeBag = DisposeBag()
+    }
+}
+
+extension TextFieldTableViewCell {
+    func setup(viewModel: TextFieldTableViewCellModel) {
+        self.viewModel = viewModel
+
+        titleLabel.attributedText = viewModel.title.styled(with: .dashboardSection)
+        textField.attributedPlaceholder = viewModel.placeholder.styled(with: .addEmergencyContactPlaceholder)
+        textField.keyboardType = viewModel.keyboardType
+        textField.autocapitalizationType = viewModel.autocapitalization
+        textField.text = viewModel.text
+
+        switch viewModel.valueType {
+        case .text:
+            textField.isSecureTextEntry = false
+            textField.inputView = nil
+        case .password:
+            textField.isSecureTextEntry = true
+            textField.inputView = nil
+        case .list:
+            textField.isSecureTextEntry = false
+
+            let pickerView = UIPickerView()
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            pickerView.showsSelectionIndicator = true
+
+            textField.inputView = pickerView
+        }
+
+        bindToViewModel()
+    }
+}
+
+private extension TextFieldTableViewCell {
+    func bindToViewModel() {
+        guard let unwrappedViewModel = viewModel else {
+            return
+        }
+
+        let input = TextFieldTableViewCellModel.Input(
+            text: textField.rx.text.asObservable()
+        )
+
+        let output = unwrappedViewModel.transform(input: input)
+
+        output.status.asObservable()
+            .map {
+                if case let .error(errorMessage) = $0 {
+                    return errorMessage
+                }
+
+                return ""
+            }
+            .bind(to: validationStatusLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        output.heightCell.asObservable()
+            .subscribeNext { [weak self] height in
+                self?.separatorBottomConstraint.constant = height ? 24 : 0
+                self?.viewModel?.updateTableClosure?()
+            }
+            .disposed(by: disposeBag)
+    }
+}
+
+extension TextFieldTableViewCell: UIPickerViewDataSource {
+    func numberOfComponents(in _: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
+        if case let .list(array, _) = viewModel?.valueType {
+            return array.count
+        }
+        return 0
+    }
+}
+
+extension TextFieldTableViewCell: UIPickerViewDelegate {
+    func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
+        if case let .list(array, _) = viewModel?.valueType {
+            return array[row]
+        }
+        return ""
+    }
+
+    func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
+        if case let .list(array, _) = viewModel?.valueType {
+            textField.text = array[row]
+        }
+    }
+}

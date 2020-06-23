@@ -12,6 +12,7 @@ public enum TemplateCombo: String {
     case scene
     case sceneControllerRxSwift
     case sceneControllerRxSwiftWithTableView
+    case sceneControllerRxSwiftWithFormTableView
     case sceneControllerRxSwiftWithCollectionView
 
     func perform(context: Context) throws {
@@ -39,6 +40,24 @@ public enum TemplateCombo: String {
                 for cell in unwrappedNewCells {
                     let modifiedContext = updateComboContext(context, name: cell)
                     try Generator.shared.generate(generationMode: .template(.tableViewCellRxSwift), context: modifiedContext, deleteGenerated: false)
+                }
+            }
+            
+        case .sceneControllerRxSwiftWithFormTableView:
+            try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithFormTableView), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template(.viewModelRxSwiftWithFormTableView), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.viewModelAssembly), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.rxDataSourcesSectionType), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template(.storyboardViewControllerWithTableView), context: context, deleteGenerated: false)
+
+            if context["sectionHeader"] != nil {
+                try Generator.shared.generate(generationMode: .template(.tableViewSectionHeader), context: context, deleteGenerated: false)
+            }
+
+            if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
+                for cell in unwrappedNewCells {
+                    let modifiedContext = updateComboContext(context, name: cell)
+                    try Generator.shared.generate(generationMode: .template(.textFieldTableViewCellRxSwift), context: modifiedContext, deleteGenerated: false)
                 }
             }
 
