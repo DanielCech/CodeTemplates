@@ -21,6 +21,9 @@ import Stencil
  tableContentFromAPI - loads table content from API
  whiteCellSelection - table views has white selected state (touch is not visible)
  Screen - the name of generated screen; used in combination with cell name
+ bottomView - shows buttons at the bottom of table in controller
+ topGradientView - top alpha gradient
+ bottomGradientView - bottom alpha gradient
  */
 
 // =======================================================

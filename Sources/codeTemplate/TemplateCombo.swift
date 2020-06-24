@@ -42,7 +42,7 @@ public enum TemplateCombo: String {
                     try Generator.shared.generate(generationMode: .template(.tableViewCellRxSwift), context: modifiedContext, deleteGenerated: false)
                 }
             }
-            
+
         case .sceneControllerRxSwiftWithFormTableView:
             try Generator.shared.generate(generationMode: .template(.viewControllerRxSwiftWithFormTableView), context: context, deleteGenerated: true)
             try Generator.shared.generate(generationMode: .template(.viewModelRxSwiftWithFormTableView), context: context, deleteGenerated: false)
