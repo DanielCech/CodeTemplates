@@ -22,6 +22,10 @@ func compareThreeItems(first: String, second: String, third: String) {
         + second + "\" \""
         + third + "\""
     shell(command)
+}
+
+func touch(file: String) {
+    let command = "touch \"" + file + "\""
     shell(command)
 }
 

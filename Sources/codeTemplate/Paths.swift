@@ -12,6 +12,7 @@ class Paths {
     static var scriptPath: String = ""
     static var templatePath: String = ""
     static var generatedPath: String = ""
+    static var validationPath: String = ""
 
     static var projectPath: String = ""
     static var scenePath: String = ""
@@ -38,6 +39,7 @@ class Paths {
             Paths.scriptPath = unwrappedScriptPath
             Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
             Paths.generatedPath = Paths.scriptPath.appendingPathComponent(path: "Generated")
+            Paths.validationPath = Paths.scriptPath.appendingPathComponent(path: "Validation")
         } else {
             throw ScriptError.moreInfoNeeded(message: "scriptPath is missing")
         }

@@ -6,8 +6,6 @@
 //  {{copyright}}
 //
 
-import RxCocoa
-import RxSwift
 import UIKit
 
 final class {{Name}}ViewController: UIViewController, ViewModelContaining {
@@ -47,9 +45,7 @@ extension {{Name}}ViewController {
     }
 
     func bindToCoordinator() {
-        button.rx.tap.asObservable().subscribeNext { [weak self] _ in
-
-        }.disposed(by: disposeBag)
+        
     }
 }
 

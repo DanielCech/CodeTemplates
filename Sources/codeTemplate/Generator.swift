@@ -156,6 +156,8 @@ private extension Generator {
 
         // Process files in folder
         for file in templateFolder.files {
+            if file.name == "template.json" { continue }
+            
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
             let outputFile = try generatedFolder.createFile(named: outputFileName)

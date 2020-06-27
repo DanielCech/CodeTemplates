@@ -6,7 +6,6 @@
 //  {{copyright}}
 //
 
-import Foundation
 import UIKit
 
 final class HalfModalContainerViewController: UIViewController {

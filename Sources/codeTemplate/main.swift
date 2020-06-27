@@ -61,7 +61,7 @@ do {
         let unwrappedUpdateModeString = updateTeplates.value,
         let updateMode = UpdateTemplateMode(rawValue: unwrappedUpdateModeString),
         let unwrappedScriptpath = scriptPath.value {
-        try TemplateUpdater.shared.updateTemplates(updateMode: updateMode, scriptPath: unwrappedScriptpath)
+        try Updater.shared.updateTemplates(updateMode: updateMode, scriptPath: unwrappedScriptpath)
     } else {
         print(moderator.usagetext)
         exit(0)

@@ -1,5 +1,5 @@
 //
-//  TemplateUpdater.swift
+//  Updater.swift
 //  codeTemplate
 //
 //  Created by Daniel Cech on 21/06/2020.
@@ -9,8 +9,8 @@ import Files
 import Foundation
 import ScriptToolkit
 
-class TemplateUpdater {
-    static let shared = TemplateUpdater()
+class Updater {
+    static let shared = Updater()
 
     func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
@@ -28,13 +28,13 @@ class TemplateUpdater {
                 }
 
                 print("⚙️ Updating: \(parentTemplate.rawValue) to \(childTemplate.rawValue)")
-                try update(parentTemplate: parentTemplateFolder, childTemplate: childTemplateFolder, updateMode: updateMode)
+                try update(parentTemplate: parentTemplateFolder, childTemplate: childTemplateFolder, updateMode: updateMode, scriptPath: scriptPath)
             }
         }
     }
 
-    func update(parentTemplate: Folder, childTemplate: Folder, updateMode: UpdateTemplateMode) throws {
-        let templateFolder = try Folder(path: Paths.templatePath)
+    func update(parentTemplate: Folder, childTemplate: Folder, updateMode: UpdateTemplateMode, scriptPath: String) throws {
+        let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 
         // Process files in folder
         for parentTemplateFile in parentTemplate.files where parentTemplateFile.name.lowercased().hasSuffix(".swift.stencil") {
@@ -42,15 +42,18 @@ class TemplateUpdater {
                 let parentTemplateFileModificationDate = try parentTemplateFile.modificationDate()
                 let childTemplateFileModificationDate = try childTemplateFile.modificationDate()
 
-                if updateMode == .all || (parentTemplateFileModificationDate > childTemplateFileModificationDate) {
-                    let parentTemplateFilePath = parentTemplateFile.path(relativeTo: templateFolder)
-                    let childTemplateFilePath = childTemplateFile.path(relativeTo: templateFolder)
+                if updateMode == .all || (abs(parentTemplateFileModificationDate.distance(to: childTemplateFileModificationDate)) < 60) {
+                    let parentTemplateFilePath = parentTemplateFile.path.replacingOccurrences(of: templateFolder.path, with: "")
+                    let childTemplateFilePath = childTemplateFile.path.replacingOccurrences(of: templateFolder.path, with: "")
 
                     compareTwoItems(first: parentTemplateFile.path, second: childTemplateFile.path)
 
-                    print("    \(parentTemplateFilePath): \(childTemplateFilePath)")
+                    print("    1️⃣ \(parentTemplateFilePath)\n    2️⃣ \(childTemplateFilePath)")
                     print("    🟢 Press any key to continue...")
                     _ = readLine()
+                    
+                    touch(file: parentTemplateFile.path)
+                    touch(file: childTemplateFile.path)
                 }
             }
         }
@@ -64,7 +67,7 @@ class TemplateUpdater {
         for parentSubfolder in subfolders {
             guard let childSubfolder = try? childTemplate.subfolder(named: parentSubfolder.name) else { continue }
 
-            try update(parentTemplate: parentSubfolder, childTemplate: childSubfolder, updateMode: updateMode)
+            try update(parentTemplate: parentSubfolder, childTemplate: childSubfolder, updateMode: updateMode, scriptPath: scriptPath)
         }
     }
 }
