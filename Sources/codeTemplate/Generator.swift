@@ -56,13 +56,14 @@ class Generator {
         generationMode: GenerationMode,
         context: Context,
         reviewMode: ReviewMode = .none,
-        deleteGenerated: Bool = true
+        deleteGenerated: Bool = true,
+        outputPath: String = Paths.generatedPath
     ) throws {
         switch generationMode {
         case let .template(templateType):
 
             // Delete contents of Generated folder
-            let generatedFolder = try Folder(path: Paths.generatedPath)
+            let generatedFolder = try Folder(path: outputPath)
             if deleteGenerated {
                 try generatedFolder.empty(includingHidden: true)
             }
@@ -156,7 +157,7 @@ private extension Generator {
 
         // Process files in folder
         for file in templateFolder.files {
-            if file.name == "template.json" { continue }
+            if file.name.lowercased() == "template.json" { continue }
             
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName

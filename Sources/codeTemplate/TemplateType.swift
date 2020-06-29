@@ -67,7 +67,7 @@ public enum TemplateType: String, CaseIterable {
     case screenListViewController
     case stylesheet
 
-    var category: TemplateCategory {
+    public var category: TemplateCategory {
         switch self {
         case .viewControllerBasic, .viewControllerRxSwift, .viewControllerRxSwiftWithTableView, .viewControllerRxSwiftWithCollectionView, .viewControllerRxSwiftWithFormTableView:
             return .viewController
@@ -110,7 +110,7 @@ public enum TemplateType: String, CaseIterable {
         }
     }
 
-    func basePath() -> String {
+    public func basePath() -> String {
         switch self {
         case .viewModelAssembly:
             return Paths.projectPath
@@ -120,7 +120,7 @@ public enum TemplateType: String, CaseIterable {
     }
 }
 
-var templateDependencies: [TemplateType: [TemplateType]] = [
+public var templateDependencies: [TemplateType: [TemplateType]] = [
     // View
     .view: [.tableViewCell, .tableViewSectionHeader, .collectionViewCell],
 

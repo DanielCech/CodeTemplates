@@ -41,8 +41,10 @@ let reviewMode = moderator.add(Argument<String?>
 let updateTeplates = moderator.add(Argument<String?>
     .optionWithValue("updateTemplates", name: "Trigger template updates based on teplate dependencies", description: "Possible values: all, new. Parameter scriptPath needs to be specified too."))
 
+let validateTeplates = moderator.add(.option("v", "validateTemplates", description: "Start templates validation. This option can't be combined with updateTemplates option."))
+
 let scriptPath = moderator.add(Argument<String?>
-    .optionWithValue("scriptPath", name: "Path parameter", description: "The path to codeTemplate script with Generated and Templates folder"))
+    .optionWithValue("scriptPath", name: "Path parameter", description: "The path to codeTemplate script with Generated and Templates folder."))
 
 var programMode: ProgramMode
 
@@ -62,6 +64,8 @@ do {
         let updateMode = UpdateTemplateMode(rawValue: unwrappedUpdateModeString),
         let unwrappedScriptpath = scriptPath.value {
         try Updater.shared.updateTemplates(updateMode: updateMode, scriptPath: unwrappedScriptpath)
+    } else if let unwrappedScriptpath = scriptPath.value, validateTeplates.value {
+        try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
     } else {
         print(moderator.usagetext)
         exit(0)

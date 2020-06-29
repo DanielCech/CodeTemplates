@@ -9,10 +9,10 @@ import Files
 import Foundation
 import ScriptToolkit
 
-class Updater {
-    static let shared = Updater()
+public class Updater {
+    public static let shared = Updater()
 
-    func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
+    public func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 
         for parentTemplate in TemplateType.allCases {
@@ -32,7 +32,9 @@ class Updater {
             }
         }
     }
+}
 
+private extension Updater {
     func update(parentTemplate: Folder, childTemplate: Folder, updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 

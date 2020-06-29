@@ -1,4 +1,4 @@
 {
   "context": {},
-  "switches": []
+  "switches": ["fakeNavbar", "sectionHeaders"]
 }
