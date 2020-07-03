@@ -39,4 +39,7 @@ public enum TemplateCategory: String {
 
     // Code snippets
     case snippets
+
+    // Xcode project
+    case xcodeproj
 }

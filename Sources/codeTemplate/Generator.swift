@@ -16,12 +16,6 @@ class Generator {
 
     var processedFiles = [ProcessedFile]()
 
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/YYYY"
-        return formatter
-    }()
-
     func generateCode(contextFile: String, reviewMode: ReviewMode) throws {
         let contextFile = try File(path: contextFile)
         let contextString = try contextFile.readAsString(encodedAs: .utf8)
@@ -43,12 +37,12 @@ class Generator {
 
         try Paths.setupPaths(context: context)
 
-        let modifiedContext = Generator.shared.updateContext(context)
+        let modifiedContext = ContextHelper.shared.updateContext(context)
         try Generator.shared.generate(
             generationMode: generationMode,
             context: modifiedContext,
             reviewMode: reviewMode,
-            deleteGenerated: false
+            deleteGenerated: true
         )
     }
 
@@ -81,48 +75,6 @@ class Generator {
         shell("/usr/local/bin/swiftformat \"\(Paths.scriptPath)\" > /dev/null 2>&1")
 
         try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
-    }
-
-    func updateContext(_ context: Context) -> Context {
-        var modifiedContext = context
-        for key in context.keys {
-            guard let stringValue = context[key] as? String else { continue }
-            modifiedContext[key.pascalCased()] = stringValue.pascalCased()
-        }
-
-        modifiedContext["date"] = dateFormatter.string(from: Date())
-
-        // Table view cells
-
-        var tableViewCells = [String]()
-
-        if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String] {
-            tableViewCells.append(contentsOf: unwrappedOldTableViewCells)
-        }
-
-        if let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
-            tableViewCells.append(contentsOf: unwrappedNewTableViewCells)
-        }
-
-        modifiedContext["tableViewCells"] = tableViewCells
-
-        // Collection view cells
-
-        var collectionViewCells = [String]()
-
-        if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String] {
-            collectionViewCells.append(contentsOf: unwrappedOldCollectionViewCells)
-        }
-
-        if let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
-            collectionViewCells.append(contentsOf: unwrappedNewCollectionViewCells)
-        }
-
-        modifiedContext["collectionViewCells"] = collectionViewCells
-
-        modifiedContext["Screen"] = modifiedContext["Name"]
-
-        return modifiedContext
     }
 }
 
@@ -158,11 +110,18 @@ private extension Generator {
         // Process files in folder
         for file in templateFolder.files {
             if file.name.lowercased() == "template.json" { continue }
-            
+
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
-            let outputFile = try generatedFolder.createFile(named: outputFileName)
 
+            // Directly copy binary file
+            guard let _ = try? file.readAsString() else {
+                let copiedFile = try file.copy(to: generatedFolder)
+                try copiedFile.rename(to: outputFileName)
+                continue
+            }
+
+            let outputFile = try generatedFolder.createFile(named: outputFileName)
             let rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
 
             try outputFile.write(rendered)

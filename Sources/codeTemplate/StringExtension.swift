@@ -36,4 +36,8 @@ public extension String {
         }
         return newName
     }
+
+    static func randomFileUUID() -> String {
+        return "273AB" + (0 ..< 11).map { _ in "0123456789ABCDEF".randomElement()! } + "00F30E8D"
+    }
 }

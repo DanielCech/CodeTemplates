@@ -32,3 +32,8 @@ public enum ProgramMode {
     case updateTemplates(UpdateTemplateMode)
     case validateTemplates
 }
+
+public struct ProjectFile {
+    var name: String
+    var uuid: String
+}

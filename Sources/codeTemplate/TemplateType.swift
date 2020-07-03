@@ -67,6 +67,8 @@ public enum TemplateType: String, CaseIterable {
     case screenListViewController
     case stylesheet
 
+    case singleViewApp
+
     public var category: TemplateCategory {
         switch self {
         case .viewControllerBasic, .viewControllerRxSwift, .viewControllerRxSwiftWithTableView, .viewControllerRxSwiftWithCollectionView, .viewControllerRxSwiftWithFormTableView:
@@ -107,6 +109,9 @@ public enum TemplateType: String, CaseIterable {
 
         case .halfModalContainerViewController, .halfModalContainerViewControllerRxSwift, .interpolate, .screenListViewController, .stylesheet:
             return .snippets
+
+        case .singleViewApp:
+            return .xcodeproj
         }
     }
 

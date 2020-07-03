@@ -53,7 +53,7 @@ private extension Updater {
                     print("    1️⃣ \(parentTemplateFilePath)\n    2️⃣ \(childTemplateFilePath)")
                     print("    🟢 Press any key to continue...")
                     _ = readLine()
-                    
+
                     touch(file: parentTemplateFile.path)
                     touch(file: childTemplateFile.path)
                 }
