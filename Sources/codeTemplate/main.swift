@@ -32,16 +32,14 @@ import Stencil
 let moderator = Moderator(description: "Generates a swift app components from templates")
 moderator.usageFormText = "codeTemplate <params>"
 
+let mode = moderator.add(Argument<String?>
+    .optionWithValue("mode", name: "Current operation mode - code generation, updating templates and template validation", description: "Possible values: generate, updateAll, updateNew, validate"))
+
 let context = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
 
 let reviewMode = moderator.add(Argument<String?>
     .optionWithValue("review", name: "Result review mode", description: "Possible values: none, individual, overall").default("individual"))
-
-let updateTeplates = moderator.add(Argument<String?>
-    .optionWithValue("updateTemplates", name: "Trigger template updates based on teplate dependencies", description: "Possible values: all, new. Parameter scriptPath needs to be specified too."))
-
-let validateTeplates = moderator.add(.option("v", "validateTemplates", description: "Start templates validation. This option can't be combined with updateTemplates option."))
 
 let scriptPath = moderator.add(Argument<String?>
     .optionWithValue("scriptPath", name: "Path parameter", description: "The path to codeTemplate script with Generated and Templates folder."))
@@ -53,19 +51,39 @@ do {
 
     print("⌚️ Processing")
 
-    if let contextFile = context.value {
-        guard let reviewMode = ReviewMode(rawValue: reviewMode.value) else {
-            throw ScriptError.argumentError(message: "invalid review mode")
-        }
+    if let mode = mode.value {
+        switch mode {
+        case "generate":
+            guard let contextFile = context.value else {
+                throw ScriptError.argumentError(message: "context not specified")
+            }
+            guard let reviewMode = ReviewMode(rawValue: reviewMode.value) else {
+                throw ScriptError.argumentError(message: "invalid review mode")
+            }
 
-        try Generator.shared.generateCode(contextFile: contextFile, reviewMode: reviewMode)
-    } else if
-        let unwrappedUpdateModeString = updateTeplates.value,
-        let updateMode = UpdateTemplateMode(rawValue: unwrappedUpdateModeString),
-        let unwrappedScriptpath = scriptPath.value {
-        try Updater.shared.updateTemplates(updateMode: updateMode, scriptPath: unwrappedScriptpath)
-    } else if let unwrappedScriptpath = scriptPath.value, validateTeplates.value {
-        try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
+            try Generator.shared.generateCode(contextFile: contextFile, reviewMode: reviewMode)
+
+        case "updateAll":
+            guard let unwrappedScriptpath = scriptPath.value else {
+                throw ScriptError.argumentError(message: "scriptPath not specified")
+            }
+            try Updater.shared.updateTemplates(updateMode: .all, scriptPath: unwrappedScriptpath)
+
+        case "updateNew":
+            guard let unwrappedScriptpath = scriptPath.value else {
+                throw ScriptError.argumentError(message: "scriptPath not specified")
+            }
+            try Updater.shared.updateTemplates(updateMode: .new, scriptPath: unwrappedScriptpath)
+
+        case "validate":
+            guard let unwrappedScriptpath = scriptPath.value else {
+                throw ScriptError.argumentError(message: "scriptPath not specified")
+            }
+            try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
+
+        default:
+            throw ScriptError.argumentError(message: "invalid mode value")
+        }
     } else {
         print(moderator.usagetext)
         exit(0)

@@ -82,7 +82,7 @@ public class Validator {
                 outputPath: validationFolder.path
             )
 
-            let outputFolder = try validationFolder.createSubfolder(at: "Template")
+            let outputFolder = try validationFolder.subfolder(named: "Template")
 
             try Generator.shared.generate(
                 generationMode: .template(template),
@@ -91,11 +91,25 @@ public class Validator {
                 deleteGenerated: false,
                 outputPath: outputFolder.path
             )
+            
+            // Create Xcodeproj
+            let xcodegenOutput = shell("cd \"\(validationFolder.path)\";/usr/local/bin/xcodegen generate > /dev/null 2>&1")
+            if xcodegenOutput.contains("error") {
+                print(xcodegenOutput)
+            }
+            
+            // Instal Cocoapods if needed
+            if validationFolder.containsFile(named: "Podfile") {
+                let podsOutput = shell("cd \"\(validationFolder.path)\";/pod install > /dev/null 2>&1")
+                if podsOutput.contains("error") {
+                    print(podsOutput)
+                }
+            }
 
-            shell("/usr/local/bin/xcodegen generate")
-
-            // TODO: wait for result of last operation
-            shell("/usr/bin/xcodebuild -project Template.xcodeproj/ -scheme Template build")
+            let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
+            if xcodebuildOutput.contains("BUILD FAILED") {
+                print(xcodebuildOutput)
+            }
 
             print("    🟢 Press any key to continue...")
             _ = readLine()
