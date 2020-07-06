@@ -82,14 +82,12 @@ do {
             guard let unwrappedScriptpath = scriptPath.value else {
                 throw ScriptError.argumentError(message: "scriptPath not specified")
             }
-            
+
             if let unwrappedTemplate = template.value {
                 try Validator.shared.validate(template: unwrappedTemplate, scriptPath: unwrappedScriptpath)
-            }
-            else {
+            } else {
                 try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
             }
-            
 
         default:
             throw ScriptError.argumentError(message: "invalid mode value")

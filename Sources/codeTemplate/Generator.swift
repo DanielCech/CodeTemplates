@@ -62,28 +62,23 @@ class Generator {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let templateCategory = try TemplateTypes.shared.templateCategory(for: templateType)
-            
+            let templateCategory = try Templates.shared.templateCategory(for: templateType)
             let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
+            let templateInfo = try Templates.shared.templateInfo(for: templateType)
 
-            let templateSettings = try TemplateTypes.shared.templateSettings(for: templateType)
-            
-            var basePath = Paths.scenePath
-            if let relativeTo = templateSettings["relativeTo"] as? String {
-                switch relativeTo {
-                case "project":
-                    basePath = Paths.projectPath
-                case "sources":
-                    basePath = Paths.sourcesPath
-                case "scene":
-                    basePath = Paths.scenePath
-                default:
-                    throw ScriptError.argumentError(message: "Invalid 'relativeTo' value")
-                }
-            }
-            
+            var basePath = Paths.projectPath
+
+//            switch templateInfo.locationRelativeTo {
+//            case .project:
+//                basePath = Paths.projectPath
+//            case .sources:
+//                basePath = Paths.sourcesPath
+//            case .scene:
+//                basePath = Paths.scenePath
+//            }
+
             let projectFolder = try Folder(path: basePath)
-            
+
             try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, projectFolder: projectFolder, context: context)
 
         case let .combo(comboType):
@@ -140,7 +135,13 @@ private extension Generator {
             }
 
             let outputFile = try generatedFolder.createFile(named: outputFileName)
-            let rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
+
+            var rendered: String
+            do {
+                rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
+            } catch {
+                throw ScriptError.generalError(message: "Stencil template error \(templateFolder.path): \(file.name): \(error.localizedDescription)")
+            }
 
             try outputFile.write(rendered)
 

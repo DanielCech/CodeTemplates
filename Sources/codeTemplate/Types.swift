@@ -8,7 +8,6 @@
 import Foundation
 
 public typealias Context = [String: Any]
-public typealias Settings = [String: Any]
 public typealias ProcessedFile = (templateFile: String, generatedFile: String, projectFile: String?)
 
 public enum ReviewMode: String {
@@ -18,7 +17,7 @@ public enum ReviewMode: String {
 }
 
 public enum GenerationMode {
-    case template(TemplateType)
+    case template(Template)
     case combo(TemplateCombo)
 }
 
@@ -36,4 +35,10 @@ public enum ProgramMode {
 public struct ProjectFile {
     var name: String
     var uuid: String
+}
+
+public enum LocationRelativeTo: String {
+    case project
+    case sources
+    case scene
 }

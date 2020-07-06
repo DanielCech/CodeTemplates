@@ -10,15 +10,15 @@ import ScriptToolkit
 
 class Paths {
     // CodeTemplates paths
-    static var scriptPath: String = ""          // codeTemplate
-    static var templatePath: String = ""        // codeTemplate/Templates
-    static var generatedPath: String = ""       // codeTemplate/Generated
-    static var validationPath: String = ""      // codeTemplate/Validation
+    static var scriptPath: String = "" // codeTemplate
+    static var templatePath: String = "" // codeTemplate/Templates
+    static var generatedPath: String = "" // codeTemplate/Generated
+    static var validationPath: String = "" // codeTemplate/Validation
 
     // Project paths
-    static var projectPath: String = ""         // harbor-ios
-    static var sourcesPath: String = ""         // harbor-ios/Harbor
-    static var scenePath: String = ""           // harbor-ios/Harbor/...
+    static var projectPath: String = "" // harbor-ios
+    static var sourcesPath: String = "" // harbor-ios/Harbor
+    static var scenePath: String = "" // harbor-ios/Harbor/...
 
     static func setupPaths(context: Context) throws {
         if let unwrappedProjectPath = context["projectPath"] as? String {
@@ -26,16 +26,14 @@ class Paths {
         } else {
             throw ScriptError.moreInfoNeeded(message: "projectPath is missing")
         }
-        
+
         if let unwrappedSourcesPath = context["sourcesPath"] as? String {
             Paths.sourcesPath = unwrappedSourcesPath
-        }
-        else {
+        } else {
             // Derive sources path from project path and project name
             if let unwrappedProjectName = context["projectName"] as? String {
                 Paths.sourcesPath = Paths.projectPath.appendingPathComponent(path: unwrappedProjectName)
-            }
-            else {
+            } else {
                 throw ScriptError.moreInfoNeeded(message: "unknown sourcesPath")
             }
         }

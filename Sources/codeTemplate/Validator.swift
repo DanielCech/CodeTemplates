@@ -22,14 +22,14 @@ public class Validator {
     public static let shared = Validator()
 
     public func validateTemplates(scriptPath: String) throws {
-        for template in try TemplateTypes.shared.templateTypes().keys {
+        for template in try Templates.shared.templateTypes().keys {
             try validate(template: template, scriptPath: scriptPath)
         }
     }
 
-    public func validate(template: TemplateType, scriptPath: String) throws {
+    public func validate(template: Template, scriptPath: String) throws {
         print("🔎 \(template)")
-        
+
         Paths.scriptPath = scriptPath
         Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
         Paths.validationPath = Paths.scriptPath.appendingPathComponent(path: "Validation")
@@ -40,25 +40,18 @@ public class Validator {
 
         // Load template settings
         var context = defaultContext()
-        let settings = try TemplateTypes.shared.templateSettings(for: template)
-
-        guard
-            let settingsContext = settings["context"] as? Context,
-            let settingsSwitches = settings["switches"] as? [String]
-        else {
-            throw ScriptError.generalError(message: "template.json data corrupted")
-        }
+        let templateInfo = try Templates.shared.templateInfo(for: template)
 
         // Update default context with settings context
-        for key in settingsContext.keys {
-            context[key] = settingsContext[key]
+        for key in templateInfo.context.keys {
+            context[key] = templateInfo.context[key]
         }
 
         // Series of switches values - all combinations
-        for index in 0 ..< 2^^settingsSwitches.count {
+        for index in 0 ..< 2^^templateInfo.switches.count {
             let unsignedIndex = UInt32(index)
 
-            for (switchIndex, switchElement) in settingsSwitches.enumerated() {
+            for (switchIndex, switchElement) in templateInfo.switches.enumerated() {
                 let unsignedSwitchBit: UInt32 = 1 << switchIndex
                 if (unsignedIndex & unsignedSwitchBit) > 0 {
                     context[switchElement] = true
@@ -69,7 +62,7 @@ public class Validator {
                 }
             }
 
-            if !settingsSwitches.isEmpty {
+            if !templateInfo.switches.isEmpty {
                 print("    --------------------------")
             }
 
@@ -92,13 +85,13 @@ public class Validator {
                 deleteGenerated: false,
                 outputPath: outputFolder.path
             )
-            
+
             // Create Xcodeproj
             let xcodegenOutput = shell("cd \"\(validationFolder.path)\";/usr/local/bin/xcodegen generate > /dev/null 2>&1")
             if xcodegenOutput.contains("error") {
                 print(xcodegenOutput)
             }
-            
+
             // Instal Cocoapods if needed
             if validationFolder.containsFile(named: "Podfile") {
                 let podsOutput = shell("cd \"\(validationFolder.path)\";/pod install > /dev/null 2>&1")
@@ -119,7 +112,6 @@ public class Validator {
 }
 
 private extension Validator {
-
     func defaultContext() -> Context {
         let context: Context = [
             "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",

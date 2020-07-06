@@ -15,17 +15,17 @@ public class Updater {
     public func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 
-        for parentTemplate in try TemplateTypes.shared.templateTypes().keys {
-            guard let dependencies = try TemplateDependencies.shared.templateDependencies()[parentTemplate] else { continue }
+        for parentTemplate in try Templates.shared.templateTypes().keys {
+            guard let dependencies = try Templates.shared.templateDependencies()[parentTemplate] else { continue }
 
-            let parentTemplateCategory = try TemplateTypes.shared.templateCategory(for: parentTemplate)
+            let parentTemplateCategory = try Templates.shared.templateCategory(for: parentTemplate)
             guard let parentTemplateFolder = try? templateFolder.subfolder(at: parentTemplateCategory).subfolder(at: parentTemplate) else {
                 throw ScriptError.folderNotFound(message: parentTemplateCategory + "/" + parentTemplate)
             }
 
             for childTemplate in dependencies {
-                let childTemplateCategory = try TemplateTypes.shared.templateCategory(for: childTemplate)
-                
+                let childTemplateCategory = try Templates.shared.templateCategory(for: childTemplate)
+
                 guard let childTemplateFolder = try? templateFolder.subfolder(at: childTemplateCategory).subfolder(at: childTemplate) else {
                     throw ScriptError.folderNotFound(message: childTemplateCategory + "/" + childTemplate)
                 }
@@ -63,13 +63,8 @@ private extension Updater {
             }
         }
 
-        guard let subfolders = try? parentTemplate.subfolders else {
-            print("problem with \(parentTemplate.path) subfolders")
-            return
-        }
-
         // Process subfolders
-        for parentSubfolder in subfolders {
+        for parentSubfolder in parentTemplate.subfolders {
             guard let childSubfolder = try? childTemplate.subfolder(named: parentSubfolder.name) else { continue }
 
             try update(parentTemplate: parentSubfolder, childTemplate: childSubfolder, updateMode: updateMode, scriptPath: scriptPath)
