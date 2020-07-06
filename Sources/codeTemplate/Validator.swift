@@ -22,13 +22,14 @@ public class Validator {
     public static let shared = Validator()
 
     public func validateTemplates(scriptPath: String) throws {
-        for template in TemplateType.allCases {
-            print("🔎 \(template.rawValue)")
+        for template in try TemplateTypes.shared.templateTypes().keys {
             try validate(template: template, scriptPath: scriptPath)
         }
     }
 
     public func validate(template: TemplateType, scriptPath: String) throws {
+        print("🔎 \(template)")
+        
         Paths.scriptPath = scriptPath
         Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
         Paths.validationPath = Paths.scriptPath.appendingPathComponent(path: "Validation")
@@ -39,7 +40,7 @@ public class Validator {
 
         // Load template settings
         var context = defaultContext()
-        let settings = try templateSettings(template: template)
+        let settings = try TemplateTypes.shared.templateSettings(for: template)
 
         guard
             let settingsContext = settings["context"] as? Context,
@@ -75,7 +76,7 @@ public class Validator {
             let validationFolder = try Folder(path: Paths.validationPath)
 
             try Generator.shared.generate(
-                generationMode: .template(.singleViewApp),
+                generationMode: .template("singleViewApp"),
                 context: context,
                 reviewMode: .none,
                 deleteGenerated: true,
@@ -118,28 +119,11 @@ public class Validator {
 }
 
 private extension Validator {
-    func templateSettings(template: TemplateType) throws -> Settings {
-        let settingFilePath = Paths.templatePath
-            .appendingPathComponent(path: template.category.rawValue)
-            .appendingPathComponent(path: template.rawValue)
-            .appendingPathComponent(path: "template.json")
-
-        let settingFile = try File(path: settingFilePath)
-        let settingsString = try settingFile.readAsString(encodedAs: .utf8)
-        let settingsData = Data(settingsString.utf8)
-
-        // make sure this JSON is in the format we expect
-        guard let settings = try JSONSerialization.jsonObject(with: settingsData, options: []) as? [String: Any] else {
-            throw ScriptError.generalError(message: "Deserialization error")
-        }
-
-        return settings
-    }
 
     func defaultContext() -> Context {
         let context: Context = [
             "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",
-            "projectPath": "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS/Harbor",
+            "projectPath": "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS",
             "scenePath": "Scenes/HouseholdScene/EmergencyContacts/EditEmergencyContact",
 
             "name": "test",

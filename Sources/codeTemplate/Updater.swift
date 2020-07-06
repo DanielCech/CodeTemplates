@@ -15,19 +15,22 @@ public class Updater {
     public func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 
-        for parentTemplate in TemplateType.allCases {
-            guard let dependencies = templateDependencies[parentTemplate] else { continue }
+        for parentTemplate in try TemplateTypes.shared.templateTypes().keys {
+            guard let dependencies = try TemplateDependencies.shared.templateDependencies()[parentTemplate] else { continue }
 
-            guard let parentTemplateFolder = try? templateFolder.subfolder(at: parentTemplate.category.rawValue).subfolder(at: parentTemplate.rawValue) else {
-                throw ScriptError.folderNotFound(message: parentTemplate.category.rawValue + "/" + parentTemplate.rawValue)
+            let parentTemplateCategory = try TemplateTypes.shared.templateCategory(for: parentTemplate)
+            guard let parentTemplateFolder = try? templateFolder.subfolder(at: parentTemplateCategory).subfolder(at: parentTemplate) else {
+                throw ScriptError.folderNotFound(message: parentTemplateCategory + "/" + parentTemplate)
             }
 
             for childTemplate in dependencies {
-                guard let childTemplateFolder = try? templateFolder.subfolder(at: childTemplate.category.rawValue).subfolder(at: childTemplate.rawValue) else {
-                    throw ScriptError.folderNotFound(message: childTemplate.category.rawValue + "/" + childTemplate.rawValue)
+                let childTemplateCategory = try TemplateTypes.shared.templateCategory(for: childTemplate)
+                
+                guard let childTemplateFolder = try? templateFolder.subfolder(at: childTemplateCategory).subfolder(at: childTemplate) else {
+                    throw ScriptError.folderNotFound(message: childTemplateCategory + "/" + childTemplate)
                 }
 
-                print("⚙️ Updating: \(parentTemplate.rawValue) to \(childTemplate.rawValue)")
+                print("⚙️ Updating: \(parentTemplate) to \(childTemplate)")
                 try update(parentTemplate: parentTemplateFolder, childTemplate: childTemplateFolder, updateMode: updateMode, scriptPath: scriptPath)
             }
         }

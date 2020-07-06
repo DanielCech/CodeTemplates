@@ -35,6 +35,9 @@ moderator.usageFormText = "codeTemplate <params>"
 let mode = moderator.add(Argument<String?>
     .optionWithValue("mode", name: "Current operation mode - code generation, updating templates and template validation", description: "Possible values: generate, updateAll, updateNew, validate"))
 
+let template = moderator.add(Argument<String?>
+    .optionWithValue("template", name: "Code template for validation", description: "Use with validate mode only"))
+
 let context = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
 
@@ -79,7 +82,14 @@ do {
             guard let unwrappedScriptpath = scriptPath.value else {
                 throw ScriptError.argumentError(message: "scriptPath not specified")
             }
-            try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
+            
+            if let unwrappedTemplate = template.value {
+                try Validator.shared.validate(template: unwrappedTemplate, scriptPath: unwrappedScriptpath)
+            }
+            else {
+                try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
+            }
+            
 
         default:
             throw ScriptError.argumentError(message: "invalid mode value")

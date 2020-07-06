@@ -55,10 +55,6 @@ class ContextHelper {
 
         modifiedContext["Screen"] = modifiedContext["Name"]
 
-        if let unwrappedProjectFiles = context["projectFiles"] as? [String] {
-            modifiedContext["projectFiles"] = unwrappedProjectFiles.map { ProjectFile(name: $0, uuid: String.randomFileUUID()) }
-        }
-
         return modifiedContext
     }
 }

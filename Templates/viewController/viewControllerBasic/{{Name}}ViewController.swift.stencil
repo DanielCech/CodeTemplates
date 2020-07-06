@@ -1,4 +1,4 @@
-  //
+//
 //  {{fileName}}
 //  {{projectName}}
 //
@@ -45,7 +45,7 @@ extension {{Name}}ViewController {
     }
 
     func bindToCoordinator() {
-        
+
     }
 }
 

@@ -27,8 +27,8 @@ class Generator {
         }
 
         let generationMode: GenerationMode
-        if let unwrappedTemplate = context["template"] as? String, let templateType = TemplateType(rawValue: unwrappedTemplate) {
-            generationMode = .template(templateType)
+        if let unwrappedTemplate = context["template"] as? String {
+            generationMode = .template(unwrappedTemplate)
         } else if let unwrappedTemplateCombo = context["templateCombo"] as? String, let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) {
             generationMode = .combo(comboType)
         } else {
@@ -62,10 +62,28 @@ class Generator {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateType.category.rawValue).subfolder(at: templateType.rawValue)
+            let templateCategory = try TemplateTypes.shared.templateCategory(for: templateType)
+            
+            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
 
-            let projectFolder = try Folder(path: templateType.basePath())
-
+            let templateSettings = try TemplateTypes.shared.templateSettings(for: templateType)
+            
+            var basePath = Paths.scenePath
+            if let relativeTo = templateSettings["relativeTo"] as? String {
+                switch relativeTo {
+                case "project":
+                    basePath = Paths.projectPath
+                case "sources":
+                    basePath = Paths.sourcesPath
+                case "scene":
+                    basePath = Paths.scenePath
+                default:
+                    throw ScriptError.argumentError(message: "Invalid 'relativeTo' value")
+                }
+            }
+            
+            let projectFolder = try Folder(path: basePath)
+            
             try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, projectFolder: projectFolder, context: context)
 
         case let .combo(comboType):

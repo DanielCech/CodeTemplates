@@ -1,0 +1,23 @@
+{
+
+    "view": ["tableViewCell", "tableViewSectionHeader", "collectionViewCell"],
+
+
+    "viewControllerBasic": ["viewControllerRxSwift", "halfModalContainerViewController", "halfModalContainerViewControllerRxSwift", "screenListViewController"],
+    "viewControllerRxSwift": ["viewControllerRxSwiftWithTableView", "viewControllerRxSwiftWithCollectionView"],
+    "viewControllerRxSwiftWithTableView": ["viewControllerRxSwiftWithFormTableView"],
+
+
+    "viewModelBasic": ["viewModelRxSwift", "tableViewCellViewModel", "collectionViewCellViewModel"],
+    "viewModelRxSwift": ["viewModelRxSwiftWithTableView", "viewModelRxSwiftWithCollectionView", "tableViewCellViewModelRxSwift", "collectionViewCellViewModelRxSwift"],
+
+
+    "tableViewCell": ["tableViewCellRxSwift"],
+    "tableViewCellRxSwift": ["textFieldTableViewCellRxSwift"],
+
+
+    "collectionViewCell": ["collectionViewCellRxSwift"],
+
+
+    "coordinator": ["coordinatorNavigation"],
+}
