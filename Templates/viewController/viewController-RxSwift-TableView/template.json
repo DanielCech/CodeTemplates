@@ -1,4 +1,5 @@
 {
   "context": {},
-  "switches": ["fakeNavbar", "sectionHeaders"]
+  "switches": ["fakeNavbar", "sectionHeaders"],
+  "locationRelativeTo": "scene"
 }

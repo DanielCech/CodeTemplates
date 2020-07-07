@@ -43,7 +43,7 @@ class Paths {
             if unwrappedScenePath.starts(with: "/") {
                 Paths.scenePath = unwrappedScenePath
             } else {
-                Paths.scenePath = Paths.sourcesPath.appendingPathComponent(path: unwrappedScenePath)
+                Paths.scenePath = Paths.projectPath.appendingPathComponent(path: unwrappedScenePath)
             }
         } else {
             throw ScriptError.moreInfoNeeded(message: "scenePath is missing")

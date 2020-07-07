@@ -66,23 +66,31 @@ class Generator {
             let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
             let templateInfo = try Templates.shared.templateInfo(for: templateType)
 
-            var basePath = Paths.projectPath
+            var baseGeneratedPath: String
+            var baseProjectPath: String
 
-//            switch templateInfo.locationRelativeTo {
-//            case .project:
-//                basePath = Paths.projectPath
-//            case .sources:
-//                basePath = Paths.sourcesPath
-//            case .scene:
-//                basePath = Paths.scenePath
-//            }
+            switch templateInfo.locationRelativeTo {
+            case .project:
+                baseGeneratedPath = generatedFolder.path
+                baseProjectPath = Paths.projectPath
 
-            let projectFolder = try Folder(path: basePath)
+            case .sources:
+                baseGeneratedPath = try generatedFolder.createSubfolder(at: Paths.sourcesPath.lastPathComponent).path
+                baseProjectPath = Paths.sourcesPath
+
+            case .scene:
+                let subPath = String(Paths.scenePath.suffix(Paths.scenePath.count - Paths.projectPath.count))
+                baseGeneratedPath = try generatedFolder.createSubfolder(at: subPath).path
+                baseProjectPath = Paths.scenePath
+            }
+
+            let baseGeneratedFolder = try Folder(path: baseGeneratedPath)
+            let baseProjectFolder = try Folder(path: baseProjectPath)
 
             try traverse(
                 templateFolder: templateFolder,
-                generatedFolder: generatedFolder,
-                projectFolder: projectFolder,
+                generatedFolder: baseGeneratedFolder,
+                projectFolder: baseProjectFolder,
                 context: context
             )
 
@@ -132,6 +140,27 @@ private extension Generator {
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
 
+            let templateFile = templateFolder.path + "/" + file.name
+            let generatedFile = generatedFolder.path + "/" + outputFileName
+
+            let projectFile: String?
+            if let unwrappedProjectFolder = projectFolder {
+                projectFile = unwrappedProjectFolder.path + "/" + outputFileName
+            } else {
+                projectFile = nil // TODO: check - we want three way comparison everytime
+            }
+
+            if file.name == "Podfile" {
+                let generatedFolder = try Folder(path: Paths.generatedPath)
+                try file.copy(to: generatedFolder)
+                processedFiles.append((
+                    templateFile: templateFile,
+                    generatedFile: generatedFolder.path + "/" + file.name,
+                    projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
+                ))
+                continue
+            }
+
             // Directly copy binary file
             guard let _ = try? file.readAsString() else {
                 let copiedFile = try file.copy(to: generatedFolder)
@@ -149,16 +178,6 @@ private extension Generator {
             }
 
             try outputFile.write(rendered)
-
-            let templateFile = templateFolder.path + "/" + file.name
-            let generatedFile = generatedFolder.path + "/" + outputFileName
-
-            let projectFile: String?
-            if let unwrappedProjectFolder = projectFolder {
-                projectFile = unwrappedProjectFolder.path + "/" + outputFileName
-            } else {
-                projectFile = nil
-            }
 
             processedFiles.append((templateFile: templateFile, generatedFile: generatedFile, projectFile: projectFile))
         }
