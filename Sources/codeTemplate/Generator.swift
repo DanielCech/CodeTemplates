@@ -79,7 +79,12 @@ class Generator {
 
             let projectFolder = try Folder(path: basePath)
 
-            try traverse(templateFolder: templateFolder, generatedFolder: generatedFolder, projectFolder: projectFolder, context: context)
+            try traverse(
+                templateFolder: templateFolder,
+                generatedFolder: generatedFolder,
+                projectFolder: projectFolder,
+                context: context
+            )
 
         case let .combo(comboType):
             try comboType.perform(context: context)

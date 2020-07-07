@@ -3,21 +3,21 @@
     "view": ["tableViewCell", "tableViewSectionHeader", "collectionViewCell"],
 
 
-    "viewControllerBasic": ["viewControllerRxSwift", "halfModalContainerViewController", "halfModalContainerViewControllerRxSwift", "screenListViewController"],
-    "viewControllerRxSwift": ["viewControllerRxSwiftWithTableView", "viewControllerRxSwiftWithCollectionView"],
-    "viewControllerRxSwiftWithTableView": ["viewControllerRxSwiftWithFormTableView"],
+    "viewController": ["viewController-RxSwift", "halfModalContainerViewController", "halfModalContainerViewController-RxSwift", "screenListViewController"],
+    "viewController-RxSwift": ["viewControllerRxSwiftWithTableView", "viewController-RxSwift-CollectionView"],
+    "viewController-RxSwift-TableView": ["viewController-RxSwift-FormTableView"],
 
 
-    "viewModelBasic": ["viewModelRxSwift", "tableViewCellViewModel", "collectionViewCellViewModel"],
-    "viewModelRxSwift": ["viewModelRxSwiftWithTableView", "viewModelRxSwiftWithCollectionView", "tableViewCellViewModelRxSwift", "collectionViewCellViewModelRxSwift"],
+    "viewModel": ["viewModel-RxSwift", "tableViewCellViewModel", "collectionViewCellViewModel"],
+    "viewModel-RxSwift": ["viewModel-RxSwift-TableView", "viewModel-RxSwift-CollectionView", "tableViewCellViewModel-RxSwift", "collectionViewCellViewModel-RxSwift"],
 
 
-    "tableViewCell": ["tableViewCellRxSwift"],
-    "tableViewCellRxSwift": ["textFieldTableViewCellRxSwift"],
+    "tableViewCell": ["tableViewCell-RxSwift"],
+    "tableViewCell-RxSwift": ["textFieldTableViewCell-RxSwift"],
 
 
-    "collectionViewCell": ["collectionViewCellRxSwift"],
+    "collectionViewCell": ["collectionViewCell-RxSwift"],
 
 
-    "coordinator": ["coordinatorNavigation"],
+    "coordinator": ["coordinator-Navigation"],
 }
