@@ -1,4 +1,5 @@
 {
   "context": {},
-  "switches": []
+  "switches": [],
+  "locationRelativeTo": "project"
 }

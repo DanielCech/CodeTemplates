@@ -51,7 +51,8 @@ class Generator {
         context: Context,
         reviewMode: ReviewMode = .none,
         deleteGenerated: Bool = true,
-        outputPath: String = Paths.generatedPath
+        outputPath: String = Paths.generatedPath,
+        validationMode: Bool = false
     ) throws {
         switch generationMode {
         case let .template(templateType):
@@ -75,12 +76,23 @@ class Generator {
                 baseProjectPath = Paths.projectPath
 
             case .sources:
-                baseGeneratedPath = try generatedFolder.createSubfolder(at: Paths.sourcesPath.lastPathComponent).path
+                if validationMode {
+                    baseGeneratedPath = outputPath
+                } else {
+                    baseGeneratedPath = try generatedFolder.createSubfolder(at: Paths.sourcesPath.lastPathComponent).path
+                }
+
                 baseProjectPath = Paths.sourcesPath
 
             case .scene:
                 let subPath = String(Paths.scenePath.suffix(Paths.scenePath.count - Paths.projectPath.count))
-                baseGeneratedPath = try generatedFolder.createSubfolder(at: subPath).path
+
+                if validationMode {
+                    baseGeneratedPath = outputPath
+                } else {
+                    baseGeneratedPath = try generatedFolder.createSubfolder(at: subPath).path
+                }
+
                 baseProjectPath = Paths.scenePath
             }
 
@@ -91,7 +103,8 @@ class Generator {
                 templateFolder: templateFolder,
                 generatedFolder: baseGeneratedFolder,
                 projectFolder: baseProjectFolder,
-                context: context
+                context: context,
+                validationMode: validationMode
             )
 
         case let .combo(comboType):
@@ -128,7 +141,13 @@ private extension Generator {
         return environment
     }
 
-    func traverse(templateFolder: Folder, generatedFolder: Folder, projectFolder: Folder?, context: Context) throws {
+    func traverse(
+        templateFolder: Folder,
+        generatedFolder: Folder,
+        projectFolder: Folder?,
+        context: Context,
+        validationMode: Bool = false
+    ) throws {
         var modifiedContext = context
 
         let environment = stencilEnvironment(templateFolder: templateFolder)
@@ -151,13 +170,24 @@ private extension Generator {
             }
 
             if file.name == "Podfile" {
-                let generatedFolder = try Folder(path: Paths.generatedPath)
-                try file.copy(to: generatedFolder)
-                processedFiles.append((
-                    templateFile: templateFile,
-                    generatedFile: generatedFolder.path.appendingPathComponent(path: file.name),
-                    projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
-                ))
+                if validationMode {
+                    let validationFolder = try Folder(path: Paths.validationPath)
+                    try file.copy(to: validationFolder)
+                    processedFiles.append((
+                        templateFile: templateFile,
+                        generatedFile: validationFolder.path.appendingPathComponent(path: file.name),
+                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
+                    ))
+                } else {
+                    let generatedFolder = try Folder(path: Paths.generatedPath)
+                    try file.copy(to: generatedFolder)
+                    processedFiles.append((
+                        templateFile: templateFile,
+                        generatedFile: generatedFolder.path.appendingPathComponent(path: file.name),
+                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
+                    ))
+                }
+
                 continue
             }
 

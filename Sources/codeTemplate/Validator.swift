@@ -48,7 +48,7 @@ public class Validator {
         }
 
         // Series of switches values - all combinations
-        for index in 0 ..< 2^^templateInfo.switches.count {
+        for index in 0 ..< 2 ^^ templateInfo.switches.count {
             let unsignedIndex = UInt32(index)
 
             for (switchIndex, switchElement) in templateInfo.switches.enumerated() {
@@ -83,7 +83,8 @@ public class Validator {
                 context: context,
                 reviewMode: .none,
                 deleteGenerated: false,
-                outputPath: outputFolder.path
+                outputPath: outputFolder.path,
+                validationMode: true
             )
 
             // Create Xcodeproj
@@ -94,16 +95,27 @@ public class Validator {
 
             // Instal Cocoapods if needed
             if validationFolder.containsFile(named: "Podfile") {
-                let podsOutput = shell("cd \"\(validationFolder.path)\";/pod install > /dev/null 2>&1")
-                if podsOutput.contains("error") {
+                let podsOutput = shell("cd \"\(validationFolder.path)\";export LANG=en_US.UTF-8;/usr/local/bin/pod install")
+                if podsOutput.lowercased().contains("error") {
                     print(podsOutput)
+                }
+                
+                // Build workspace
+                let xcodebuildOutput = shell("/usr/bin/xcodebuild -workspace \(validationFolder.path)/Template.xcworkspace/ -scheme Template build 2>&1")
+                if xcodebuildOutput.contains("BUILD FAILED") {
+                    print(xcodebuildOutput)
+                }
+                
+            }
+            else {
+                // Build project
+                let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
+                if xcodebuildOutput.contains("BUILD FAILED") {
+                    print(xcodebuildOutput)
                 }
             }
 
-            let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
-            if xcodebuildOutput.contains("BUILD FAILED") {
-                print(xcodebuildOutput)
-            }
+            
 
             print("    🟢 Press any key to continue...")
             _ = readLine()
