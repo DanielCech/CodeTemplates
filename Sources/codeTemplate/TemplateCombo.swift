@@ -10,27 +10,27 @@ import Foundation
 public enum TemplateCombo: String {
     // Scenes
     case scene
-    case sceneControllerRxSwift
-    case sceneControllerRxSwiftWithTableView
-    case sceneControllerRxSwiftWithFormTableView
-    case sceneControllerRxSwiftWithCollectionView
+    case sceneViewControllerRxSwift = "scene-ViewController-RxSwift"
+    case sceneViewControllerRxSwiftWithTableView = "scene-ViewController-RxSwift-TableView"
+    case sceneViewControllerRxSwiftWithFormTableView = "scene-ViewController-RxSwift-FormTableView"
+    case sceneViewControllerRxSwiftWithCollectionView = "scene-ViewController-RxSwift-CollectionView"
 
     func perform(context: Context) throws {
         switch self {
         case .scene:
-            try Generator.shared.generate(generationMode: .template("viewControllerBasic"), context: context, deleteGenerated: true)
-            try Generator.shared.generate(generationMode: .template("viewModelBasic"), context: context, deleteGenerated: false)
-            try Generator.shared.generate(generationMode: .template("storyboardViewController"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("viewController"), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template("viewModel"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("storyboard-ViewController"), context: context, deleteGenerated: false)
 
-        case .sceneControllerRxSwift:
+        case .sceneViewControllerRxSwift:
             break
 
-        case .sceneControllerRxSwiftWithTableView:
-            try Generator.shared.generate(generationMode: .template("viewControllerRxSwiftWithTableView"), context: context, deleteGenerated: true)
-            try Generator.shared.generate(generationMode: .template("viewModelRxSwiftWithTableView"), context: context, deleteGenerated: false)
+        case .sceneViewControllerRxSwiftWithTableView:
+            try Generator.shared.generate(generationMode: .template("viewController-RxSwift-TableView"), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template("viewModel-RxSwift-TableView"), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
-            try Generator.shared.generate(generationMode: .template("storyboardViewControllerWithTableView"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("storyboard-ViewController-TableView"), context: context, deleteGenerated: false)
 
             if context["sectionHeader"] != nil {
                 try Generator.shared.generate(generationMode: .template("tableViewSectionHeader"), context: context, deleteGenerated: false)
@@ -43,12 +43,12 @@ public enum TemplateCombo: String {
                 }
             }
 
-        case .sceneControllerRxSwiftWithFormTableView:
-            try Generator.shared.generate(generationMode: .template("viewControllerRxSwiftWithFormTableView"), context: context, deleteGenerated: true)
-            try Generator.shared.generate(generationMode: .template("viewModelRxSwiftWithFormTableView"), context: context, deleteGenerated: false)
+        case .sceneViewControllerRxSwiftWithFormTableView:
+            try Generator.shared.generate(generationMode: .template("viewController-RxSwift-FormTableView"), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template("viewModel-RxSwift-FormTableView"), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
-            try Generator.shared.generate(generationMode: .template("storyboardViewControllerWithTableView"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("storyboard-ViewController-TableView"), context: context, deleteGenerated: false)
 
             if context["sectionHeader"] != nil {
                 try Generator.shared.generate(generationMode: .template("tableViewSectionHeader"), context: context, deleteGenerated: false)
@@ -57,16 +57,16 @@ public enum TemplateCombo: String {
             if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
                 for cell in unwrappedNewCells {
                     let modifiedContext = updateComboContext(context, name: cell)
-                    try Generator.shared.generate(generationMode: .template("textFieldTableViewCellRxSwift"), context: modifiedContext, deleteGenerated: false)
+                    try Generator.shared.generate(generationMode: .template("tableViewCell-RxSwift-TextField"), context: modifiedContext, deleteGenerated: false)
                 }
             }
 
-        case .sceneControllerRxSwiftWithCollectionView:
-            try Generator.shared.generate(generationMode: .template("viewControllerRxSwiftWithCollectionView"), context: context, deleteGenerated: true)
-            try Generator.shared.generate(generationMode: .template("viewModelRxSwiftWithCollectionView"), context: context, deleteGenerated: false)
+        case .sceneViewControllerRxSwiftWithCollectionView:
+            try Generator.shared.generate(generationMode: .template("viewController-RxSwift-CollectionView"), context: context, deleteGenerated: true)
+            try Generator.shared.generate(generationMode: .template("viewModel-RxSwift-CollectionView"), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
             try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
-            try Generator.shared.generate(generationMode: .template("storyboardViewControllerWithCollectionView"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("storyboard-ViewController-CollectionView"), context: context, deleteGenerated: false)
 
             if context["sectionHeader"] != nil {
                 try Generator.shared.generate(generationMode: .template("tableViewSectionHeader"), context: context, deleteGenerated: false)
@@ -75,7 +75,7 @@ public enum TemplateCombo: String {
             if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
                 for cell in unwrappedNewCells {
                     let modifiedContext = updateComboContext(context, name: cell)
-                    try Generator.shared.generate(generationMode: .template("collectionViewCellRxSwift"), context: modifiedContext, deleteGenerated: false)
+                    try Generator.shared.generate(generationMode: .template("collectionViewCell-RxSwift"), context: modifiedContext, deleteGenerated: false)
                 }
             }
         }
