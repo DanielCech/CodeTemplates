@@ -140,12 +140,12 @@ private extension Generator {
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
 
-            let templateFile = templateFolder.path + "/" + file.name
-            let generatedFile = generatedFolder.path + "/" + outputFileName
+            let templateFile = templateFolder.path.appendingPathComponent(path: file.name)
+            let generatedFile = generatedFolder.path.appendingPathComponent(path: outputFileName)
 
             let projectFile: String?
             if let unwrappedProjectFolder = projectFolder {
-                projectFile = unwrappedProjectFolder.path + "/" + outputFileName
+                projectFile = unwrappedProjectFolder.path.appendingPathComponent(path: outputFileName)
             } else {
                 projectFile = nil // TODO: check - we want three way comparison everytime
             }
@@ -155,7 +155,7 @@ private extension Generator {
                 try file.copy(to: generatedFolder)
                 processedFiles.append((
                     templateFile: templateFile,
-                    generatedFile: generatedFolder.path + "/" + file.name,
+                    generatedFile: generatedFolder.path.appendingPathComponent(path: file.name),
                     projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
                 ))
                 continue
@@ -189,7 +189,7 @@ private extension Generator {
 
             let projectSubFolder: Folder?
             if let unwrappedProjectFolder = projectFolder {
-                projectSubFolder = try? Folder(path: unwrappedProjectFolder.path + "/" + outputFolder)
+                projectSubFolder = try? Folder(path: unwrappedProjectFolder.path.appendingPathComponent(path: outputFolder))
             } else {
                 projectSubFolder = nil
             }
