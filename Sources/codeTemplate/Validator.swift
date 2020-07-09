@@ -42,6 +42,11 @@ public class Validator {
         var context = defaultContext()
         let templateInfo = try Templates.shared.templateInfo(for: template)
 
+        if templateInfo.compilable == false {
+            print("ℹ️ template \(template) is marked as non-compilable. Skipping.")
+            return
+        }
+
         // Update default context with settings context
         for key in templateInfo.context.keys {
             context[key] = templateInfo.context[key]
@@ -94,7 +99,10 @@ public class Validator {
             }
 
             // Instal Cocoapods if needed
-            if validationFolder.containsFile(named: "Podfile") {
+            if outputFolder.containsFile(named: "Podfile") {
+                let podfile = try outputFolder.file(named: "Podfile")
+                try podfile.move(to: validationFolder)
+
                 let podsOutput = shell("cd \"\(validationFolder.path)\";export LANG=en_US.UTF-8;/usr/local/bin/pod install")
                 if podsOutput.lowercased().contains("error") {
                     print(podsOutput)
