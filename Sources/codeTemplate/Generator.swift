@@ -214,7 +214,7 @@ private extension Generator {
                 )
 
             case "_location":
-                let subPath = String(Paths.scenePath.suffix(Paths.scenePath.count - Paths.projectPath.count))
+                let subPath = String(Paths.locationPath.suffix(Paths.locationPath.count - Paths.projectPath.count))
 
                 if validationMode {
                     baseGeneratedPath = outputPath
@@ -222,7 +222,7 @@ private extension Generator {
                     baseGeneratedPath = try generatedFolder.createSubfolder(at: subPath).path
                 }
 
-                baseProjectPath = Paths.scenePath
+                baseProjectPath = Paths.locationPath
 
                 try traverse(
                     templateFolder: folder,

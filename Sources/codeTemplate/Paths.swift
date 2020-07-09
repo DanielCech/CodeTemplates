@@ -18,7 +18,7 @@ class Paths {
     // Project paths
     static var projectPath: String = "" // harbor-ios
     static var sourcesPath: String = "" // harbor-ios/Harbor
-    static var scenePath: String = "" // harbor-ios/Harbor/...
+    static var locationPath: String = "" // harbor-ios/Harbor/...
 
     static func setupPaths(context: Context) throws {
         if let unwrappedProjectPath = context["projectPath"] as? String {
@@ -38,15 +38,15 @@ class Paths {
             }
         }
 
-        if let unwrappedScenePath = context["scenePath"] as? String {
+        if let unwrappedScenePath = context["locationPath"] as? String {
             // If path is absolute
             if unwrappedScenePath.starts(with: "/") {
-                Paths.scenePath = unwrappedScenePath
+                Paths.locationPath = unwrappedScenePath
             } else {
-                Paths.scenePath = Paths.projectPath.appendingPathComponent(path: unwrappedScenePath)
+                Paths.locationPath = Paths.projectPath.appendingPathComponent(path: unwrappedScenePath)
             }
         } else {
-            throw ScriptError.moreInfoNeeded(message: "scenePath is missing")
+            throw ScriptError.moreInfoNeeded(message: "locationPath is missing")
         }
 
         if let unwrappedScriptPath = context["scriptPath"] as? String {

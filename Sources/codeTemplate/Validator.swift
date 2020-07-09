@@ -124,7 +124,7 @@ private extension Validator {
         let context: Context = [
             "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",
             "projectPath": "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS",
-            "scenePath": "Scenes/HouseholdScene/EmergencyContacts/EditEmergencyContact",
+            "locationPath": "Scenes/HouseholdScene/EmergencyContacts/EditEmergencyContact",
 
             "name": "test",
             "Name": "Test",

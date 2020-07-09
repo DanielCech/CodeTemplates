@@ -1,0 +1,55 @@
+source 'https://cdn.cocoapods.org/'
+
+platform :ios, '12.0'
+
+use_frameworks!
+inhibit_all_warnings!
+
+abstract_target 'defaults' do
+
+  # Tools
+  pod 'SwiftLint', '~> 0.39.0'
+  pod 'R.swift', '~> 5.2.0'
+  pod 'SwiftFormat/CLI', '~> 0.44.0'
+  pod 'AlamofireEasyLogger', '~> 1.2.0'
+  pod 'XCGLogger', '~> 7.0.0'
+  pod 'BonMot', '~> 5.5.1'
+  pod 'VersionIcon', '~> 1.0.4'
+  pod 'Nuke', '~> 9.0'
+  pod 'SwiftyStoreKit', '~> 0.15.0'
+  pod 'YPImagePicker', '~> 4.2.0'
+  pod 'IQKeyboardManagerSwift', '~> 6.3.0'
+
+  # DI
+  pod 'Swinject', '~> 2.7.0'
+  pod 'SwinjectAutoregistration', '~> 2.7.0'
+
+  # RX
+  pod 'Moya/RxSwift', '~> 14.0.0'
+  pod 'RxCocoa', '~> 5.1.0'
+  pod 'RxSwift', '~> 5.1.0'
+  pod 'RxDataSources', '~> 4.0'
+  pod 'RxOptional', '~> 4.0'
+  pod 'RxSwiftExt', '~> 5'
+
+  # Storage
+  pod 'RealmSwift', '~> 4.4.0'
+  pod 'KeychainSwift', '~> 19.0'
+
+  # Support
+  pod 'ZendeskSupportSDK', '~> 5'
+
+  #Analytics
+  pod 'FirebaseAnalytics', '~> 6.5'
+
+  # Sign in
+  pod 'GoogleSignIn', '~> 5'
+
+  target 'Harbor'
+
+  # Unit tests
+
+  target 'Harbor Tests' do
+      # Quick and Nimble here
+  end
+end
