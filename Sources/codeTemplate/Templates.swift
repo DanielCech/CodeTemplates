@@ -99,15 +99,10 @@ class Templates {
             throw ScriptError.generalError(message: "Deserialization error")
         }
 
-        var locationRelativeTo: LocationRelativeTo = .scene
-        if let unwrappedLocation = info["locationRelativeTo"] as? String, let value = LocationRelativeTo(rawValue: unwrappedLocation) {
-            locationRelativeTo = value
-        }
-
         let templateInfo = TemplateInfo(
             category: category,
             completeness: (info["completeness"] as? Int) ?? 0,
-            locationRelativeTo: locationRelativeTo,
+            compilable: (info["compilable"] as? Bool) ?? true,
             context: (info["context"] as? Context) ?? [:],
             switches: (info["switches"] as? [Template]) ?? []
         )

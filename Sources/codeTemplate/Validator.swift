@@ -99,23 +99,19 @@ public class Validator {
                 if podsOutput.lowercased().contains("error") {
                     print(podsOutput)
                 }
-                
+
                 // Build workspace
                 let xcodebuildOutput = shell("/usr/bin/xcodebuild -workspace \(validationFolder.path)/Template.xcworkspace/ -scheme Template build 2>&1")
                 if xcodebuildOutput.contains("BUILD FAILED") {
                     print(xcodebuildOutput)
                 }
-                
-            }
-            else {
+            } else {
                 // Build project
                 let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
                 if xcodebuildOutput.contains("BUILD FAILED") {
                     print(xcodebuildOutput)
                 }
             }
-
-            
 
             print("    🟢 Press any key to continue...")
             _ = readLine()

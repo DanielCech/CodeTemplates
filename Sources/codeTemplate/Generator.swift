@@ -57,53 +57,23 @@ class Generator {
         switch generationMode {
         case let .template(templateType):
 
+            let templateCategory = try Templates.shared.templateCategory(for: templateType)
+            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
+
             // Delete contents of Generated folder
             let generatedFolder = try Folder(path: outputPath)
             if deleteGenerated {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let templateCategory = try Templates.shared.templateCategory(for: templateType)
-            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
-            let templateInfo = try Templates.shared.templateInfo(for: templateType)
-
-            var baseGeneratedPath: String
-            var baseProjectPath: String
-
-            switch templateInfo.locationRelativeTo {
-            case .project:
-                baseGeneratedPath = generatedFolder.path
-                baseProjectPath = Paths.projectPath
-
-            case .sources:
-                if validationMode {
-                    baseGeneratedPath = outputPath
-                } else {
-                    baseGeneratedPath = try generatedFolder.createSubfolder(at: Paths.sourcesPath.lastPathComponent).path
-                }
-
-                baseProjectPath = Paths.sourcesPath
-
-            case .scene:
-                let subPath = String(Paths.scenePath.suffix(Paths.scenePath.count - Paths.projectPath.count))
-
-                if validationMode {
-                    baseGeneratedPath = outputPath
-                } else {
-                    baseGeneratedPath = try generatedFolder.createSubfolder(at: subPath).path
-                }
-
-                baseProjectPath = Paths.scenePath
-            }
-
-            let baseGeneratedFolder = try Folder(path: baseGeneratedPath)
-            let baseProjectFolder = try Folder(path: baseProjectPath)
+            let projectFolder = try Folder(path: Paths.projectPath)
 
             try traverse(
                 templateFolder: templateFolder,
-                generatedFolder: baseGeneratedFolder,
-                projectFolder: baseProjectFolder,
+                generatedFolder: generatedFolder,
+                projectFolder: projectFolder,
                 context: context,
+                outputPath: outputPath,
                 validationMode: validationMode
             )
 
@@ -146,6 +116,7 @@ private extension Generator {
         generatedFolder: Folder,
         projectFolder: Folder?,
         context: Context,
+        outputPath: String = Paths.generatedPath,
         validationMode: Bool = false
     ) throws {
         var modifiedContext = context
@@ -169,27 +140,27 @@ private extension Generator {
                 projectFile = nil // TODO: check - we want three way comparison everytime
             }
 
-            if file.name == "Podfile" {
-                if validationMode {
-                    let validationFolder = try Folder(path: Paths.validationPath)
-                    try file.copy(to: validationFolder)
-                    processedFiles.append((
-                        templateFile: templateFile,
-                        generatedFile: validationFolder.path.appendingPathComponent(path: file.name),
-                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
-                    ))
-                } else {
-                    let generatedFolder = try Folder(path: Paths.generatedPath)
-                    try file.copy(to: generatedFolder)
-                    processedFiles.append((
-                        templateFile: templateFile,
-                        generatedFile: generatedFolder.path.appendingPathComponent(path: file.name),
-                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
-                    ))
-                }
-
-                continue
-            }
+//            if file.name == "Podfile" {
+//                if validationMode {
+//                    let validationFolder = try Folder(path: Paths.validationPath)
+//                    try file.copy(to: validationFolder)
+//                    processedFiles.append((
+//                        templateFile: templateFile,
+//                        generatedFile: validationFolder.path.appendingPathComponent(path: file.name),
+//                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
+//                    ))
+//                } else {
+//                    let generatedFolder = try Folder(path: Paths.generatedPath)
+//                    try file.copy(to: generatedFolder)
+//                    processedFiles.append((
+//                        templateFile: templateFile,
+//                        generatedFile: generatedFolder.path.appendingPathComponent(path: file.name),
+//                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
+//                    ))
+//                }
+//
+//                continue
+//            }
 
             // Directly copy binary file
             guard let _ = try? file.readAsString() else {
@@ -214,17 +185,65 @@ private extension Generator {
 
         // Process subfolders
         for folder in templateFolder.subfolders {
-            let outputFolder = folder.name.modifyName(context: context)
-            let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
+            var baseGeneratedPath: String
+            var baseProjectPath: String
 
-            let projectSubFolder: Folder?
-            if let unwrappedProjectFolder = projectFolder {
-                projectSubFolder = try? Folder(path: unwrappedProjectFolder.path.appendingPathComponent(path: outputFolder))
-            } else {
-                projectSubFolder = nil
+            switch folder.name {
+            case "_project":
+                try traverse(
+                    templateFolder: folder,
+                    generatedFolder: try Folder(path: outputPath),
+                    projectFolder: try Folder(path: Paths.projectPath),
+                    context: context
+                )
+
+            case "_sources":
+                if validationMode {
+                    baseGeneratedPath = outputPath
+                } else {
+                    baseGeneratedPath = try generatedFolder.createSubfolder(at: Paths.sourcesPath.lastPathComponent).path
+                }
+
+                baseProjectPath = Paths.sourcesPath
+
+                try traverse(
+                    templateFolder: folder,
+                    generatedFolder: try Folder(path: baseGeneratedPath),
+                    projectFolder: try Folder(path: baseProjectPath),
+                    context: context
+                )
+
+            case "_location":
+                let subPath = String(Paths.scenePath.suffix(Paths.scenePath.count - Paths.projectPath.count))
+
+                if validationMode {
+                    baseGeneratedPath = outputPath
+                } else {
+                    baseGeneratedPath = try generatedFolder.createSubfolder(at: subPath).path
+                }
+
+                baseProjectPath = Paths.scenePath
+
+                try traverse(
+                    templateFolder: folder,
+                    generatedFolder: try Folder(path: baseGeneratedPath),
+                    projectFolder: try Folder(path: baseProjectPath),
+                    context: context
+                )
+
+            default:
+                let outputFolder = folder.name.modifyName(context: context)
+                let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
+
+                let projectSubFolder: Folder?
+                if let unwrappedProjectFolder = projectFolder {
+                    projectSubFolder = try? Folder(path: unwrappedProjectFolder.path.appendingPathComponent(path: outputFolder))
+                } else {
+                    projectSubFolder = nil
+                }
+
+                try traverse(templateFolder: folder, generatedFolder: generatedSubFolder, projectFolder: projectSubFolder,context: context)
             }
-
-            try traverse(templateFolder: folder, generatedFolder: generatedSubFolder, projectFolder: projectSubFolder,context: context)
         }
     }
 }
