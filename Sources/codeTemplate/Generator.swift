@@ -158,7 +158,7 @@ private extension Generator {
             do {
                 rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
             } catch {
-                throw ScriptError.generalError(message: "Stencil template error \(templateFolder.path): \(file.name): \(error.localizedDescription)")
+                throw CodeTemplateError.stencilTemplateError(message: "\(templateFolder.path): \(file.name): \(error.localizedDescription)")
             }
 
             try outputFile.write(rendered)
