@@ -8,18 +8,18 @@
 import Foundation
 
 struct TemplateInfo {
-    /// category of template - the first level of folder structure
+    /// Category of template - the first level of folder structure
     var category: String
 
-    // subjective measure - how well is template prepared?
+    /// Subjective measure - how well is template prepared?
     var completeness: Int
 
-    // is template separately compilable and validatable?
+    /// Is template separately compilable and validatable?
     var compilable: Bool
 
-    // context for template validation - for validation purposes
+    /// Context for template validation - for validation purposes
     var context: Context
 
-    // set of bool variables - the different setup of template - for validation purposes
+    /// Set of bool variables - the different setup of template - for validation purposes
     var switches: [String]
 }

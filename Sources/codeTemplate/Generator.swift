@@ -16,6 +16,7 @@ class Generator {
 
     var processedFiles = [ProcessedFile]()
 
+    /// Generate code using template with context in json file
     func generateCode(contextFile: String, reviewMode: ReviewMode) throws {
         let contextFile = try File(path: contextFile)
         let contextString = try contextFile.readAsString(encodedAs: .utf8)
@@ -46,6 +47,7 @@ class Generator {
         )
     }
 
+    /// Generate code using particular template
     func generate(
         generationMode: GenerationMode,
         context: Context,
@@ -88,6 +90,8 @@ class Generator {
 }
 
 private extension Generator {
+    
+    /// Definition of stencil environment with support of custom filters
     func stencilEnvironment(templateFolder: Folder) -> Environment {
         let ext = Extension()
 
@@ -111,6 +115,7 @@ private extension Generator {
         return environment
     }
 
+    /// Recursive traverse thru template, generated and project folders
     func traverse(
         templateFolder: Folder,
         generatedFolder: Folder,
@@ -139,28 +144,6 @@ private extension Generator {
             } else {
                 projectFile = nil // TODO: check - we want three way comparison everytime
             }
-
-//            if file.name == "Podfile" {
-//                if validationMode {
-//                    let validationFolder = try Folder(path: Paths.validationPath)
-//                    try file.copy(to: validationFolder)
-//                    processedFiles.append((
-//                        templateFile: templateFile,
-//                        generatedFile: validationFolder.path.appendingPathComponent(path: file.name),
-//                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
-//                    ))
-//                } else {
-//                    let generatedFolder = try Folder(path: Paths.generatedPath)
-//                    try file.copy(to: generatedFolder)
-//                    processedFiles.append((
-//                        templateFile: templateFile,
-//                        generatedFile: generatedFolder.path.appendingPathComponent(path: file.name),
-//                        projectFile: Paths.projectPath.appendingPathComponent(path: file.name)
-//                    ))
-//                }
-//
-//                continue
-//            }
 
             // Directly copy binary file
             guard let _ = try? file.readAsString() else {

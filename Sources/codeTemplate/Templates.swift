@@ -11,12 +11,17 @@ import ScriptToolkit
 
 public typealias Template = String
 
+/// Code template management
 class Templates {
     static let shared = Templates()
 
+    /// Internal representation of templates
     private var templateTypesDict: [Template: TemplateInfo] = [:]
+    
+    /// Internal representation of template dependencies
     private var templateDependenciesDict: [Template: [Template]] = [:]
 
+    /// Loads templates from folder structure in Templates dir and loads their json
     func templateTypes() throws -> [Template: TemplateInfo] {
         if !templateTypesDict.isEmpty {
             return templateTypesDict
@@ -52,6 +57,7 @@ class Templates {
         return types
     }
 
+    /// Loads template dependencies from json
     func templateDependencies() throws -> [Template: [Template]] {
         if !templateDependenciesDict.isEmpty {
             return templateDependenciesDict
@@ -73,6 +79,7 @@ class Templates {
         return dependencies
     }
 
+    /// Returns template category
     func templateCategory(for template: Template) throws -> String {
         if let templateInfo = try templateTypes()[template] {
             return templateInfo.category
@@ -81,6 +88,7 @@ class Templates {
         }
     }
 
+    /// Returns template info structure
     func templateInfo(for template: Template) throws -> TemplateInfo {
         if let templateInfo = try templateTypes()[template] {
             return templateInfo
@@ -89,6 +97,7 @@ class Templates {
         }
     }
 
+    /// Creates template info structure from json
     private func templateInfo(infoFilePath: String, category: String) throws -> TemplateInfo {
         let templateInfoFile = try File(path: infoFilePath)
         let templateInfoString = try templateInfoFile.readAsString(encodedAs: .utf8)

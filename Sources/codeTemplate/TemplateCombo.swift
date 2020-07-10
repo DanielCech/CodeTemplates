@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Combination of several templates
 public enum TemplateCombo: String {
     // Scenes
     case scene
@@ -81,6 +82,7 @@ public enum TemplateCombo: String {
         }
     }
 
+    /// Modification of context for combo generation
     func updateComboContext(_ context: Context, name: String) -> Context {
         var modifiedContext = context
         modifiedContext["name"] = name

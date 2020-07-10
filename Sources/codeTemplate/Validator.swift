@@ -11,22 +11,25 @@ import Files
 import Foundation
 import ScriptToolkit
 
-// Power operator
+/// Power operator - used for counting the possible combinations
 precedencegroup PowerPrecedence { higherThan: MultiplicationPrecedence }
 infix operator ^^ : PowerPrecedence
 func ^^ (radix: Int, power: Int) -> Int {
     return Int(pow(Double(radix), Double(power)))
 }
 
+/// Validation the templates - test whether they can be compiled separately with all possible combinations of switches
 public class Validator {
     public static let shared = Validator()
 
+    /// Validate all templates
     public func validateTemplates(scriptPath: String) throws {
         for template in try Templates.shared.templateTypes().keys {
             try validate(template: template, scriptPath: scriptPath)
         }
     }
 
+    /// Validate particular template
     public func validate(template: Template, scriptPath: String) throws {
         print("🔎 \(template)")
 
@@ -71,63 +74,70 @@ public class Validator {
                 print("    --------------------------")
             }
 
-            let validationFolder = try Folder(path: Paths.validationPath)
-
-            try Generator.shared.generate(
-                generationMode: .template("singleViewApp"),
-                context: context,
-                reviewMode: .none,
-                deleteGenerated: true,
-                outputPath: validationFolder.path
-            )
-
-            let outputFolder = try validationFolder.subfolder(named: "Template")
-
-            try Generator.shared.generate(
-                generationMode: .template(template),
-                context: context,
-                reviewMode: .none,
-                deleteGenerated: false,
-                outputPath: outputFolder.path,
-                validationMode: true
-            )
-
-            // Create Xcodeproj
-            let xcodegenOutput = shell("cd \"\(validationFolder.path)\";/usr/local/bin/xcodegen generate > /dev/null 2>&1")
-            if xcodegenOutput.contains("error") {
-                print(xcodegenOutput)
-            }
-
-            // Instal Cocoapods if needed
-            if outputFolder.containsFile(named: "Podfile") {
-                let podfile = try outputFolder.file(named: "Podfile")
-                try podfile.move(to: validationFolder)
-
-                let podsOutput = shell("cd \"\(validationFolder.path)\";export LANG=en_US.UTF-8;/usr/local/bin/pod install")
-                if podsOutput.lowercased().contains("error") {
-                    print(podsOutput)
-                }
-
-                // Build workspace
-                let xcodebuildOutput = shell("/usr/bin/xcodebuild -workspace \(validationFolder.path)/Template.xcworkspace/ -scheme Template build 2>&1")
-                if xcodebuildOutput.contains("BUILD FAILED") {
-                    print(xcodebuildOutput)
-                }
-            } else {
-                // Build project
-                let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
-                if xcodebuildOutput.contains("BUILD FAILED") {
-                    print(xcodebuildOutput)
-                }
-            }
-
-            print("    🟢 Press any key to continue...")
-            _ = readLine()
+            try checkTemplateCombination(template: template, context: context)
         }
     }
 }
 
 private extension Validator {
+    
+    /// Check particular template combination of enabled switches
+    func checkTemplateCombination(template: Template, context: Context) throws {
+        let validationFolder = try Folder(path: Paths.validationPath)
+
+        try Generator.shared.generate(
+            generationMode: .template("singleViewApp"),
+            context: context,
+            reviewMode: .none,
+            deleteGenerated: true,
+            outputPath: validationFolder.path
+        )
+
+        let outputFolder = try validationFolder.subfolder(named: "Template")
+
+        try Generator.shared.generate(
+            generationMode: .template(template),
+            context: context,
+            reviewMode: .none,
+            deleteGenerated: false,
+            outputPath: outputFolder.path,
+            validationMode: true
+        )
+
+        // Create Xcodeproj
+        let xcodegenOutput = shell("cd \"\(validationFolder.path)\";/usr/local/bin/xcodegen generate > /dev/null 2>&1")
+        if xcodegenOutput.contains("error") {
+            print(xcodegenOutput)
+        }
+
+        // Instal Cocoapods if needed
+        if outputFolder.containsFile(named: "Podfile") {
+            let podfile = try outputFolder.file(named: "Podfile")
+            try podfile.move(to: validationFolder)
+
+            let podsOutput = shell("cd \"\(validationFolder.path)\";export LANG=en_US.UTF-8;/usr/local/bin/pod install")
+            if podsOutput.lowercased().contains("error") {
+                print(podsOutput)
+            }
+
+            // Build workspace
+            let xcodebuildOutput = shell("/usr/bin/xcodebuild -workspace \(validationFolder.path)/Template.xcworkspace/ -scheme Template build 2>&1")
+            if xcodebuildOutput.contains("BUILD FAILED") {
+                print(xcodebuildOutput)
+            }
+        } else {
+            // Build project
+            let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
+            if xcodebuildOutput.contains("BUILD FAILED") {
+                print(xcodebuildOutput)
+            }
+        }
+
+        print("    🟢 Press any key to continue...")
+        _ = readLine()
+    }
+    
+    /// Default context used for template validation
     func defaultContext() -> Context {
         let context: Context = [
             "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",

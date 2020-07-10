@@ -16,6 +16,7 @@ class ContextHelper {
         return formatter
     }()
 
+    /// Default operations with context - default content, case processing, ...
     func updateContext(_ context: Context) -> Context {
         var modifiedContext = context
         for key in context.keys {

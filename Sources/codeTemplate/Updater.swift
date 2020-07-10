@@ -12,6 +12,7 @@ import ScriptToolkit
 public class Updater {
     public static let shared = Updater()
 
+    /// Update templates based on their dependencies
     public func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 
@@ -38,6 +39,8 @@ public class Updater {
 }
 
 private extension Updater {
+    
+    /// Update particular template
     func update(parentTemplate: Folder, childTemplate: Folder, updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 

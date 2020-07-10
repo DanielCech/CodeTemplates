@@ -20,6 +20,7 @@ class Paths {
     static var sourcesPath: String = "" // harbor-ios/Harbor
     static var locationPath: String = "" // harbor-ios/Harbor/...
 
+    /// Setup paths from context
     static func setupPaths(context: Context) throws {
         if let unwrappedProjectPath = context["projectPath"] as? String {
             Paths.projectPath = unwrappedProjectPath

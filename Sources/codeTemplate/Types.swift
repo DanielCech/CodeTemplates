@@ -7,38 +7,43 @@
 
 import Foundation
 
+/// Context is dictionary like structure that contains all info for code generation using template
 public typealias Context = [String: Any]
+
+/// Tuple of template file, generated file and project file that are related to the same file
 public typealias ProcessedFile = (templateFile: String, generatedFile: String, projectFile: String?)
 
+/// Review mode after code generation
 public enum ReviewMode: String {
+    /// Do not review
     case none
+    
+    /// Review files separately
     case individual
+    
+    /// Review files together as folder comparison
     case overall
 }
 
+/// Generate code using single template or template combo
 public enum GenerationMode {
     case template(Template)
     case combo(TemplateCombo)
 }
 
+/// The way howo templates should be updated
 public enum UpdateTemplateMode: String {
-    case all // update all templates
-    case new // update only when parent template modification date is newer than child template modification date
+    /// Update all templates
+    case all
+    
+    /// Update only when parent template modification date is newer than child template modification date
+    case new
 }
 
+
+/// The current program operation - generate code, update template or validate template
 public enum ProgramMode {
     case generateCode(Context)
     case updateTemplates(UpdateTemplateMode)
     case validateTemplates
-}
-
-public struct ProjectFile {
-    var name: String
-    var uuid: String
-}
-
-public enum LocationRelativeTo: String {
-    case project
-    case sources
-    case scene
 }
