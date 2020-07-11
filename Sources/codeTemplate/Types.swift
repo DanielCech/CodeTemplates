@@ -17,10 +17,10 @@ public typealias ProcessedFile = (templateFile: String, generatedFile: String, p
 public enum ReviewMode: String {
     /// Do not review
     case none
-    
+
     /// Review files separately
     case individual
-    
+
     /// Review files together as folder comparison
     case overall
 }
@@ -35,11 +35,10 @@ public enum GenerationMode {
 public enum UpdateTemplateMode: String {
     /// Update all templates
     case all
-    
+
     /// Update only when parent template modification date is newer than child template modification date
     case new
 }
-
 
 /// The current program operation - generate code, update template or validate template
 public enum ProgramMode {

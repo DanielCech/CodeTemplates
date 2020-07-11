@@ -17,9 +17,9 @@ class Templates {
 
     /// Internal representation of templates
     private var templateTypesDict: [Template: TemplateInfo] = [:]
-    
-    /// Internal representation of template dependencies
-    private var templateDependenciesDict: [Template: [Template]] = [:]
+
+    /// Internal representation of template derivations
+    private var templateDerivationsDict: [Template: [Template]] = [:]
 
     /// Loads templates from folder structure in Templates dir and loads their json
     func templateTypes() throws -> [Template: TemplateInfo] {
@@ -57,26 +57,26 @@ class Templates {
         return types
     }
 
-    /// Loads template dependencies from json
-    func templateDependencies() throws -> [Template: [Template]] {
-        if !templateDependenciesDict.isEmpty {
-            return templateDependenciesDict
+    /// Loads template derivations from json
+    func templateDerivations() throws -> [Template: [Template]] {
+        if !templateDerivationsDict.isEmpty {
+            return templateDerivationsDict
         }
 
-        let dependenciesFilePath = Paths.templatePath.appendingPathComponent(path: "dependencies.json")
+        let derivationsFilePath = Paths.templatePath.appendingPathComponent(path: "derivations.json")
 
-        let dependenciesFile = try File(path: dependenciesFilePath)
-        let dependenciesString = try dependenciesFile.readAsString(encodedAs: .utf8)
-        let dependenciesData = Data(dependenciesString.utf8)
+        let derivationsFile = try File(path: derivationsFilePath)
+        let derivationsString = try derivationsFile.readAsString(encodedAs: .utf8)
+        let derivationsData = Data(derivationsString.utf8)
 
         // make sure this JSON is in the format we expect
-        guard let dependencies = try JSONSerialization.jsonObject(with: dependenciesData, options: []) as? [Template: [Template]] else {
+        guard let derivations = try JSONSerialization.jsonObject(with: derivationsData, options: []) as? [Template: [Template]] else {
             throw ScriptError.generalError(message: "Deserialization error")
         }
 
-        templateDependenciesDict = dependencies
+        templateDerivationsDict = derivations
 
-        return dependencies
+        return derivations
     }
 
     /// Returns template category

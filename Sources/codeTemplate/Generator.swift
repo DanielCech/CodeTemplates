@@ -90,7 +90,6 @@ class Generator {
 }
 
 private extension Generator {
-    
     /// Definition of stencil environment with support of custom filters
     func stencilEnvironment(templateFolder: Folder) -> Environment {
         let ext = Extension()
@@ -146,7 +145,7 @@ private extension Generator {
             }
 
             // Directly copy binary file
-            guard let _ = try? file.readAsString() else {
+            guard var fileString = try? file.readAsString() else {
                 let copiedFile = try file.copy(to: generatedFolder)
                 try copiedFile.rename(to: outputFileName)
                 continue
@@ -156,7 +155,14 @@ private extension Generator {
 
             var rendered: String
             do {
-                rendered = try environment.renderTemplate(name: file.name, context: modifiedContext)
+                // Stencil expressions {% for %} needs to be placed at the end of last line to prevent extra linespaces in generated code
+                let matches = try! fileString.regExpMatches(lineRegExp: #"\n^\w*\{% for .*%\}$"#)
+
+                for match in matches {
+                    fileString = fileString.replacingOccurrences(of: match, with: " " + match.suffix(match.count - 1))
+                }
+
+                rendered = try environment.renderTemplate(string: fileString, context: modifiedContext)
             } catch {
                 throw CodeTemplateError.stencilTemplateError(message: "\(templateFolder.path): \(file.name): \(error.localizedDescription)")
             }

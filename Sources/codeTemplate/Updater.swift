@@ -12,19 +12,19 @@ import ScriptToolkit
 public class Updater {
     public static let shared = Updater()
 
-    /// Update templates based on their dependencies
+    /// Update templates based on their derivations
     public func updateTemplates(updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")
 
         for parentTemplate in try Templates.shared.templateTypes().keys {
-            guard let dependencies = try Templates.shared.templateDependencies()[parentTemplate] else { continue }
+            guard let derivations = try Templates.shared.templateDerivations()[parentTemplate] else { continue }
 
             let parentTemplateCategory = try Templates.shared.templateCategory(for: parentTemplate)
             guard let parentTemplateFolder = try? templateFolder.subfolder(at: parentTemplateCategory).subfolder(at: parentTemplate) else {
                 throw ScriptError.folderNotFound(message: parentTemplateCategory + "/" + parentTemplate)
             }
 
-            for childTemplate in dependencies {
+            for childTemplate in derivations {
                 let childTemplateCategory = try Templates.shared.templateCategory(for: childTemplate)
 
                 guard let childTemplateFolder = try? templateFolder.subfolder(at: childTemplateCategory).subfolder(at: childTemplate) else {
@@ -39,7 +39,6 @@ public class Updater {
 }
 
 private extension Updater {
-    
     /// Update particular template
     func update(parentTemplate: Folder, childTemplate: Folder, updateMode: UpdateTemplateMode, scriptPath: String) throws {
         let templateFolder = try Folder(path: scriptPath).subfolder(named: "Templates")

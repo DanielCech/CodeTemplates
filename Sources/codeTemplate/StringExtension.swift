@@ -8,7 +8,6 @@
 import Foundation
 
 public extension String {
-    
     /// Conversion to PascalCase
     func pascalCased() -> String {
         let first = String(prefix(1)).uppercased()
@@ -41,5 +40,17 @@ public extension String {
             newName = newName.replacingOccurrences(of: "{{\(key)}}", with: stringValue)
         }
         return newName
+    }
+
+    /// Regular expression matches
+    func regExpMatches(lineRegExp: String) throws -> [String] {
+        let nsrange = NSRange(startIndex..<endIndex, in: self)
+        let regex = try NSRegularExpression(pattern: lineRegExp, options: [.anchorsMatchLines])
+        let matches = regex.matches(in: self, options: [], range: nsrange)
+
+        let ranges = matches.map { Range($0.range, in: self)! }
+        let substrings = ranges.map { self[$0] }
+        let strings = substrings.map { String($0) }
+        return strings
     }
 }

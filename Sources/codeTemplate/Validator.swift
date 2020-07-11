@@ -80,7 +80,6 @@ public class Validator {
 }
 
 private extension Validator {
-    
     /// Check particular template combination of enabled switches
     func checkTemplateCombination(template: Template, context: Context) throws {
         let validationFolder = try Folder(path: Paths.validationPath)
@@ -136,7 +135,7 @@ private extension Validator {
         print("    🟢 Press any key to continue...")
         _ = readLine()
     }
-    
+
     /// Default context used for template validation
     func defaultContext() -> Context {
         let context: Context = [

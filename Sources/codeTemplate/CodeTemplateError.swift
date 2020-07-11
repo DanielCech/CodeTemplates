@@ -16,12 +16,12 @@ extension CodeTemplateError: PrintableError {
     var errorDescription: String {
         let prefix = "💥 error: "
         var errorDescription = ""
-        
+
         switch self {
         case let .stencilTemplateError(message):
             errorDescription = "stencil syntax error: \(message)"
         }
-        
+
         return prefix + errorDescription
     }
 }
