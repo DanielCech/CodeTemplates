@@ -46,11 +46,7 @@ class Reviewer {
 
         case .individual:
             for processedFile in processedFiles {
-                if let unwrappedProjectFile = processedFile.projectFile {
-                    compareThreeItems(first: processedFile.templateFile, second: processedFile.generatedFile, third: unwrappedProjectFile)
-                } else {
-                    compareTwoItems(first: processedFile.templateFile, second: processedFile.generatedFile)
-                }
+                compareThreeItems(first: processedFile.templateFile, second: processedFile.generatedFile, third: processedFile.projectFile)
 
                 print(processedFile.generatedFile.lastPathComponent + ":")
                 print("🟢 Press any key to continue...")

@@ -72,9 +72,9 @@ class Generator {
             let projectFolder = try Folder(path: Paths.projectPath)
 
             try traverse(
-                templateFolder: templateFolder,
-                generatedFolder: generatedFolder,
-                projectFolder: projectFolder,
+                templatePath: templateFolder.path,
+                generatedPath: generatedFolder.path,
+                projectPath: projectFolder.path,
                 context: context,
                 outputPath: outputPath,
                 validationMode: validationMode
@@ -129,14 +129,17 @@ private extension Generator {
 
     /// Recursive traverse thru template, generated and project folders
     func traverse(
-        templateFolder: Folder,
-        generatedFolder: Folder,
-        projectFolder: Folder?,
+        templatePath: String,
+        generatedPath: String,
+        projectPath: String,
         context: Context,
         outputPath: String = Paths.generatedPath,
         validationMode: Bool = false
     ) throws {
         var modifiedContext = context
+
+        let templateFolder = try Folder(path: templatePath)
+        let generatedFolder = try Folder(path: generatedPath)
 
         let environment = stencilEnvironment(templateFolder: templateFolder)
 
@@ -147,15 +150,9 @@ private extension Generator {
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
 
-            let templateFile = templateFolder.path.appendingPathComponent(path: file.name)
-            let generatedFile = generatedFolder.path.appendingPathComponent(path: outputFileName)
-
-            let projectFile: String?
-            if let unwrappedProjectFolder = projectFolder {
-                projectFile = unwrappedProjectFolder.path.appendingPathComponent(path: outputFileName)
-            } else {
-                projectFile = nil // TODO: check - we want three way comparison everytime
-            }
+            let templateFile = templatePath.appendingPathComponent(path: file.name)
+            let generatedFile = generatedPath.appendingPathComponent(path: outputFileName)
+            let projectFile = projectPath.appendingPathComponent(path: outputFileName)
 
             // Directly copy binary file
             guard var fileString = try? file.readAsString() else {
@@ -193,9 +190,9 @@ private extension Generator {
             switch folder.name {
             case "_project":
                 try traverse(
-                    templateFolder: folder,
-                    generatedFolder: try Folder(path: outputPath),
-                    projectFolder: try Folder(path: Paths.projectPath),
+                    templatePath: folder.path,
+                    generatedPath: outputPath,
+                    projectPath: Paths.projectPath,
                     context: context
                 )
 
@@ -209,9 +206,9 @@ private extension Generator {
                 baseProjectPath = Paths.sourcesPath
 
                 try traverse(
-                    templateFolder: folder,
-                    generatedFolder: try Folder(path: baseGeneratedPath),
-                    projectFolder: try Folder(path: baseProjectPath),
+                    templatePath: folder.path,
+                    generatedPath: baseGeneratedPath,
+                    projectPath: baseProjectPath,
                     context: context
                 )
 
@@ -227,9 +224,9 @@ private extension Generator {
                 baseProjectPath = Paths.locationPath
 
                 try traverse(
-                    templateFolder: folder,
-                    generatedFolder: try Folder(path: baseGeneratedPath),
-                    projectFolder: try Folder(path: baseProjectPath),
+                    templatePath: folder.path,
+                    generatedPath: baseGeneratedPath,
+                    projectPath: baseProjectPath,
                     context: context
                 )
 
@@ -237,14 +234,12 @@ private extension Generator {
                 let outputFolder = folder.name.modifyName(context: context)
                 let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
 
-                let projectSubFolder: Folder?
-                if let unwrappedProjectFolder = projectFolder {
-                    projectSubFolder = try? Folder(path: unwrappedProjectFolder.path.appendingPathComponent(path: outputFolder))
-                } else {
-                    projectSubFolder = nil
-                }
-
-                try traverse(templateFolder: folder, generatedFolder: generatedSubFolder, projectFolder: projectSubFolder,context: context)
+                try traverse(
+                    templatePath: folder.path,
+                    generatedPath: generatedSubFolder.path,
+                    projectPath: projectPath.appendingPathComponent(path: outputFolder),
+                    context: context
+                )
             }
         }
     }
