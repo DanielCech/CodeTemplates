@@ -11,6 +11,9 @@ struct TemplateInfo {
     /// Category of template - the first level of folder structure
     var category: String
 
+    /// List of templates that are dependencies for current template (e.g. some view controller is not compilable without his view model)
+    var dependencies: [String]
+
     /// Subjective measure - how well is template prepared?
     var completeness: Int
 

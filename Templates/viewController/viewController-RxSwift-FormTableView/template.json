@@ -1,4 +1,5 @@
 {
   "context": {},
-  "switches": []
+  "switches": [],
+  "dependencies": ["viewModel-RxSwift-FormTableView"]
 }

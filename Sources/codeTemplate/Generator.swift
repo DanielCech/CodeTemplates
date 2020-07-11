@@ -60,6 +60,7 @@ class Generator {
         case let .template(templateType):
 
             let templateCategory = try Templates.shared.templateCategory(for: templateType)
+            let templateInfo = try Templates.shared.templateInfo(for: templateType)
             let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
 
             // Delete contents of Generated folder
@@ -78,6 +79,18 @@ class Generator {
                 outputPath: outputPath,
                 validationMode: validationMode
             )
+
+            // Generate also template dependencies
+            for dependency in templateInfo.dependencies {
+                try generate(
+                    generationMode: .template(dependency),
+                    context: context,
+                    reviewMode: .none,
+                    deleteGenerated: false,
+                    outputPath: outputPath,
+                    validationMode: validationMode
+                )
+            }
 
         case let .combo(comboType):
             try comboType.perform(context: context)
