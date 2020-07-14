@@ -46,12 +46,33 @@ class Reviewer {
 
         case .individual:
             for processedFile in processedFiles {
+                if try sameContents(processedFile) {
+                    print("🧷 " + processedFile.generatedFile.lastPathComponent + ": same content, skipping\n")
+                    continue
+                }
+
                 compareThreeItems(first: processedFile.templateFile, second: processedFile.generatedFile, third: processedFile.projectFile)
 
-                print(processedFile.generatedFile.lastPathComponent + ":")
-                print("🟢 Press any key to continue...")
+                print("🧷 " + processedFile.generatedFile.lastPathComponent + ":")
+                print("    🟢 Press enter to continue...")
                 _ = readLine()
             }
+        }
+    }
+}
+
+private extension Reviewer {
+    func sameContents(_ files: ProcessedFile) throws -> Bool {
+        do {
+            let generatedFile = try File(path: files.generatedFile)
+            let generatedFileData = try generatedFile.read()
+
+            let projectFile = try File(path: files.projectFile)
+            let projectFileData = try projectFile.read()
+
+            return generatedFileData == projectFileData
+        } catch {
+            return false
         }
     }
 }

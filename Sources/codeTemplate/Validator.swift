@@ -132,7 +132,7 @@ private extension Validator {
             }
         }
 
-        print("    🟢 Press any key to continue...")
+        print("    🟢 Press enter to continue...")
         _ = readLine()
     }
 

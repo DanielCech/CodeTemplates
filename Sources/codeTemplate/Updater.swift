@@ -56,7 +56,7 @@ private extension Updater {
                     compareTwoItems(first: parentTemplateFile.path, second: childTemplateFile.path)
 
                     print("    1️⃣ \(parentTemplateFilePath)\n    2️⃣ \(childTemplateFilePath)")
-                    print("    🟢 Press any key to continue...")
+                    print("    🟢 Press enter to continue...")
                     _ = readLine()
 
                     touch(file: parentTemplateFile.path)

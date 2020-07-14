@@ -69,7 +69,7 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
         switch item {
 {% for cell in tableViewCells %}
         case .{{cell}}:
-            let cell: {{Name}}{{cell|pascalCased}}TableViewCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: {{cell|pascalCased}}TableViewCell = tableView.dequeueReusableCell(for: indexPath)
             return cell
 {% endfor %}
         }
@@ -178,7 +178,7 @@ private extension {{Name}}ViewController {
         {{name}}TableView.separatorStyle = .none
         {{name}}TableView.rowHeight = UITableView.automaticDimension
 {% for cell in tableViewCells %}
-        {{name}}TableView.register({{Name}}{{cell|pascalCased}}TableViewCell.self) {% endfor %}
+        {{name}}TableView.register({{cell|pascalCased}}TableViewCell.self) {% endfor %}
 {% if sectionHeader %}
         TableView.registerHeaderFooterView({{Name}}SectionHeader.self)
 {% endif %}

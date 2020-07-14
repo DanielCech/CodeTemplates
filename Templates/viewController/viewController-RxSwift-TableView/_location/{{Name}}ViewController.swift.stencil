@@ -34,7 +34,7 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
         switch item {
 {% for cell in tableViewCells %}
         case .{{cell}}:
-            let cell: {{Name}}{{cell|pascalCased}}TableViewCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: {{cell|pascalCased}}TableViewCell = tableView.dequeueReusableCell(for: indexPath)
             return cell
 {% endfor %}
         }
@@ -68,11 +68,7 @@ extension {{Name}}ViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard dataSource.sectionModels[section].model != nil else {
-            return 0
-        }
-
-        return 52
+        return UITableView.automaticDimension
     }
 }
 {% endif %}
@@ -143,9 +139,19 @@ private extension {{Name}}ViewController {
         {{name}}TableView.separatorStyle = .none
         {{name}}TableView.rowHeight = UITableView.automaticDimension
 {% for cell in tableViewCells %}
-        {{name}}TableView.register({{Name}}{{cell|pascalCased}}TableViewCell.self) {% endfor %}
+        {{name}}TableView.register({{cell|pascalCased}}TableViewCell.self) {% endfor %}
 {% if sectionHeader %}
         TableView.registerHeaderFooterView({{Name}}SectionHeader.self)
+{% endif %}
+
+{% if tableViewHeader %}
+		let tableHeader = {{Name}}Header.nibInstance
+        accountTableView.setTableHeader(header: tableHeader, height: 200) // TODO: set header height
+{% endif %}
+
+{% if tableViewFooter %}
+		let tableFooter = {{Name}}Footer.nibInstance
+        accountTableView.setTableFooter(footer: tableFooter, height: 200) // TODO: set footer height
 {% endif %}
     }
 }

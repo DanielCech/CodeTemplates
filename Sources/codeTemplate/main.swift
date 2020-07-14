@@ -12,6 +12,8 @@ import Stencil
  copyright - copyright phrase used in file header
  fakeNavbar - using scrolling fake navbar
  sectionHeaders - support for tableview section headers
+ tableViewHeader - table has header
+ tableViewFooter - table has footer
  oldTableViewCells - already defined table view cells
  newTableViewCells - table view cells that need to be generated
  tableViewCells - all table view cells together

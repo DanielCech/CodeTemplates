@@ -82,9 +82,31 @@ class Generator {
 
             // Generate also template dependencies
             for dependency in templateInfo.dependencies {
+                var dependencyName = dependency
+
+                if dependency.contains(":") {
+                    let parts = dependency.split(separator: ":")
+                    dependencyName = String(parts.first!)
+                    let conditions = parts.last!.split(separator: ",")
+
+                    var overallValue = false
+                    for condition in conditions {
+                        if let conditionValue = context[String(condition)] as? Bool, conditionValue {
+                            overallValue = true
+                            break
+                        }
+                    }
+
+                    // Dependency has not fullfilled conditions
+                    if !overallValue {
+                        continue
+                    }
+                }
+
                 try generate(
-                    generationMode: .template(dependency),
+                    generationMode: .template(dependencyName),
                     context: context,
+
                     reviewMode: .none,
                     deleteGenerated: false,
                     outputPath: outputPath,

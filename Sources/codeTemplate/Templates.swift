@@ -84,7 +84,7 @@ class Templates {
         if let templateInfo = try templateTypes()[template] {
             return templateInfo.category
         } else {
-            throw ScriptError.argumentError(message: "template does not exist")
+            throw ScriptError.argumentError(message: "template '\(template)' does not exist")
         }
     }
 
@@ -93,7 +93,7 @@ class Templates {
         if let templateInfo = try templateTypes()[template] {
             return templateInfo
         } else {
-            throw ScriptError.argumentError(message: "template does not exist")
+            throw ScriptError.argumentError(message: "template '\(template)' does not exist")
         }
     }
 
