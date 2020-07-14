@@ -50,6 +50,8 @@ public class Validator {
             return
         }
 
+        print("✂️ template \(template):")
+
         // Update default context with settings context
         for key in templateInfo.context.keys {
             context[key] = templateInfo.context[key]
@@ -103,6 +105,7 @@ private extension Validator {
             validationMode: true
         )
 
+        print("    🗳 generating xcode project")
         // Create Xcodeproj
         let xcodegenOutput = shell("cd \"\(validationFolder.path)\";/usr/local/bin/xcodegen generate > /dev/null 2>&1")
         if xcodegenOutput.contains("error") {
@@ -111,6 +114,8 @@ private extension Validator {
 
         // Instal Cocoapods if needed
         if outputFolder.containsFile(named: "Podfile") {
+            print("    📦 installing pods")
+
             let podfile = try outputFolder.file(named: "Podfile")
             try podfile.move(to: validationFolder)
 
@@ -119,12 +124,15 @@ private extension Validator {
                 print(podsOutput)
             }
 
+            print("    🕓 building workspace")
             // Build workspace
-            let xcodebuildOutput = shell("/usr/bin/xcodebuild -workspace \(validationFolder.path)/Template.xcworkspace/ -scheme Template build 2>&1")
+            let xcodebuildOutput = shell("/usr/bin/xcodebuild -workspace \(validationFolder.path)/Template.xcworkspace/ -scheme Template -destination 'platform=iOS Simulator,name=iPhone 11,OS=13.5' build 2>&1")
             if xcodebuildOutput.contains("BUILD FAILED") {
                 print(xcodebuildOutput)
             }
         } else {
+            print("    🕓 building project")
+
             // Build project
             let xcodebuildOutput = shell("/usr/bin/xcodebuild -project \(validationFolder.path)/Template.xcodeproj/ -scheme Template build 2>&1")
             if xcodebuildOutput.contains("BUILD FAILED") {
