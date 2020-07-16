@@ -12,5 +12,5 @@ abstract_target 'defaults' do
   pod 'RxSwift', '~> 5.1.0'
   pod 'RxDataSources', '~> 4.0'
 
-  target 'Template'
+  target '{{projectName}}'
 end

@@ -33,8 +33,6 @@ final class {{Name}}NavigationCoordinator {
 // MARK: - {{Name}}NavigationCoordinatoring
 
 extension {{Name}}NavigationCoordinator: {{Name}}NavigationCoordinatoring {
-    func showActivity() {}
-
     func start() {
         navigationController.pushViewController(
             make{{Name}}ViewController(),

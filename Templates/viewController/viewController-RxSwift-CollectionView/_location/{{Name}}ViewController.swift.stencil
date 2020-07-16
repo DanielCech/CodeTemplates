@@ -7,23 +7,30 @@
 //
 
 import RxCocoa
+import RxDataSources
 import RxSwift
 import UIKit
 
 final class {{Name}}ViewController: UIViewController, ViewModelContaining {
     // MARK: IBOutlets
-    @IBOutlet private var button: UIButton!
+
+    @IBOutlet private var collectionView: UICollectionView!
 
     // MARK: Public Properties
 
     // swiftlint:disable:next implicitly_unwrapped_optional
-    weak var coordinator: {{Name}}NavigationCoordinating!
+    weak var coordinator: ProfileNavigationCoordinating!
 
     // swiftlint:disable:next implicitly_unwrapped_optional
-    var viewModel: {{Name}}ViewModel!
+    var viewModel: AvatarSelectionSheetViewModel!
     var disposeBag: DisposeBag = DisposeBag()
 
     // MARK: Private Properties
+    private lazy var dataSource = RxCollectionViewSectionedReloadDataSource<{{Name}}SectionModel>(configureCell: { _, collectionView, indexPath, model -> UICollectionViewCell in
+        let cell: AvatarCollectionViewCell = collectionView.dequeueReusableCell(for: indexPath)
+        cell.setup(image: model.image)
+        return cell
+    })
 
     // MARK: Lifecycle
 
@@ -33,31 +40,69 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupView()
+    }
+
+    @objc func handleTap(_: UITapGestureRecognizer) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
 // MARK: - Binding
 
-extension {{Name}}ViewController {
+extension AvatarSelectionSheetViewController {
     func bindToViewModel() {
-        let input = {{Name}}ViewModel.Input()
-        let output = viewModel.transform(input: input)
+        guard let unwrappedViewModel = viewModel else {
+            return
+        }
+
+        let output = unwrappedViewModel.transform(
+            input: .init(
+                avatarSelected: collectionView.rx.modelSelected(Avatar.self).asObservable()
+            )
+        )
+
+        output.avatars
+            .map { [AvatarTableViewCellSectionModel(model: nil, items: $0)] }
+            .drive(collectionView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+
+        output.selectedAvatarRow
+            .asObservable()
+            .take(1)
+            .withUnretained(self)
+            .subscribeNext { view, index in
+                view.collectionView.selectItem(
+                    at: IndexPath(row: index, section: 0),
+                    animated: false,
+                    scrollPosition: .left
+                )
+            }
+            .disposed(by: disposeBag)
     }
 
     func bindToCoordinator() {
-        button.rx.tap.asObservable().subscribeNext { [weak self] _ in
-
+        backButton.rx.tap.asObservable().subscribeNext { [weak self] _ in
+            self?.coordinator.returnToChangeAvatarSheet()
         }.disposed(by: disposeBag)
     }
 }
 
 // MARK: - Private Methods
 
-private extension {{Name}}ViewController {
+private extension AvatarSelectionSheetViewController {
     func setupView() {
+        setupIBOutlets()
+        setupCollectionView()
         bindToViewModel()
         bindToCoordinator()
+    }
+
+    func setupIBOutlets() {
+
+    }
+
+    func setupCollectionView() {
+        collectionView.register(AvatarCollectionViewCell.self)
     }
 }

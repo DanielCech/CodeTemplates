@@ -27,7 +27,7 @@ class Templates {
             return templateTypesDict
         }
 
-        print("💡 Loading templates")
+        print("💡 Loading templates\n")
 
         var types = [Template: TemplateInfo]()
 

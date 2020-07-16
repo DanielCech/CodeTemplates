@@ -54,6 +54,16 @@ class Reviewer {
                 compareThreeItems(first: processedFile.templateFile, second: processedFile.generatedFile, third: processedFile.projectFile)
 
                 print("🧷 " + processedFile.generatedFile.lastPathComponent + ":")
+
+                // Check whether project folder exists
+                let projectDestinationPath = processedFile.projectFile.deletingLastPathComponent
+                if !FileManager.default.directoryExists(atPath: projectDestinationPath) {
+                    print("    🟢 Project subfolder does not exist. Create? [yN] ", terminator: "")
+                    if readLine() == "y" {
+                        try FileManager.default.createDirectory(atPath: projectDestinationPath, withIntermediateDirectories: true, attributes: nil)
+                    }
+                }
+
                 print("    🟢 Press enter to continue...")
                 _ = readLine()
             }

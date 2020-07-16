@@ -10,11 +10,14 @@ import RxCocoa
 import RxDataSources
 import RxSwift
 
-typealias {{Name}}SectionModel = SectionModel<String?, {{Name}}Section>
+typealias {{Name}}SectionModel = SectionModel<String?, Void>
 
 final class {{Name}}ViewModel: ViewModelType {
     // MARK: Private properties
-    private let apiService: AppServicing
+
+    private(set) var avatars: [Avatar]
+    private(set) var selectedAvatarId = PublishRelay<Int>()
+    private let disposeBag = DisposeBag()
 
     // MARK: Lifecycle
 
@@ -22,43 +25,41 @@ final class {{Name}}ViewModel: ViewModelType {
         print("Deinit \(self)")
     }
 
-    init(apiService: AppServicing) {
-        self.apiService = apiService
+    init() {
+        avatars = AvatarManager.avatars
     }
 }
 
 // MARK: - Input / output transformation
 
-extension {{Name}}ViewModel {
+extension AvatarSelectionSheetViewModel {
     struct Input {
-        let viewWillAppear: Observable<Void>
+        let avatarSelected: Observable<Avatar>
     }
 
     struct Output {
-        let {{name}}Sections: Driver<[{{Name}}SectionModel]>
+        let avatars: Driver<[Avatar]>
+        let selectedAvatarRow: Driver<Int>
     }
 
-    func transform(input: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
-      {% if tableContentFromAPI %}
-        let {{name}}Output = input.viewWillAppear
-            .flatMap {
-                self.apiService.fetch{{Name}}()
+    func transform(input: AvatarSelectionSheetViewModel.Input) -> AvatarSelectionSheetViewModel.Output {
+        input.avatarSelected
+            .mapAt(\.id)
+            .bind(to: selectedAvatarId)
+            .disposed(by: disposeBag)
+
+        let selectedAvatarRow = selectedAvatarId
+            .withUnretained(self)
+            .map { model, id -> Int in
+                if let index = model.avatars.firstIndex(where: { $0.id == id }) {
+                    return index
+                }
+                return 0
             }
-            .map { response -> [{{Name}}SectionModel] in
-                let sections: [{{Name}}SectionModel] = [
 
-                ]
-                return sections
-            }
-            .asDriverLogError()
-
-        return Output({{name}}Sections: {{name}}Output)
-        {% else %}
-        let items: [{{Name}}Section] = []
-        let models: [{{Name}}SectionModel] = [{{Name}}SectionModel(model: nil, items: items)]
-        let {{name}}Output = Driver<[{{Name}}SectionModel]>.just(models)
-
-        return Output({{name}}Sections: {{name}}Output)
-        {% endif %}
+        return Output(
+            avatars: Driver.just(avatars),
+            selectedAvatarRow: selectedAvatarRow.asDriverOnErrorJustComplete()
+        )
     }
 }

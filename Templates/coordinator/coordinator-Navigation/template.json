@@ -1,4 +1,5 @@
 {
   "context": {},
-  "switches": []
+  "switches": [],
+  "preferablyOriginalLocation": ["{{Name}}NavigationCoordinating.swift.stencil", "{{Name}}NavigationCoordinator.swift.stencil"]
 }

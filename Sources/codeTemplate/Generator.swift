@@ -167,14 +167,16 @@ private extension Generator {
 
         // Process files in folder
         for file in templateFolder.files {
-            if file.name.lowercased() == "template.json" { continue }
+            if file.name.lowercased() == "template.json" || file.name.lowercased().starts(with: "screenshot") { continue }
 
             let outputFileName = file.name.modifyName(context: context)
             modifiedContext["fileName"] = outputFileName
 
             let templateFile = templatePath.appendingPathComponent(path: file.name)
             let generatedFile = generatedPath.appendingPathComponent(path: outputFileName)
-            let projectFile = projectPath.appendingPathComponent(path: outputFileName)
+            var projectFile = projectPath.appendingPathComponent(path: outputFileName)
+
+            // TODO: preferablyOriginalLocation implementation
 
             // Directly copy binary file
             guard var fileString = try? file.readAsString() else {

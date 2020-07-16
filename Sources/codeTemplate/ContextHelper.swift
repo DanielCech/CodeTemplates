@@ -19,6 +19,15 @@ class ContextHelper {
     /// Default operations with context - default content, case processing, ...
     func updateContext(_ context: Context) -> Context {
         var modifiedContext = context
+
+        if modifiedContext["coordinator"] == nil {
+            modifiedContext["coordinator"] = modifiedContext["name"]
+        }
+
+        if modifiedContext["target"] == nil {
+            modifiedContext["target"] = modifiedContext["projectName"]
+        }
+
         for key in context.keys {
             guard let stringValue = context[key] as? String else { continue }
             modifiedContext[key.pascalCased()] = stringValue.pascalCased()

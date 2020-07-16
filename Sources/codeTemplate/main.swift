@@ -26,6 +26,7 @@ import Stencil
  bottomView - shows buttons at the bottom of table in controller
  topGradientView - top alpha gradient
  bottomGradientView - bottom alpha gradient
+ coordinator - the name of coordinator which is related to the scene - name doesn't contain "Coordinator" or "Coordinating"
  */
 
 // =======================================================

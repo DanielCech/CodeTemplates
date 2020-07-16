@@ -23,7 +23,7 @@ final class {{Name}}ViewController: UIViewController, ViewModelContaining {
     // MARK: Public Properties
 
     // swiftlint:disable:next implicitly_unwrapped_optional
-    weak var coordinator: {{Name}}NavigationCoordinating!
+    weak var coordinator: {{coordinator}}Coordinating!
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     var viewModel: {{Name}}ViewModel!
