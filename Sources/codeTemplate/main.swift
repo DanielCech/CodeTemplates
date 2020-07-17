@@ -36,10 +36,13 @@ let moderator = Moderator(description: "Generates a swift app components from te
 moderator.usageFormText = "codeTemplate <params>"
 
 let mode = moderator.add(Argument<String?>
-    .optionWithValue("mode", name: "Current operation mode - code generation, updating templates and template validation", description: "Possible values: generate, updateAll, updateNew, validate"))
+    .optionWithValue("mode", name: "Current operation mode - code generation, updating templates and template validation", description: "Possible values: generate, updateAll, updateNew, validate, prepare"))
 
 let template = moderator.add(Argument<String?>
-    .optionWithValue("template", name: "Code template for validation", description: "Use with validate mode only"))
+    .optionWithValue("template", name: "Code template name", description: "Use with validate or prepare modes only"))
+
+let category = moderator.add(Argument<String?>
+    .optionWithValue("category", name: "Template category name", description: "Use with prepare mode only"))
 
 let context = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
@@ -91,6 +94,22 @@ do {
             } else {
                 try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
             }
+            
+        case "prepare":
+            guard let unwrappedTemplate = template.value else {
+                throw ScriptError.argumentError(message: "template not specified")
+            }
+            
+            guard let unwrappedCategory = category.value else {
+                throw ScriptError.argumentError(message: "category not specified")
+            }
+            
+            // Preparation process uses just simple context with path definitions, etc
+            guard let contextFile = context.value else {
+                throw ScriptError.argumentError(message: "context not specified")
+            }
+            
+            try Preparator.shared.prepareTemplate(unwrappedTemplate, category: unwrappedCategory, contextFile: contextFile)
 
         default:
             throw ScriptError.argumentError(message: "invalid mode value")

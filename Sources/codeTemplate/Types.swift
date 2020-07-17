@@ -45,4 +45,5 @@ public enum ProgramMode {
     case generateCode(Context)
     case updateTemplates(UpdateTemplateMode)
     case validateTemplates
+    case prepareTemplate
 }
