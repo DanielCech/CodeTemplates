@@ -47,3 +47,9 @@ public enum ProgramMode {
     case validateTemplates
     case prepareTemplate
 }
+
+public enum TemplateDestination: String {
+    case project = "_project"
+    case sources = "_sources"
+    case location = "_location"
+}

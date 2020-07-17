@@ -53,4 +53,11 @@ public extension String {
         let strings = substrings.map { String($0) }
         return strings
     }
+    
+    func withoutSlash() -> String {
+        if self.last == "/" {
+            return String(prefix(self.count - 1))
+        }
+        return self
+    }
 }

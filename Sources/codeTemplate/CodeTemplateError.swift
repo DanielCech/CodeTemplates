@@ -12,6 +12,7 @@ import ScriptToolkit
 enum CodeTemplateError: Error {
     case stencilTemplateError(message: String)
     case parameterNotSpecified(message: String)
+    case invalidProjectFilePath(message: String)
 }
 
 extension CodeTemplateError: PrintableError {
@@ -24,6 +25,8 @@ extension CodeTemplateError: PrintableError {
             errorDescription = "stencil syntax error: \(message)"
         case let .parameterNotSpecified(message):
             errorDescription = "parameter not specified: \(message)"
+        case let .invalidProjectFilePath(message):
+            errorDescription = "invalid project file path: \(message)"
         }
 
         return prefix + errorDescription

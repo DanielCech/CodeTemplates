@@ -44,8 +44,13 @@ let template = moderator.add(Argument<String?>
 let category = moderator.add(Argument<String?>
     .optionWithValue("category", name: "Template category name", description: "Use with prepare mode only"))
 
+let name = moderator.add(Argument<String?>
+    .optionWithValue("name", name: "Name that should be replaced by placeholder", description: "Use with prepare mode only"))
+
 let context = moderator.add(Argument<String?>
     .optionWithValue("context", name: "Context", description: "JSON file with template context"))
+
+let projectFiles = moderator.add(Argument<String?>.singleArgument(name: "projectFiles").repeat())
 
 let reviewMode = moderator.add(Argument<String?>
     .optionWithValue("review", name: "Result review mode", description: "Possible values: none, individual, overall").default("individual"))
@@ -96,20 +101,28 @@ do {
             }
             
         case "prepare":
-            guard let unwrappedTemplate = template.value else {
-                throw ScriptError.argumentError(message: "template not specified")
-            }
-            
-            guard let unwrappedCategory = category.value else {
-                throw ScriptError.argumentError(message: "category not specified")
-            }
-            
             // Preparation process uses just simple context with path definitions, etc
             guard let contextFile = context.value else {
                 throw ScriptError.argumentError(message: "context not specified")
             }
             
-            try Preparator.shared.prepareTemplate(unwrappedTemplate, category: unwrappedCategory, contextFile: contextFile)
+            var context = try ContextHelper.shared.context(fromFile: contextFile)
+            
+            if let unwrappedTemplate = template.value {
+                context["template"] = unwrappedTemplate
+            }
+            
+            if let unwrappedCategory = category.value {
+                context["category"] = unwrappedCategory
+            }
+            
+            if let unwrappedName = name.value {
+                context["name"] = unwrappedName
+            }
+            
+            context["projectFiles"] = context["projectFiles"] ?? projectFiles.value
+            
+            try Preparator.shared.prepareTemplate(context: context)
 
         default:
             throw ScriptError.argumentError(message: "invalid mode value")
