@@ -114,7 +114,8 @@ class Templates {
             completeness: (info["completeness"] as? Int) ?? 0,
             compilable: (info["compilable"] as? Bool) ?? true,
             context: (info["context"] as? Context) ?? [:],
-            switches: (info["switches"] as? [String]) ?? []
+            switches: (info["switches"] as? [String]) ?? [],
+            preferOriginalLocation: (info["preferOriginalLocation"] as? [String]) ?? []
         )
 
         return templateInfo

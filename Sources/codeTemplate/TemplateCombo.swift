@@ -19,7 +19,7 @@ public enum TemplateCombo: String {
     func perform(context: Context) throws {
         switch self {
         case .scene:
-            try sceneCombo(context: context)
+            try sceneViewControllerCombo(context: context)
 
         case .sceneViewControllerRxSwift:
             try sceneViewControllerRxSwiftCombo(context: context)
@@ -47,82 +47,66 @@ public enum TemplateCombo: String {
 // MARK: - Factories
 
 private extension TemplateCombo {
-    func sceneCombo(context: Context) throws {
-        try Generator.shared.generate(generationMode: .template("viewController"), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("viewModel"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("storyboard-ViewController"), context: context, deleteGenerated: false)
-
+    func sceneViewControllerCombo(context: Context) throws {
+        try generateViewController(
+            context: context,
+            viewControllerTemplate: "viewController",
+            storyboardTemplate: "storyboard-ViewController",
+            generateSectionType: false
+        )
+    
         try generateViewCoordinator(context: context)
     }
 
     func sceneViewControllerRxSwiftCombo(context: Context) throws {
-        try Generator.shared.generate(generationMode: .template("viewController-RxSwif"), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("storyboard-ViewController"), context: context, deleteGenerated: false)
+        try generateViewController(
+            context: context,
+            viewControllerTemplate: "viewController-RxSwift",
+            storyboardTemplate: "storyboard-ViewController"
+        )
 
-        if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
-            for cell in unwrappedNewCells {
-                let modifiedContext = updateComboContext(context, name: cell)
-                try Generator.shared.generate(generationMode: .template("tableViewCell-RxSwift"), context: modifiedContext, deleteGenerated: false)
-            }
-        }
+        try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
 
         try generateViewCoordinator(context: context)
     }
 
     func sceneViewControllerRxSwiftWithTableViewCombo(context: Context) throws {
-        try Generator.shared.generate(generationMode: .template("viewController-RxSwift-TableView"), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("storyboard-ViewController-TableView"), context: context, deleteGenerated: false)
+        try generateViewController(
+            context: context,
+            viewControllerTemplate: "viewController-RxSwift-TableView",
+            storyboardTemplate: "storyboard-ViewController-TableView"
+        )
 
         try generateHeadersAndFooters(context: context)
-
-        if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
-            for cell in unwrappedNewCells {
-                let modifiedContext = updateComboContext(context, name: cell)
-                try Generator.shared.generate(generationMode: .template("tableViewCell-RxSwift"), context: modifiedContext, deleteGenerated: false)
-            }
-        }
-
+        
+        try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
+        
         try generateViewCoordinator(context: context)
     }
 
     func sceneViewControllerRxSwiftWithFormTableViewCombo(context: Context) throws {
-        try Generator.shared.generate(generationMode: .template("viewController-RxSwift-FormTableView"), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("storyboard-ViewController-TableView"), context: context, deleteGenerated: false)
+        try generateViewController(
+            context: context,
+            viewControllerTemplate: "viewController-RxSwift-FormTableView",
+            storyboardTemplate: "storyboard-ViewController-TableView"
+        )
 
         try generateHeadersAndFooters(context: context)
-
-        if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
-            for cell in unwrappedNewCells {
-                let modifiedContext = updateComboContext(context, name: cell)
-                try Generator.shared.generate(generationMode: .template("tableViewCell-RxSwift-TextField"), context: modifiedContext, deleteGenerated: false)
-            }
-        }
-
+        
+        try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
+        
         try generateViewCoordinator(context: context)
     }
 
     func sceneViewControllerRxSwiftWithCollectionViewCombo(context: Context) throws {
-        try Generator.shared.generate(generationMode: .template("viewController-RxSwift-CollectionView"), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template("storyboard-ViewController-CollectionView"), context: context, deleteGenerated: false)
-
-        if context["sectionHeader"] != nil {
-            try Generator.shared.generate(generationMode: .template("tableViewSectionHeader"), context: context, deleteGenerated: false)
-        }
-
-        if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
-            for cell in unwrappedNewCells {
-                let modifiedContext = updateComboContext(context, name: cell)
-                try Generator.shared.generate(generationMode: .template("collectionViewCell-RxSwift"), context: modifiedContext, deleteGenerated: false)
-            }
-        }
-
+        try generateViewController(
+            context: context,
+            viewControllerTemplate: "viewController-RxSwift-CollectionView",
+            storyboardTemplate: "storyboard-ViewController-CollectionView"
+        )
+        
+        try generateCollectionViewCells(context: context, collectionViewCellTemplate: "collectionViewCell-RxSwift")
+        
         try generateViewCoordinator(context: context)
     }
 }
@@ -130,6 +114,23 @@ private extension TemplateCombo {
 // MARK: - Helpers
 
 private extension TemplateCombo {
+    func generateViewController(
+        context: Context,
+        viewControllerTemplate: Template,
+        storyboardTemplate: Template,
+        generateSectionType: Bool = true
+    ) throws {
+        
+        try Generator.shared.generate(generationMode: .template(viewControllerTemplate), context: context, deleteGenerated: true)
+        try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
+        
+        if generateSectionType {
+            try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
+        }
+        
+        try Generator.shared.generate(generationMode: .template(storyboardTemplate), context: context, deleteGenerated: false)
+    }
+    
     func generateHeadersAndFooters(context: Context) throws {
         guard let name = context["name"] as? String else {
             throw CodeTemplateError.parameterNotSpecified(message: "name")
@@ -147,6 +148,24 @@ private extension TemplateCombo {
         if let footer = context["tableViewFooter"] as? Bool, footer {
             let modifiedContext = updateComboContext(context, name: name+"Footer")
             try Generator.shared.generate(generationMode: .template("view"), context: modifiedContext, deleteGenerated: false)
+        }
+    }
+    
+    func generateTableViewCells(context: Context, tableViewCellTemplate: Template) throws {
+        if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
+            for cell in unwrappedNewCells {
+                let modifiedContext = updateComboContext(context, name: cell)
+                try Generator.shared.generate(generationMode: .template(tableViewCellTemplate), context: modifiedContext, deleteGenerated: false)
+            }
+        }
+    }
+    
+    func generateCollectionViewCells(context: Context, collectionViewCellTemplate: Template) throws {
+        if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
+            for cell in unwrappedNewCells {
+                let modifiedContext = updateComboContext(context, name: cell)
+                try Generator.shared.generate(generationMode: .template(collectionViewCellTemplate), context: modifiedContext, deleteGenerated: false)
+            }
         }
     }
 

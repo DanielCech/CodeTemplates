@@ -40,6 +40,18 @@ public enum UpdateTemplateMode: String {
     case new
 }
 
+/// For particular template, we want to update also:
+public enum UpdateScopeMode: String {
+    /// Update all ancestors of current template
+    case acestors
+    
+    /// Update all descendants of current template
+    case descendants
+    
+    /// Update ancestors and descendants
+    case both
+}
+
 /// The current program operation - generate code, update template or validate template
 public enum ProgramMode {
     case generateCode(Context)

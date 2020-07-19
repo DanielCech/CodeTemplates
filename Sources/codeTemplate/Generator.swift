@@ -69,6 +69,7 @@ class Generator {
                 generatedPath: generatedFolder.path,
                 projectPath: projectFolder.path,
                 context: context,
+                templateInfo: templateInfo,
                 outputPath: outputPath,
                 validationMode: validationMode
             )
@@ -77,6 +78,7 @@ class Generator {
             for dependency in templateInfo.dependencies {
                 var dependencyName = dependency
 
+                // Conditional dependency syntax: "template:condition1,condition2,..."; true if any of conditions is true
                 if dependency.contains(":") {
                     let parts = dependency.split(separator: ":")
                     dependencyName = String(parts.first!)
@@ -148,6 +150,7 @@ private extension Generator {
         generatedPath: String,
         projectPath: String,
         context: Context,
+        templateInfo: TemplateInfo,
         outputPath: String = Paths.generatedPath,
         validationMode: Bool = false
     ) throws {
@@ -169,7 +172,13 @@ private extension Generator {
             let generatedFile = generatedPath.appendingPathComponent(path: outputFileName)
             var projectFile = projectPath.appendingPathComponent(path: outputFileName)
 
-            // TODO: preferablyOriginalLocation implementation
+            // TODO: preferOriginalLocation implementation
+            if templateInfo.preferOriginalLocation.contains(file.name) {
+                let projectFolder = try Folder(path: Paths.projectPath)
+                if let foundProjectFile = projectFolder.findFirstFile(name: outputFileName) {
+                    projectFile = foundProjectFile.path
+                }
+            }
 
             // Directly copy binary file
             guard var fileString = try? file.readAsString() else {
@@ -210,7 +219,8 @@ private extension Generator {
                     templatePath: folder.path,
                     generatedPath: outputPath,
                     projectPath: Paths.projectPath,
-                    context: context
+                    context: context,
+                    templateInfo: templateInfo
                 )
 
             case "_sources":
@@ -226,7 +236,8 @@ private extension Generator {
                     templatePath: folder.path,
                     generatedPath: baseGeneratedPath,
                     projectPath: baseProjectPath,
-                    context: context
+                    context: context,
+                    templateInfo: templateInfo
                 )
 
             case "_location":
@@ -244,7 +255,8 @@ private extension Generator {
                     templatePath: folder.path,
                     generatedPath: baseGeneratedPath,
                     projectPath: baseProjectPath,
-                    context: context
+                    context: context,
+                    templateInfo: templateInfo
                 )
 
             default:
@@ -255,7 +267,8 @@ private extension Generator {
                     templatePath: folder.path,
                     generatedPath: generatedSubFolder.path,
                     projectPath: projectPath.appendingPathComponent(path: outputFolder),
-                    context: context
+                    context: context,
+                    templateInfo: templateInfo
                 )
             }
         }
