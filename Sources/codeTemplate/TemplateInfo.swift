@@ -25,7 +25,7 @@ struct TemplateInfo {
 
     /// Set of bool variables - the different setup of template - for validation purposes
     var switches: [String]
-    
+
     /// For following list of file paths always  prefer the original location of file in project
     var preferOriginalLocation: [String]
 }

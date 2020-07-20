@@ -44,10 +44,10 @@ public enum UpdateTemplateMode: String {
 public enum UpdateScopeMode: String {
     /// Update all ancestors of current template
     case acestors
-    
+
     /// Update all descendants of current template
     case descendants
-    
+
     /// Update ancestors and descendants
     case both
 }

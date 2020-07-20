@@ -5,8 +5,8 @@
 //  Created by Daniel Cech on 04/07/2020.
 //
 
-import Foundation
 import Files
+import Foundation
 import ScriptToolkit
 
 class ContextHelper {
@@ -69,7 +69,7 @@ class ContextHelper {
 
         return modifiedContext
     }
-    
+
     func context(fromFile contextFile: String) throws -> Context {
         let contextFile = try File(path: contextFile)
         let contextString = try contextFile.readAsString(encodedAs: .utf8)
@@ -79,7 +79,7 @@ class ContextHelper {
         guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
             throw ScriptError.generalError(message: "Deserialization error")
         }
-        
+
         return context
     }
 }

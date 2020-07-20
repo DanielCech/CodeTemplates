@@ -99,29 +99,29 @@ do {
             } else {
                 try Validator.shared.validateTemplates(scriptPath: unwrappedScriptpath)
             }
-            
+
         case "prepare":
             // Preparation process uses just simple context with path definitions, etc
             guard let contextFile = context.value else {
                 throw ScriptError.argumentError(message: "context not specified")
             }
-            
+
             var context = try ContextHelper.shared.context(fromFile: contextFile)
-            
+
             if let unwrappedTemplate = template.value {
                 context["template"] = unwrappedTemplate
             }
-            
+
             if let unwrappedCategory = category.value {
                 context["category"] = unwrappedCategory
             }
-            
+
             if let unwrappedName = name.value {
                 context["name"] = unwrappedName
             }
-            
+
             context["projectFiles"] = context["projectFiles"] ?? projectFiles.value
-            
+
             try Preparator.shared.prepareTemplate(context: context)
 
         default:

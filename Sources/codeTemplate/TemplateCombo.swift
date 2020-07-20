@@ -54,7 +54,7 @@ private extension TemplateCombo {
             storyboardTemplate: "storyboard-ViewController",
             generateSectionType: false
         )
-    
+
         try generateViewCoordinator(context: context)
     }
 
@@ -78,9 +78,9 @@ private extension TemplateCombo {
         )
 
         try generateHeadersAndFooters(context: context)
-        
+
         try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
-        
+
         try generateViewCoordinator(context: context)
     }
 
@@ -92,9 +92,9 @@ private extension TemplateCombo {
         )
 
         try generateHeadersAndFooters(context: context)
-        
+
         try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
-        
+
         try generateViewCoordinator(context: context)
     }
 
@@ -104,9 +104,9 @@ private extension TemplateCombo {
             viewControllerTemplate: "viewController-RxSwift-CollectionView",
             storyboardTemplate: "storyboard-ViewController-CollectionView"
         )
-        
+
         try generateCollectionViewCells(context: context, collectionViewCellTemplate: "collectionViewCell-RxSwift")
-        
+
         try generateViewCoordinator(context: context)
     }
 }
@@ -120,17 +120,16 @@ private extension TemplateCombo {
         storyboardTemplate: Template,
         generateSectionType: Bool = true
     ) throws {
-        
         try Generator.shared.generate(generationMode: .template(viewControllerTemplate), context: context, deleteGenerated: true)
         try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
-        
+
         if generateSectionType {
             try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
         }
-        
+
         try Generator.shared.generate(generationMode: .template(storyboardTemplate), context: context, deleteGenerated: false)
     }
-    
+
     func generateHeadersAndFooters(context: Context) throws {
         guard let name = context["name"] as? String else {
             throw CodeTemplateError.parameterNotSpecified(message: "name")
@@ -150,7 +149,7 @@ private extension TemplateCombo {
             try Generator.shared.generate(generationMode: .template("view"), context: modifiedContext, deleteGenerated: false)
         }
     }
-    
+
     func generateTableViewCells(context: Context, tableViewCellTemplate: Template) throws {
         if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
             for cell in unwrappedNewCells {
@@ -159,7 +158,7 @@ private extension TemplateCombo {
             }
         }
     }
-    
+
     func generateCollectionViewCells(context: Context, collectionViewCellTemplate: Template) throws {
         if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
             for cell in unwrappedNewCells {

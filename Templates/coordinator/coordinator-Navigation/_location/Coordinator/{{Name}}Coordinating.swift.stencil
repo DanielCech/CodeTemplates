@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol {{Name}}NavigationCoordinating: NavigationControllerCoordinator {
+protocol {{Name}}Coordinating: NavigationControllerCoordinator {
 {% for controller in controllers %}
   func show{{controller|pascalCased}}() {% endfor %}
 }
