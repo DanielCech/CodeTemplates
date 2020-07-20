@@ -33,12 +33,19 @@ public extension String {
     }
 
     /// File name modification based on substitutions from context
-    func modifyName(context: Context) -> String {
+    func generateName(context: Context) -> String {
         var newName = replacingOccurrences(of: ".stencil", with: "")
         for key in context.keys {
             guard let stringValue = context[key] as? String else { continue }
             newName = newName.replacingOccurrences(of: "{{\(key)}}", with: stringValue)
         }
+        return newName
+    }
+    
+    /// File name modification based on substitutions from context
+    func prepareName(name: String) -> String {
+        var newName = replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
+        newName.append(".stencil")
         return newName
     }
 

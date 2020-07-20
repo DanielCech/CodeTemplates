@@ -165,7 +165,7 @@ private extension Generator {
         for file in templateFolder.files {
             if file.name.lowercased() == "template.json" || file.name.lowercased().starts(with: "screenshot") { continue }
 
-            let outputFileName = file.name.modifyName(context: context)
+            let outputFileName = file.name.generateName(context: context)
             modifiedContext["fileName"] = outputFileName
 
             let templateFile = templatePath.appendingPathComponent(path: file.name)
@@ -260,7 +260,7 @@ private extension Generator {
                 )
 
             default:
-                let outputFolder = folder.name.modifyName(context: context)
+                let outputFolder = folder.name.generateName(context: context)
                 let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
 
                 try traverse(

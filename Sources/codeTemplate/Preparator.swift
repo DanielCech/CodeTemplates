@@ -30,6 +30,8 @@ class Preparator {
         }
 
         try Paths.setupPaths(context: context)
+        
+        try prepareTemplateFolder(template: template, category: category)
 
         for projectFile in projectFiles {
             try prepareTemplate(
@@ -46,13 +48,13 @@ class Preparator {
         forFile projectFile: String,
         template: Template,
         category: String,
-        name _: String,
-        context _: Context
+        name: String,
+        context: Context
     ) throws {
-        // Create template folder
         let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
-        try? FileManager.default.createDirectory(atPath: templatePath, withIntermediateDirectories: true, attributes: nil)
-
+        
+        try createTemplateJSON(template: template, category: category)
+        
         let inputFile = try File(path: projectFile)
 
         // Prepare target folder structure
@@ -72,18 +74,93 @@ class Preparator {
             throw CodeTemplateError.invalidProjectFilePath(message: projectFile)
         }
 
-        let templateSubPath = Paths.templatePath.appendingPathComponent(path: templateDestination.rawValue)
+        let templateSubPath = templatePath.appendingPathComponent(path: templateDestination.rawValue)
         try? FileManager.default.createDirectory(atPath: templateSubPath, withIntermediateDirectories: true, attributes: nil)
 
+//        if !projectSubPath.isEmpty {
         let templateDestinationPath = templateSubPath.appendingPathComponent(path: projectSubPath)
         try? FileManager.default.createDirectory(atPath: templateDestinationPath, withIntermediateDirectories: true, attributes: nil)
 
         let templateDestinationFolder = try Folder(path: templateDestinationPath)
         let copiedFile = try inputFile.copy(to: templateDestinationFolder)
+        
+        try prepareTemplate(for: copiedFile, name: name)
+        
+        try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
+    
 
+        
 //        let copiedFile = try file.copy(to: generatedFolder)
 //        try copiedFile.rename(to: outputFileName)
 //            continue
 //        }
+    }
+}
+
+private extension Preparator {
+    func createTemplateJSON(
+        template: Template,
+        category: String
+    ) throws {
+        let json = """
+                   {
+                     "context": {},
+                     "switches": []
+                   }
+                   """
+        
+        let templatePath = Paths.templatePath
+            .appendingPathComponent(path: category)
+            .appendingPathComponent(path: template)
+        
+        let templateFolder = try Folder(path: templatePath)
+        let jsonFile = try templateFolder.createFile(named: "template.json")
+        try jsonFile.write(json, encoding: .utf8)
+    }
+    
+    func prepareTemplate(for file: File, name: String) throws {
+        let contents = try file.readAsString()
+        var newContents = contents
+        var comment = ""
+        
+        if file.extension?.lowercased() == "swift" {
+            for line in contents.lines() {
+                if line.starts(with: "//") {
+                    comment += line + "\n"
+                }
+                else {
+                    let newComment =
+                        """
+                        //
+                        //  {{fileName}}
+                        //  {{projectName}}
+                        //
+                        //  Created by {{author}} on {{date}}.
+                        //  {{copyright}}
+                        //
+
+                        """
+                     newContents = newContents.replacingOccurrences(of: comment, with: newComment)
+                    break
+                }
+            }
+        }
+        else {
+            newContents = contents
+        }
+        
+        
+        newContents = newContents.replacingOccurrences(of: name.camelCased(), with: "{{name}}")
+        newContents = newContents.replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
+        
+        try file.write(newContents)
+    }
+    
+    func prepareTemplateFolder(template: Template, category: String) throws {
+        // Create template folder
+        let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
+        try? FileManager.default.createDirectory(atPath: templatePath, withIntermediateDirectories: true, attributes: nil)
+        let templateFolder = try Folder(path: templatePath)
+        try templateFolder.empty(includingHidden: true)
     }
 }
