@@ -11,10 +11,10 @@ import Foundation
 public enum TemplateCombo: String {
     // Scenes
     case scene
-    case sceneViewControllerRxSwift = "scene-ViewController-RxSwift"
-    case sceneViewControllerRxSwiftWithTableView = "scene-ViewController-RxSwift-TableView"
-    case sceneViewControllerRxSwiftWithFormTableView = "scene-ViewController-RxSwift-FormTableView"
-    case sceneViewControllerRxSwiftWithCollectionView = "scene-ViewController-RxSwift-CollectionView"
+    case sceneViewControllerRxSwift = "Scene-ViewController-RxSwift"
+    case sceneViewControllerRxSwiftWithTableView = "Scene-ViewController-RxSwift-TableView"
+    case sceneViewControllerRxSwiftWithFormTableView = "Scene-ViewController-RxSwift-FormTableView"
+    case sceneViewControllerRxSwiftWithCollectionView = "Scene-ViewController-RxSwift-CollectionView"
 
     func perform(context: Context) throws {
         switch self {
@@ -50,8 +50,8 @@ private extension TemplateCombo {
     func sceneViewControllerCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "viewController",
-            storyboardTemplate: "storyboard-ViewController",
+            viewControllerTemplate: "ViewController",
+            storyboardTemplate: "Storyboard-ViewController",
             generateSectionType: false
         )
 
@@ -61,11 +61,11 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "viewController-RxSwift",
-            storyboardTemplate: "storyboard-ViewController"
+            viewControllerTemplate: "ViewController-RxSwift",
+            storyboardTemplate: "Storyboard-ViewController"
         )
 
-        try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
+        try generateTableViewCells(context: context, tableViewCellTemplate: "TableViewCell-RxSwift")
 
         try generateViewCoordinator(context: context)
     }
@@ -73,13 +73,13 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithTableViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "viewController-RxSwift-TableView",
-            storyboardTemplate: "storyboard-ViewController-TableView"
+            viewControllerTemplate: "ViewController-RxSwift-TableView",
+            storyboardTemplate: "Storyboard-ViewController-TableView"
         )
 
         try generateHeadersAndFooters(context: context)
 
-        try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
+        try generateTableViewCells(context: context, tableViewCellTemplate: "TableViewCell-RxSwift")
 
         try generateViewCoordinator(context: context)
     }
@@ -87,13 +87,13 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithFormTableViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "viewController-RxSwift-FormTableView",
-            storyboardTemplate: "storyboard-ViewController-TableView"
+            viewControllerTemplate: "ViewController-RxSwift-FormTableView",
+            storyboardTemplate: "Storyboard-ViewController-TableView"
         )
 
         try generateHeadersAndFooters(context: context)
 
-        try generateTableViewCells(context: context, tableViewCellTemplate: "tableViewCell-RxSwift")
+        try generateTableViewCells(context: context, tableViewCellTemplate: "TableViewCell-RxSwift")
 
         try generateViewCoordinator(context: context)
     }
@@ -101,11 +101,11 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithCollectionViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "viewController-RxSwift-CollectionView",
-            storyboardTemplate: "storyboard-ViewController-CollectionView"
+            viewControllerTemplate: "ViewController-RxSwift-CollectionView",
+            storyboardTemplate: "Storyboard-ViewController-CollectionView"
         )
 
-        try generateCollectionViewCells(context: context, collectionViewCellTemplate: "collectionViewCell-RxSwift")
+        try generateCollectionViewCells(context: context, collectionViewCellTemplate: "CollectionViewCell-RxSwift")
 
         try generateViewCoordinator(context: context)
     }
@@ -121,10 +121,10 @@ private extension TemplateCombo {
         generateSectionType: Bool = true
     ) throws {
         try Generator.shared.generate(generationMode: .template(viewControllerTemplate), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("viewModelAssembly"), context: context, deleteGenerated: false)
+        try Generator.shared.generate(generationMode: .template("ViewModelAssembly"), context: context, deleteGenerated: false)
 
         if generateSectionType {
-            try Generator.shared.generate(generationMode: .template("rxDataSourcesSectionType"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("RxDataSourcesSectionType"), context: context, deleteGenerated: false)
         }
 
         try Generator.shared.generate(generationMode: .template(storyboardTemplate), context: context, deleteGenerated: false)
@@ -136,17 +136,17 @@ private extension TemplateCombo {
         }
 
         if context["sectionHeader"] != nil {
-            try Generator.shared.generate(generationMode: .template("tableViewSectionHeader"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("TableViewSectionHeader"), context: context, deleteGenerated: false)
         }
 
         if let header = context["tableViewHeader"] as? Bool, header {
             let modifiedContext = updateComboContext(context, name: name+"Header")
-            try Generator.shared.generate(generationMode: .template("view"), context: modifiedContext, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerated: false)
         }
 
         if let footer = context["tableViewFooter"] as? Bool, footer {
             let modifiedContext = updateComboContext(context, name: name+"Footer")
-            try Generator.shared.generate(generationMode: .template("view"), context: modifiedContext, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerated: false)
         }
     }
 
@@ -169,7 +169,7 @@ private extension TemplateCombo {
     }
 
     func generateViewCoordinator(context: Context) throws {
-        guard let coordinator = context["coordinator"] as? String else {
+        guard let coordinator = context["Coordinator"] as? String else {
             return
         }
 
@@ -179,6 +179,6 @@ private extension TemplateCombo {
 
         var modifiedContext = updateComboContext(context, name: coordinator)
         modifiedContext["controllers"] = [name]
-        try Generator.shared.generate(generationMode: .template("coordinator-Navigation"), context: modifiedContext, deleteGenerated: false)
+        try Generator.shared.generate(generationMode: .template("Coordinator-Navigation"), context: modifiedContext, deleteGenerated: false)
     }
 }

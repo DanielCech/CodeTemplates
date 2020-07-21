@@ -87,7 +87,7 @@ private extension Validator {
         let validationFolder = try Folder(path: Paths.validationPath)
 
         try Generator.shared.generate(
-            generationMode: .template("singleViewApp"),
+            generationMode: .template("SingleViewApp"),
             context: context,
             reviewMode: .none,
             deleteGenerated: true,
