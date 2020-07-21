@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="JmO-xe-2y7">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Edit Emergency Contact View Controller-->
+        <scene sceneID="T4r-JI-9Pv">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="JmO-xe-2y7" customClass="{{Name}}ViewController" customModule="Harbor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7gN-ag-HZR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YXc-0P-bSo">
+                                <rect key="frame" x="0.0" y="117" width="414" height="528"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWh-wN-Bab">
+                                <rect key="frame" x="186" y="64.5" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMi-il-PDB">
+                                <rect key="frame" x="369" y="53" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="28E-1b-SfW"/>
+                                    <constraint firstAttribute="width" constant="44" id="v0C-C5-XAE"/>
+                                </constraints>
+                                <state key="normal" image="closeIcon"/>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7IF-10-yvG" customClass="EditBottomView" customModule="Harbor" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="645" width="414" height="168"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="168" id="xNw-Xo-dgn"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="7IF-10-yvG" firstAttribute="top" secondItem="YXc-0P-bSo" secondAttribute="bottom" id="9g2-oI-Q4q"/>
+                            <constraint firstItem="XWh-wN-Bab" firstAttribute="centerX" secondItem="7gN-ag-HZR" secondAttribute="centerX" id="GGr-id-gDS"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" id="MNA-aa-vzy"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="top" secondItem="fMi-il-PDB" secondAttribute="bottom" constant="20" id="NX0-gI-BJr"/>
+                            <constraint firstItem="7IF-10-yvG" firstAttribute="trailing" secondItem="AoL-UG-IwY" secondAttribute="trailing" id="QUs-h8-RKH"/>
+                            <constraint firstItem="YXc-0P-bSo" firstAttribute="trailing" secondItem="AoL-UG-IwY" secondAttribute="trailing" id="UWd-vg-d3p"/>
+                            <constraint firstItem="fMi-il-PDB" firstAttribute="top" secondItem="AoL-UG-IwY" secondAttribute="top" constant="9" id="Zwt-aN-qaD"/>
+                            <constraint firstItem="AoL-UG-IwY" firstAttribute="trailing" secondItem="fMi-il-PDB" secondAttribute="trailing" constant="1" id="g5I-zh-On5"/>
+                            <constraint firstItem="7IF-10-yvG" firstAttribute="bottom" secondItem="AoL-UG-IwY" secondAttribute="bottom" id="sFl-n2-iSa"/>
+                            <constraint firstItem="7IF-10-yvG" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" id="uyk-nC-x6I"/>
+                            <constraint firstItem="fMi-il-PDB" firstAttribute="centerY" secondItem="XWh-wN-Bab" secondAttribute="centerY" id="w9n-Bp-Lfm"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="AoL-UG-IwY"/>
+                    </view>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="closeButton" destination="fMi-il-PDB" id="9fB-Fp-qCx"/>
+                        <outlet property="editBottomView" destination="7IF-10-yvG" id="ZpJ-rr-3KU"/>
+                        <outlet property="editBottomViewHeightConstraint" destination="xNw-Xo-dgn" id="fa7-Ab-kIf"/>
+                        <outlet property="{{name}}TableView" destination="YXc-0P-bSo" id="jRt-cR-iWV"/>
+                        <outlet property="titleLabel" destination="XWh-wN-Bab" id="UeX-2c-Mfp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kdE-uS-H20" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-72" y="106"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="closeIcon" width="16" height="16"/>
+    </resources>
+</document>

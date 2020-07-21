@@ -30,7 +30,7 @@ class Preparator {
         }
 
         try Paths.setupPaths(context: context)
-        
+
         try prepareTemplateFolder(template: template, category: category)
 
         for projectFile in projectFiles {
@@ -49,12 +49,12 @@ class Preparator {
         template: Template,
         category: String,
         name: String,
-        context: Context
+        context _: Context
     ) throws {
         let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
-        
+
         try createTemplateJSON(template: template, category: category)
-        
+
         let inputFile = try File(path: projectFile)
 
         // Prepare target folder structure
@@ -83,13 +83,11 @@ class Preparator {
 
         let templateDestinationFolder = try Folder(path: templateDestinationPath)
         let copiedFile = try inputFile.copy(to: templateDestinationFolder)
-        
-        try prepareTemplate(for: copiedFile, name: name)
-        
-        try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
-    
 
-        
+        try prepareTemplate(for: copiedFile, name: name)
+
+        try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
+
 //        let copiedFile = try file.copy(to: generatedFolder)
 //        try copiedFile.rename(to: outputFileName)
 //            continue
@@ -103,32 +101,31 @@ private extension Preparator {
         category: String
     ) throws {
         let json = """
-                   {
-                     "context": {},
-                     "switches": []
-                   }
-                   """
-        
+        {
+          "context": {},
+          "switches": []
+        }
+        """
+
         let templatePath = Paths.templatePath
             .appendingPathComponent(path: category)
             .appendingPathComponent(path: template)
-        
+
         let templateFolder = try Folder(path: templatePath)
         let jsonFile = try templateFolder.createFile(named: "template.json")
         try jsonFile.write(json, encoding: .utf8)
     }
-    
+
     func prepareTemplate(for file: File, name: String) throws {
         let contents = try file.readAsString()
         var newContents = contents
         var comment = ""
-        
+
         if file.extension?.lowercased() == "swift" {
             for line in contents.lines() {
                 if line.starts(with: "//") {
                     comment += line + "\n"
-                }
-                else {
+                } else {
                     let newComment =
                         """
                         //
@@ -140,22 +137,20 @@ private extension Preparator {
                         //
 
                         """
-                     newContents = newContents.replacingOccurrences(of: comment, with: newComment)
+                    newContents = newContents.replacingOccurrences(of: comment, with: newComment)
                     break
                 }
             }
-        }
-        else {
+        } else {
             newContents = contents
         }
-        
-        
+
         newContents = newContents.replacingOccurrences(of: name.camelCased(), with: "{{name}}")
         newContents = newContents.replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
-        
+
         try file.write(newContents)
     }
-    
+
     func prepareTemplateFolder(template: Template, category: String) throws {
         // Create template folder
         let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)

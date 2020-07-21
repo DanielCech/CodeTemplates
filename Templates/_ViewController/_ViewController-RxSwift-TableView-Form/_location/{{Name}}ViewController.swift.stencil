@@ -1,0 +1,181 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+import UIKit
+
+final class {{Name}}ViewController: UIViewController, ViewModelContaining {
+    // MARK: IBOutlets & views
+
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var closeButton: UIButton!
+    @IBOutlet private var {{name}}TableView: UITableView!
+    @IBOutlet private var editBottomView: EditBottomView!
+    @IBOutlet private var editBottomViewHeightConstraint: NSLayoutConstraint!
+
+    private lazy var topGradientView: GradientView = {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        // swiftlint:disable force_unwrapping
+        view.setGradient(color1: R.color.appColors.harborWhite()!.withAlphaComponent(1), color2: R.color.appColors.harborWhite()!.withAlphaComponent(0))
+        return view
+    }()
+
+    private lazy var bottomGradientView: GradientView = {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        // swiftlint:disable force_unwrapping
+        view.setGradient(color1: R.color.appColors.harborWhite()!.withAlphaComponent(0), color2: R.color.appColors.harborWhite()!.withAlphaComponent(1))
+        return view
+    }()
+
+    // MARK: Public Properties
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    weak var coordinator: HouseholdNavigationCoordinating!
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var viewModel: {{Name}}ViewModel!
+    var disposeBag: DisposeBag = DisposeBag()
+
+    // MARK: Private Properties
+    private lazy var dataSource = RxTableViewSectionedReloadDataSource<{{Name}}SectionModel>(configureCell: { _, tableView, indexPath, item -> UITableViewCell in
+        switch item {
+        case let .textField(configuration):
+            let cell: TextFieldTableViewCell = tableView.dequeueReusableCell(for: indexPath)
+            let model = TextFieldTableViewCellModel(configuration: configuration)
+            cell.setup(viewModel: model)
+            return cell
+        }
+    })
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if #available(iOS 13.0, *) {
+            isModalInPresentation = true
+        }
+
+        setupView()
+    }
+}
+
+// MARK: - Binding
+
+extension {{Name}}ViewController {
+    func bindToView() {
+        closeButton.rx.tap.asObservable()
+            .subscribeNext { [weak self] _ in
+                self?.coordinator.dismissPresentedWithAppear()
+            }
+            .disposed(by: disposeBag)
+    }
+
+    func bindToViewModel() {
+        let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewWillAppear(_:))).mapToVoid()
+        let deleteTapped = editBottomView
+            .deleteButton.rx.tap
+            .asObservable()
+            .withUnretained(self)
+            .flatMapLatest { viewController, _ -> Observable<(String?, Bool)> in
+                viewController.showAlert(
+                    title: R.string.localizable.editContactDeleteContactTitle(),
+                    message: R.string.localizable.editContactDeleteContactMessage(),
+                    yesTitle: (R.string.localizable.generalDelete(), .destructive),
+                    noTitle: (R.string.localizable.generalCancel(), .default)
+                )
+            }
+            .filter { $0.1 }
+            .mapToVoid()
+
+        let input = {{Name}}ViewModel.Input(
+            viewWillAppear: viewWillAppear,
+            saveTapped: editBottomView.saveButton.rx.tap.asObservable(),
+            deleteTapped: deleteTapped
+        )
+        let output = viewModel.transform(input: input)
+
+        output.{{name}}Sections.drive({{name}}TableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+
+        output.isInputValid.drive(onNext: { [weak self] valid in
+            self?.editBottomView.saveButton.isEnabled = valid
+
+        }).disposed(by: disposeBag)
+
+        output.controllerMode.drive(onNext: { [weak self] mode in
+
+            switch mode {
+            case .addContact, .addOtherContact:
+                self?.editBottomViewHeightConstraint.constant = EditBottomView.halfHeight
+                self?.editBottomView.setup(mode: .add(R.string.localizable.editContactAddContact()))
+            default:
+                self?.editBottomViewHeightConstraint.constant = EditBottomView.fullHeight
+                self?.editBottomView.setup(mode: .edit(R.string.localizable.generalEditSave(), R.string.localizable.editContactDeleteContact()))
+            }
+        }).disposed(by: disposeBag)
+
+        output.titleLabel
+            .drive(titleLabel.rx.attributedText)
+            .disposed(by: disposeBag)
+
+        output.saved.drive(onNext: { [weak self] _ in
+            self?.coordinator.dismissPresentedWithAppear()
+        }).disposed(by: disposeBag)
+
+        output.deleted.drive(onNext: { [weak self] _ in
+            self?.coordinator.dismissPresentedWithAppear()
+        }).disposed(by: disposeBag)
+
+        bindErrors(errors: output.errors)
+    }
+}
+
+// MARK: - Private Methods
+
+private extension {{Name}}ViewController {
+    func setupView() {
+        setupIBOutlets()
+        bindToView()
+        bindToViewModel()
+    }
+
+    func setupIBOutlets() {
+        closeButton.apply(style: .closeButton)
+
+        {{name}}TableView.separatorStyle = .none
+        {{name}}TableView.showsVerticalScrollIndicator = false
+        {{name}}TableView.rowHeight = UITableView.automaticDimension
+        {{name}}TableView.register(TextFieldTableViewCell.self)
+
+        view.addSubview(topGradientView)
+        NSLayoutConstraint.activate([
+            topGradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topGradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topGradientView.topAnchor.constraint(equalTo: {{name}}TableView.topAnchor),
+            topGradientView.heightAnchor.constraint(equalToConstant: 15)
+        ])
+
+        view.addSubview(bottomGradientView)
+        NSLayoutConstraint.activate([
+            bottomGradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomGradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomGradientView.bottomAnchor.constraint(equalTo: {{name}}TableView.bottomAnchor),
+            bottomGradientView.heightAnchor.constraint(equalToConstant: 15)
+        ])
+    }
+}

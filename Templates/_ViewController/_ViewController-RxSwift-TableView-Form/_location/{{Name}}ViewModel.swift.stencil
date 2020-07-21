@@ -1,0 +1,265 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+
+typealias {{Name}}SectionModel = SectionModel<String?, {{Name}}Section>
+
+final class {{Name}}ViewModel: ViewModelType {
+    enum ControllerMode {
+        case addContact
+        case addOtherContact
+        case editContact(EmergencyContactResponse)
+        case editOtherContact(EmergencyContactResponse)
+    }
+
+    // MARK: Private properties
+    private let apiService: HouseholdServicing
+    private let disposeBag = DisposeBag()
+
+    private var controllerMode: ControllerMode
+    private var contact: EmergencyContactResponse?
+    private var emergencyContactType: EmergencyContactType
+    private var defaultValidationStatus: ValidationStatus {
+        contact == nil ? .error(nil) : .normal
+    }
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(apiService: HouseholdServicing, controllerMode: ControllerMode, emergencyContactType: EmergencyContactType) {
+        self.apiService = apiService
+        self.controllerMode = controllerMode
+        self.emergencyContactType = emergencyContactType
+        switch controllerMode {
+        case let .editContact(caseContact), let .editOtherContact(caseContact):
+            contact = caseContact
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {
+        let viewWillAppear: Observable<Void>
+        let saveTapped: Observable<Void>
+        let deleteTapped: Observable<Void>
+    }
+
+    struct Output {
+        let {{name}}Sections: Driver<[{{Name}}SectionModel]>
+        let titleLabel: Driver<NSAttributedString>
+        let isInputValid: Driver<Bool>
+        let deleted: Driver<Void>
+        let saved: Driver<EmergencyContactResponse>
+        let errors: Driver<Error>
+        let controllerMode: Driver<ControllerMode>
+    }
+
+    func transform(input: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+        let firstAndLastNameText = BehaviorRelay<String>(value: contact?.fullName ?? "")
+        let phoneNumberText = BehaviorRelay<String>(value: contact?.phoneNumber ?? "")
+        let contactTypeText = BehaviorRelay<String>(value: contact?.contactTypeDescription ?? "")
+        let emailText = BehaviorRelay<String>(value: contact?.email ?? "")
+        let addressText = BehaviorRelay<String>(value: contact?.address?.address ?? "")
+        let cityText = BehaviorRelay<String>(value: contact?.address?.city ?? "")
+        let zipText = BehaviorRelay<String>(value: contact?.address?.zipcode ?? "")
+        let stateText = BehaviorRelay<String>(value: contact?.address?.stateName ?? "")
+
+        var configurations: [TextFieldCellConfiguration] = [
+            createFirstNameLastNameConfiguration(text: firstAndLastNameText),
+            createPhoneNumberConfiguration(text: phoneNumberText),
+            createEmailConfiguration(text: emailText),
+            createAddresseConfiguration(text: addressText),
+            createCityConfiguration(text: cityText),
+            createZipCodeConfiguration(text: zipText),
+            createStateConfiguration(text: stateText)
+        ]
+
+        switch controllerMode {
+        case .addOtherContact, .editOtherContact:
+            configurations.insert(createContactTypeConfiguration(text: contactTypeText), at: 0)
+        default:
+            break
+        }
+
+        // swiftlint:disable force_unwrapping
+        let items: [{{Name}}Section] = configurations.map { .textField($0) }
+
+        let models: [{{Name}}SectionModel] = [{{Name}}SectionModel(model: nil, items: items)]
+        let {{name}}Output = Driver<[{{Name}}SectionModel]>.just(models)
+
+        let updateCreate = input.saveTapped
+            .map { _ -> Observable<EmergencyContactResponse> in
+                let stateId = !stateText.value.isEmpty ? State.stateId(forName: stateText.value) : nil
+                let address = Address(
+                    zipcode: zipText.value.mapToNil(),
+                    address: addressText.value.mapToNil(),
+                    city: cityText.value.mapToNil(),
+                    stateId: stateId
+                )
+
+                switch self.controllerMode {
+                case .addContact, .addOtherContact:
+                    let creteRequest = CreateEmergencyContactRequest(
+                        address: address,
+                        contactTypeDescription: contactTypeText.value,
+                        emergencyContactTypeId: self.emergencyContactType,
+                        email: emailText.value.mapToNil(),
+                        fullName: firstAndLastNameText.value,
+                        phoneNumber: phoneNumberText.value.mapToNil()
+                    )
+                    return self.apiService.createEmergencyContact(contact: creteRequest)
+
+                default:
+                    let updateRequest = UpdateEmergencyContactRequest(
+                        address: address,
+                        contactTypeDescription: contactTypeText.value,
+                        email: emailText.value.mapToNil(),
+                        fullName: firstAndLastNameText.value,
+                        phoneNumber: phoneNumberText.value.mapToNil()
+                    )
+
+                    return self.apiService.updateEmergencyContact(contactId: self.contact!.id, contact: updateRequest)
+                }
+            }
+            .flatMapLatest { $0.materialize() }
+            .share()
+
+        let delete = input.deleteTapped
+            .map { self.apiService.deleteEmergencyContact(contactId: self.contact!.id) }
+            .flatMap { $0.materialize() }
+            .share()
+
+        let correctInput = Observable
+            .combineLatest(configurations.map { $0.validationStatus.asObservable() })
+            .map { statuses in
+                statuses.allSatisfy { $0 == .normal || $0 == .validated }
+            }
+
+        let title: String
+        switch controllerMode {
+        case .addOtherContact, .addContact:
+            title = emergencyContactType.addTitle
+        case let .editContact(contact), let .editOtherContact(contact):
+            title = contact.fullName
+        }
+
+        let errors = Observable.merge(delete.errors(), updateCreate.errors())
+
+        return Output(
+            {{name}}Sections: {{name}}Output,
+            titleLabel: .just(title.styled(with: .dashboardSection)),
+            isInputValid: correctInput.asDriverOnErrorJustComplete(),
+            deleted: delete.elements().asDriverLogError(),
+            saved: updateCreate.elements().asDriverLogError(),
+            errors: errors.asDriverOnErrorJustComplete(),
+            controllerMode: .just(controllerMode)
+        )
+    }
+}
+
+// MARK: - Factories
+
+private extension {{Name}}ViewModel {
+    func createContactTypeConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactContactTypeDescription(),
+            placeholder: R.string.localizable.editContactContactTypeDescriptionPlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .required(MaxLengthInput.generic.rawValue),
+            text: text,
+            validationStatus: BehaviorRelay<ValidationStatus>(value: defaultValidationStatus)
+        )
+    }
+
+    func createFirstNameLastNameConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactFirstAndLastName(),
+            placeholder: R.string.localizable.editContactFirstAndLastNamePlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .required(MaxLengthInput.fullname.rawValue),
+            text: text,
+            validationStatus: BehaviorRelay<ValidationStatus>(value: defaultValidationStatus)
+        )
+    }
+
+    func createPhoneNumberConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactPhoneNumber(),
+            placeholder: R.string.localizable.editContactPhoneNumberPlaceholder(),
+            keyboardType: .phonePad,
+            autocapitalization: .none,
+            validation: .phone,
+            text: text
+        )
+    }
+
+    func createEmailConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactEmailAddress(),
+            placeholder: R.string.localizable.authEmailPlaceholder(),
+            keyboardType: .emailAddress,
+            autocapitalization: .none,
+            validation: .email,
+            text: text
+        )
+    }
+
+    func createAddresseConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactAddress(),
+            placeholder: R.string.localizable.editContactAddressPlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .sentences,
+            validation: .none,
+            text: text
+        )
+    }
+
+    func createCityConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactCity(),
+            placeholder: R.string.localizable.editContactCityPlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .none,
+            text: text
+        )
+    }
+
+    func createZipCodeConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactZip(),
+            placeholder: R.string.localizable.editContactZipPlaceholder(),
+            keyboardType: .phonePad,
+            autocapitalization: .none,
+            validation: .zip,
+            text: text
+        )
+    }
+
+    func createStateConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        return .init(
+            title: R.string.localizable.editContactState(),
+            placeholder: R.string.localizable.editContactStatePlaceholder(),
+            valueType: .list(State.states.map { $0.name }, nil),
+            text: text
+        )
+    }
+}

@@ -41,7 +41,7 @@ public extension String {
         }
         return newName
     }
-    
+
     /// File name modification based on substitutions from context
     func prepareName(name: String) -> String {
         var newName = replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
