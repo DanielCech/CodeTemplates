@@ -1,0 +1,170 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+
+typealias {{Name}}SectionModel = SectionModel<String?, {{Name}}Section>
+
+final class {{Name}}ViewModel: ViewModelType {
+    // MARK: Private properties
+    private let apiService: HouseholdServicing
+    private let disposeBag = DisposeBag()
+
+//    private var contact: EmergencyContactResponse?
+    private var defaultValidationStatus: ValidationStatus = .normal
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(apiService: HouseholdServicing) {
+        self.apiService = apiService
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {
+        let viewWillAppear: Observable<Void>
+    }
+
+    struct Output {
+        let {{name}}Sections: Driver<[{{Name}}SectionModel]>
+        let isInputValid: Driver<Bool>
+    }
+
+    func transform(input _: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+        let firstNameText = BehaviorRelay<String>(value: "")
+        let lastNameText = BehaviorRelay<String>(value: "")
+        let addressText = BehaviorRelay<String>(value: "")
+        let cityText = BehaviorRelay<String>(value: "")
+        let zipText = BehaviorRelay<String>(value: "")
+        let stateText = BehaviorRelay<String>(value: "")
+        let phoneNumberText = BehaviorRelay<String>(value: "")
+
+        let configurations: [TextFieldCellConfiguration] = [
+            createFirstNameConfiguration(text: firstNameText),
+            createLastNameConfiguration(text: lastNameText),
+            createAddressConfiguration(text: addressText),
+            createCityConfiguration(text: cityText),
+            createZipCodeConfiguration(text: zipText),
+            createStateConfiguration(text: stateText),
+            createPhoneNumberConfiguration(text: phoneNumberText)
+        ]
+
+        // swiftlint:disable force_unwrapping
+        let items: [{{Name}}Section] = configurations.map { .textField($0) }
+
+        let models: [{{Name}}SectionModel] = [{{Name}}SectionModel(model: nil, items: items)]
+        let {{name}}Output = Driver<[{{Name}}SectionModel]>.just(models)
+
+        let correctInput = Observable
+            .combineLatest(configurations.map { $0.validationStatus.asObservable() })
+            .map { statuses in
+                statuses.allSatisfy { $0 == .normal || $0 == .validated }
+            }
+
+        return Output(
+            {{name}}Sections: {{name}}Output,
+            isInputValid: correctInput.asDriverOnErrorJustComplete()
+        )
+    }
+}
+
+// MARK: - Factories
+
+private extension {{Name}}ViewModel {
+    func createFirstNameConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.{{name}}FirstName(),
+            placeholder: R.string.localizable.{{name}}FirstNamePlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .required(MaxLengthInput.fullname.rawValue),
+            text: text,
+            validationStatus: BehaviorRelay<ValidationStatus>(value: defaultValidationStatus),
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+
+    func createLastNameConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.{{name}}LastName(),
+            placeholder: R.string.localizable.{{name}}LastNamePlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .required(MaxLengthInput.fullname.rawValue),
+            text: text,
+            validationStatus: BehaviorRelay<ValidationStatus>(value: defaultValidationStatus),
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+
+    func createAddressConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.{{name}}Address(),
+            placeholder: R.string.localizable.{{name}}AddressPlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .sentences,
+            validation: .none,
+            text: text,
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+
+    func createCityConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.editContactCity(),
+            placeholder: R.string.localizable.editContactCityPlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .none,
+            text: text,
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+
+    func createZipCodeConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.{{name}}ZipCode(),
+            placeholder: R.string.localizable.{{name}}ZipCodePlaceholder(),
+            keyboardType: .phonePad,
+            autocapitalization: .none,
+            validation: .zip,
+            text: text,
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+
+    func createStateConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        return .init(
+            title: R.string.localizable.{{name}}State(),
+            placeholder: R.string.localizable.{{name}}StatePlaceholder(),
+            valueType: .list(State.states.map { $0.name }, nil),
+            text: text,
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+
+    func createPhoneNumberConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.{{name}}PhoneNumber(),
+            placeholder: R.string.localizable.{{name}}PhoneNumberPlaceholder(),
+            keyboardType: .phonePad,
+            autocapitalization: .none,
+            validation: .phone,
+            text: text,
+            cellBackground: R.color.appColors.baseBackground()
+        )
+    }
+}

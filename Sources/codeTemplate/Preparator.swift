@@ -148,6 +148,11 @@ private extension Preparator {
         newContents = newContents.replacingOccurrences(of: name.camelCased(), with: "{{name}}")
         newContents = newContents.replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
 
+        newContents = newContents.stringByReplacingMatches(
+            pattern: "var coordinator: (.*)Coordinating!",
+            withTemplate: "var coordinator: {{coordinator}}Coordinating!"
+        )
+
         try file.write(newContents)
     }
 

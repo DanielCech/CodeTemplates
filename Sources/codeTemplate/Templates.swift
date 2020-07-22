@@ -34,7 +34,7 @@ class Templates {
         let templatesFolder = try Folder(path: Paths.templatePath)
 
         for categoryFolder in templatesFolder.subfolders {
-            if categoryFolder.name == "_combos" {
+            if categoryFolder.name == "_Combos" {
                 continue
             }
 

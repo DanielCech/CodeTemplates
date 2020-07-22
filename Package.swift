@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "codeTemplate",
+    platforms: [
+        .macOS(.v10_15)
+    ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Files.git", from: "4.1.1"),
         .package(url: "https://github.com/kareman/Moderator.git", from: "0.5.1"),

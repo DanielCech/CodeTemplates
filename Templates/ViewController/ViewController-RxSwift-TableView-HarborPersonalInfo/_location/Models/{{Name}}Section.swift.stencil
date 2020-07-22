@@ -1,0 +1,13 @@
+//
+//  {{Name}}Section.swift
+//  Harbor
+//
+//  Created by Daniel Cech on 20/07/2020.
+//  Copyright � 2020 25MP Corp. All rights reserved.
+//
+
+// MARK: - {{Name}} table view cell types
+
+enum {{Name}}Section {
+    case textField(TextFieldCellConfiguration)
+}

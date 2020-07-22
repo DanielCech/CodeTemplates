@@ -67,4 +67,14 @@ public extension String {
         }
         return self
     }
+
+    func stringByReplacingMatches(pattern: String, withTemplate template: String) -> String {
+        let regex = try! NSRegularExpression(pattern: pattern)
+        return regex.stringByReplacingMatches(
+            in: self,
+            options: .reportCompletion,
+            range: NSRange(location: 0, length: count),
+            withTemplate: template
+        )
+    }
 }

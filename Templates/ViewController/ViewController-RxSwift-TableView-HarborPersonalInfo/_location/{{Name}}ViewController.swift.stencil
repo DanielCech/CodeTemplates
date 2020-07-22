@@ -1,0 +1,118 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+import UIKit
+
+final class {{Name}}ViewController: UIViewController, ViewModelContaining {
+    // MARK: IBOutlets & views
+
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var backButton: UIButton!
+    @IBOutlet private var {{name}}TableView: UITableView!
+
+    // MARK: Public Properties
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    weak var coordinator: {{coordinator}}Coordinating!
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var viewModel: {{Name}}ViewModel!
+    var disposeBag: DisposeBag = DisposeBag()
+
+    // MARK: Private Properties
+    private lazy var dataSource = RxTableViewSectionedReloadDataSource<{{Name}}SectionModel>(configureCell: { _, tableView, indexPath, item -> UITableViewCell in
+        switch item {
+        case let .textField(configuration):
+            let cell: TextFieldTableViewCell = tableView.dequeueReusableCell(for: indexPath)
+            let model = TextFieldTableViewCellModel(configuration: configuration)
+            cell.setup(viewModel: model)
+            return cell
+        }
+    })
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if #available(iOS 13.0, *) {
+            isModalInPresentation = true
+        }
+
+        setupView()
+    }
+}
+
+// MARK: - Binding
+
+extension {{Name}}ViewController {
+    func bindToView() {
+        backButton.rx.tap.asObservable()
+            .subscribeNext { [weak self] _ in
+                self?.coordinator.pop()
+            }
+            .disposed(by: disposeBag)
+    }
+
+    func bindToViewModel() {
+        let viewWillAppear = rx.sentMessage(#selector(UIViewController.viewWillAppear(_:))).mapToVoid()
+
+        let input = {{Name}}ViewModel.Input(
+            viewWillAppear: viewWillAppear
+        )
+        let output = viewModel.transform(input: input)
+
+        output.{{name}}Sections.drive({{name}}TableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+
+//        output.isInputValid.drive(onNext: { [weak self] _ in
+        ////            self?.editBottomView.saveButton.isEnabled = valid
+//
+//        }).disposed(by: disposeBag)
+
+//        output.controllerMode.drive(onNext: { [weak self] mode in
+//
+//            switch mode {
+//            case .addContact, .addOtherContact:
+//                self?.editBottomViewHeightConstraint.constant = EditBottomView.halfHeight
+//                self?.editBottomView.setup(mode: .add(R.string.localizable.editContactAddContact()))
+//            default:
+//                self?.editBottomViewHeightConstraint.constant = EditBottomView.fullHeight
+//                self?.editBottomView.setup(mode: .edit(R.string.localizable.generalEditSave(), R.string.localizable.editContactDeleteContact()))
+//            }
+//        }).disposed(by: disposeBag)
+
+//        bindErrors(errors: output.errors)
+    }
+}
+
+// MARK: - Private Methods
+
+private extension {{Name}}ViewController {
+    func setupView() {
+        setupIBOutlets()
+        bindToView()
+        bindToViewModel()
+    }
+
+    func setupIBOutlets() {
+//        backButton.apply(style: .backButton)
+        titleLabel.attributedText = R.string.localizable.{{name}}().styled(with: .familyAccountsTitle)
+
+        {{name}}TableView.separatorStyle = .none
+        {{name}}TableView.showsVerticalScrollIndicator = false
+        {{name}}TableView.rowHeight = UITableView.automaticDimension
+        {{name}}TableView.register(TextFieldTableViewCell.self)
+    }
+}

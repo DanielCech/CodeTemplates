@@ -50,8 +50,8 @@ private extension TemplateCombo {
     func sceneViewControllerCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "ViewController",
-            storyboardTemplate: "Storyboard-ViewController",
+            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController",
+            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController",
             generateSectionType: false
         )
 
@@ -61,8 +61,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "ViewController-RxSwift",
-            storyboardTemplate: "Storyboard-ViewController"
+            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift",
+            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController"
         )
 
         try generateTableViewCells(context: context, tableViewCellTemplate: "TableViewCell-RxSwift")
@@ -73,8 +73,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithTableViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "ViewController-RxSwift-TableView",
-            storyboardTemplate: "Storyboard-ViewController-TableView"
+            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-TableView",
+            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-TableView"
         )
 
         try generateHeadersAndFooters(context: context)
@@ -87,8 +87,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithFormTableViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "ViewController-RxSwift-FormTableView",
-            storyboardTemplate: "Storyboard-ViewController-TableView"
+            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-FormTableView",
+            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-TableView"
         )
 
         try generateHeadersAndFooters(context: context)
@@ -101,8 +101,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithCollectionViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: "ViewController-RxSwift-CollectionView",
-            storyboardTemplate: "Storyboard-ViewController-CollectionView"
+            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-CollectionView",
+            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-CollectionView"
         )
 
         try generateCollectionViewCells(context: context, collectionViewCellTemplate: "CollectionViewCell-RxSwift")

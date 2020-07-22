@@ -1,5 +1,5 @@
 {
   "context": {},
   "switches": [],
-  "dependencies": ["viewModel-RxSwift-FormTableView", "UITableView+HeadersFooters"]
+  "dependencies": ["ViewModel-RxSwift-FormTableView", "UITableView+HeadersFooters"]
 }
