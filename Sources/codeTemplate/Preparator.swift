@@ -29,22 +29,20 @@ class Preparator {
             throw CodeTemplateError.parameterNotSpecified(message: "name")
         }
 
+        try Paths.setupPaths(context: context)
+        try prepareTemplateFolder(template: template, category: category)
+        
         var deriveFromTemplate = context["deriveFromTemplate"] as? String
         if deriveFromTemplate == nil {
             print("    🟢 Derive from which template (empty for none): ", terminator: "")
             if let userInput = readLine(), !userInput.isEmpty {
                 try Templates.shared.updateTemplateDerivations(template: template, deriveFromTemplate: userInput)
                 deriveFromTemplate = userInput
+                try createTemplateJSON(template: template, category: category, deriveFromTemplate: deriveFromTemplate!)
             } else {
                 try createEmptyTemplateJSON(template: template, category: category)
             }
         }
-
-        try Paths.setupPaths(context: context)
-
-        try prepareTemplateFolder(template: template, category: category)
-
-        try createTemplateJSON(template: template, category: category, deriveFromTemplate: deriveFromTemplate!)
 
         for projectFile in projectFiles {
             try prepareTemplate(

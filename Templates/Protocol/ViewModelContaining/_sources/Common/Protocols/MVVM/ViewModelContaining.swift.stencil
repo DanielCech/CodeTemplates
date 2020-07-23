@@ -1,0 +1,20 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import Foundation
+import RxSwift
+
+public protocol ViewModelContaining {
+    associatedtype ViewModel
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var viewModel: ViewModel! { get set }
+    var disposeBag: DisposeBag { get }
+
+    func bindToViewModel()
+}
