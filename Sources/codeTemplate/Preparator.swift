@@ -36,7 +36,7 @@ class Preparator {
                 try Templates.shared.updateTemplateDerivations(template: template, deriveFromTemplate: userInput)
                 deriveFromTemplate = userInput
             } else {
-                createEmptyTemplateJSON(template: template, category: category)
+                try createEmptyTemplateJSON(template: template, category: category)
             }
         }
 
