@@ -29,9 +29,22 @@ class Preparator {
             throw CodeTemplateError.parameterNotSpecified(message: "name")
         }
 
+        var deriveFromTemplate = context["deriveFromTemplate"] as? String
+        if deriveFromTemplate == nil {
+            print("    🟢 Derive from which template (empty for none): ", terminator: "")
+            if let userInput = readLine(), !userInput.isEmpty {
+                try Templates.shared.updateTemplateDerivations(template: template, deriveFromTemplate: userInput)
+                deriveFromTemplate = userInput
+            } else {
+                createEmptyTemplateJSON(template: template, category: category)
+            }
+        }
+
         try Paths.setupPaths(context: context)
 
         try prepareTemplateFolder(template: template, category: category)
+
+        try createTemplateJSON(template: template, category: category, deriveFromTemplate: deriveFromTemplate!)
 
         for projectFile in projectFiles {
             try prepareTemplate(
@@ -52,8 +65,6 @@ class Preparator {
         context _: Context
     ) throws {
         let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
-
-        try createTemplateJSON(template: template, category: category)
 
         let inputFile = try File(path: projectFile)
 
@@ -97,6 +108,28 @@ class Preparator {
 
 private extension Preparator {
     func createTemplateJSON(
+        template: Template,
+        category: String,
+        deriveFromTemplate parentTemplate: Template
+    ) throws {
+        let parentTemplateCategory = try Templates.shared.templateCategory(for: parentTemplate)
+
+        let parentTemplatePath = Paths.templatePath
+            .appendingPathComponent(path: parentTemplateCategory)
+            .appendingPathComponent(path: parentTemplate)
+
+        let templatePath = Paths.templatePath
+            .appendingPathComponent(path: category)
+            .appendingPathComponent(path: template)
+
+        let parentTemplateFolder = try Folder(path: parentTemplatePath)
+        let templareFolder = try Folder(path: templatePath)
+
+        let parentTemplateJSON = try parentTemplateFolder.file(named: "templare.json")
+        try parentTemplateJSON.copy(to: templareFolder)
+    }
+    
+    func createEmptyTemplateJSON(
         template: Template,
         category: String
     ) throws {
@@ -148,6 +181,7 @@ private extension Preparator {
         newContents = newContents.replacingOccurrences(of: name.camelCased(), with: "{{name}}")
         newContents = newContents.replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
 
+        // Generalize coordinator
         newContents = newContents.stringByReplacingMatches(
             pattern: "var coordinator: (.*)Coordinating!",
             withTemplate: "var coordinator: {{coordinator}}Coordinating!"

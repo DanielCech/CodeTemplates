@@ -79,6 +79,27 @@ class Templates {
         return derivations
     }
 
+    func updateTemplateDerivations(template: Template, deriveFromTemplate: Template) throws {
+        if var array = templateDerivationsDict[deriveFromTemplate] {
+            array.append(template)
+            templateDerivationsDict[deriveFromTemplate] = array
+        } else {
+            templateDerivationsDict[deriveFromTemplate] = [template]
+        }
+
+        let encoder = JSONEncoder()
+        if let jsonData = try? encoder.encode(templateDerivationsDict) {
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print(jsonString)
+
+                let derivationsFilePath = Paths.templatePath.appendingPathComponent(path: "derivations.json")
+                let derivationsFile = try File(path: derivationsFilePath)
+
+                try derivationsFile.write(jsonString, encoding: .utf8)
+            }
+        }
+    }
+
     /// Returns template category
     func templateCategory(for template: Template) throws -> String {
         if let templateInfo = try templateTypes()[template] {
