@@ -31,7 +31,7 @@ class Preparator {
 
         try Paths.setupPaths(context: context)
         try prepareTemplateFolder(template: template, category: category)
-        
+
         var deriveFromTemplate = context["deriveFromTemplate"] as? String
         if deriveFromTemplate == nil {
             print("    🟢 Derive from which template (empty for none): ", terminator: "")
@@ -126,7 +126,7 @@ private extension Preparator {
         let parentTemplateJSON = try parentTemplateFolder.file(named: "templare.json")
         try parentTemplateJSON.copy(to: templareFolder)
     }
-    
+
     func createEmptyTemplateJSON(
         template: Template,
         category: String

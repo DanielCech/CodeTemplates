@@ -1,5 +1,5 @@
 {
   "context": {},
   "switches": ["fakeNavbar", "sectionHeaders", "tableViewHeader", "tableViewFooter"],
-  "dependencies": ["viewModel-RxSwift-TableView", "UITableView+HeadersFooters:tableViewHeader,tableViewFooter"]
+  "dependencies": ["ViewModel-RxSwift-TableView", "UITableView+HeadersFooters:tableViewHeader,tableViewFooter"]
 }

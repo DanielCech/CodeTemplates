@@ -141,7 +141,7 @@ private extension {{Name}}ViewController {
 {% for cell in tableViewCells %}
         {{name}}TableView.register({{cell|pascalCased}}TableViewCell.self) {% endfor %}
 {% if sectionHeader %}
-        TableView.registerHeaderFooterView({{Name}}SectionHeader.self)
+        {{name}}TableView.registerHeaderFooterView({{Name}}SectionHeader.self)
 {% endif %}
 
 {% if tableViewHeader %}
