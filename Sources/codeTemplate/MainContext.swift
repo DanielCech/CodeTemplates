@@ -7,21 +7,25 @@
 
 import Foundation
 import Moderator
-
-
+import Files
+import ScriptToolkit
 
 class MainContext {
         
     static let shared = MainContext()
     
-    private var boolParameters = [String: FutureValue<Bool>]()
-    private var stringParameters = [String: FutureValue<String?>]()
-    private var stringArrayParameters = [String: FutureValue<[String]>]()
+    private static var boolParameters = [String: FutureValue<Bool>]()
+    private static var stringParameters = [String: FutureValue<String?>]()
+    private static var stringArrayParameters = [String: FutureValue<[String]>]()
     
-    private var moderator: Moderator!
-    private(set) var context: Context!
+    private static var moderator: Moderator!
+    private(set) static var context: Context!
     
-    func setupParameters() {
+    static func getContext() -> Context {
+        return context
+    }
+    
+    static func setupParameters() {
         moderator = Moderator(description: "Generates a swift app components from templates")
         moderator.usageFormText = "codeTemplate <params>"
         
@@ -39,13 +43,14 @@ class MainContext {
         }
     }
     
-    func parseParameters() throws {
+    static func parseParameters() throws {
         try moderator.parse()
         
         if let contextFileValue = stringParameters["context"], let contextFile = contextFileValue.value {
-            context = try ContextHelper.shared.context(fromFile: contextFile)
+            context = try loadContext(fromFile: contextFile)
         }
         else {
+            print("⚠️  Context is missing")
             context = [:]
         }
         
@@ -63,7 +68,7 @@ class MainContext {
         }
     }
     
-    func boolValue(_ parameter: String) -> Bool {
+    static func boolValue(_ parameter: String) -> Bool {
         if let boolValue = context[parameter] as? Bool {
             return boolValue
         }
@@ -77,14 +82,14 @@ class MainContext {
         while true {
             var description: String
             if boolParameter.description.isEmpty {
-                description = "\nℹ️ Missing parameter \(parameter): \(boolParameter.name)"
+                description = "\nℹ️  Missing parameter '\(parameter)': \(boolParameter.name)"
             }
             else {
-                description = "\nℹ️ Missing parameter \(parameter): \(boolParameter.name). \(boolParameter.description)."
+                description = "\nℹ️  Missing parameter '\(parameter)': \(boolParameter.name). \(boolParameter.description)."
             }
             
             print(description)
-            print("❔ Enter \(parameter) [tf]: ", terminator: "")
+            print("❔ Enter '\(parameter)' [tf]: ", terminator: "")
             
             if let input = readLine(), !input.isEmpty, input == "t" || input == "f" {
                 newValue = input
@@ -101,7 +106,15 @@ class MainContext {
         return trueOrFalse
     }
     
-    func stringValue(_ parameter: String) -> String {
+    static func optionalBoolValue(_ parameter: String) -> Bool? {
+        if let boolValue = context[parameter] as? Bool {
+            return boolValue
+        }
+        
+        return nil
+    }
+    
+    static func stringValue(_ parameter: String) -> String {
         if let stringValue = context[parameter] as? String {
             return stringValue
         }
@@ -115,14 +128,14 @@ class MainContext {
         while true {
             var description: String
             if stringParameter.description.isEmpty {
-                description = "\nℹ️ Missing parameter \(parameter): \(stringParameter.name)"
+                description = "\nℹ️  Missing parameter '\(parameter)':' \(stringParameter.name)"
             }
             else {
-                description = "\nℹ️ Missing parameter \(parameter): \(stringParameter.name). \(stringParameter.description)."
+                description = "\nℹ️  Missing parameter '\(parameter)': \(stringParameter.name). \(stringParameter.description)."
             }
             
             print(description)
-            print("❔ Enter \(parameter): ", terminator: "")
+            print("❔ Enter '\(parameter)': ", terminator: "")
             
             if let input = readLine(), !input.isEmpty {
                 newValue = input
@@ -138,7 +151,14 @@ class MainContext {
         return newValue
     }
     
-    func stringArrayValue(_ parameter: String) -> [String] {
+    static func optionalStringValue(_ parameter: String) -> String? {
+        if let stringValue = context[parameter] as? String {
+            return stringValue
+        }
+        return nil
+    }
+    
+    static func stringArrayValue(_ parameter: String) -> [String] {
         if let stringArrayValue = context[parameter] as? [String] {
             return stringArrayValue
         }
@@ -152,14 +172,14 @@ class MainContext {
         while true {
             var description: String
             if stringArrayParameter.description.isEmpty {
-                description = "\nℹ️ Missing parameter \(parameter): \(stringArrayParameter.name)"
+                description = "\nℹ️  Missing parameter '\(parameter)': \(stringArrayParameter.name)"
             }
             else {
-                description = "\nℹ️ Missing parameter \(parameter): \(stringArrayParameter.name). \(stringArrayParameter.description)."
+                description = "\nℹ️  Missing parameter '\(parameter)': \(stringArrayParameter.name). \(stringArrayParameter.description)."
             }
             
             print(description)
-            print("❔ Enter \(parameter) (comma-separated): ", terminator: "")
+            print("❔ Enter '\(parameter)' (comma-separated): ", terminator: "")
             
             if let input = readLine(), !input.isEmpty {
                 newValue = input
@@ -176,5 +196,25 @@ class MainContext {
         return list
     }
     
+    static func optionalStringArrayValue(_ parameter: String) -> [String]? {
+        if let stringArrayValue = context[parameter] as? [String] {
+            return stringArrayValue
+        }
+        return nil
+    }
+}
 
+private extension MainContext {
+    static func loadContext(fromFile contextFile: String) throws -> Context {
+        let contextFile = try File(path: contextFile)
+        let contextString = try contextFile.readAsString(encodedAs: .utf8)
+        let contextData = Data(contextString.utf8)
+
+        // make sure this JSON is in the format we expect
+        guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
+            throw ScriptError.generalError(message: "Deserialization error")
+        }
+
+        return context
+    }
 }

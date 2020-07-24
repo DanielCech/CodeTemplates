@@ -17,8 +17,8 @@ class Generator {
     var processedFiles = [ProcessedFile]()
 
     /// Generate code using template with context in json file
-    func generateCode(contextFile: String, reviewMode: ReviewMode) throws {
-        let context = try ContextHelper.shared.context(fromFile: contextFile)
+    func generateCode(reviewMode: ReviewMode) throws {
+        let context = MainContext.getContext()
 
         let generationMode: GenerationMode
         if let unwrappedTemplate = context["template"] as? String {

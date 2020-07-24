@@ -69,17 +69,4 @@ class ContextHelper {
 
         return modifiedContext
     }
-
-    func context(fromFile contextFile: String) throws -> Context {
-        let contextFile = try File(path: contextFile)
-        let contextString = try contextFile.readAsString(encodedAs: .utf8)
-        let contextData = Data(contextString.utf8)
-
-        // make sure this JSON is in the format we expect
-        guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
-            throw ScriptError.generalError(message: "Deserialization error")
-        }
-
-        return context
-    }
 }
