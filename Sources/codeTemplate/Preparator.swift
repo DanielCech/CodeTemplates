@@ -34,7 +34,7 @@ class Preparator {
 
         var deriveFromTemplate = context["deriveFromTemplate"] as? String
         if deriveFromTemplate == nil {
-            print("    🟢 Derive from which template (empty for none): ", terminator: "")
+            print("🟢 Derive from which template (empty for none): ", terminator: "")
             if let userInput = readLine(), !userInput.isEmpty {
                 try Templates.shared.updateTemplateDerivations(template: template, deriveFromTemplate: userInput)
                 deriveFromTemplate = userInput
@@ -200,19 +200,27 @@ private extension Preparator {
     func analyzeFileDependencies(of file: File) throws {
         let contents = try file.readAsString()
 
-        var matches = [String]()
+        var typeDependencies = [String]()
+        var frameworkDependencies = [String]()
+        
         for line in contents.lines() {
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.classPattern))
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.structPattern))
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.enumPattern))
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.protocolPattern))
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.extensionPattern))
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.letPattern))
-            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.varPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.classPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.structPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.enumPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.protocolPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.extensionPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.letPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.varPattern))
+            
+            frameworkDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.importPattern))
         }
 
-        let matchesSet = Set(matches)
-        print(matchesSet)
+        let typeDependenciesSet = Set(typeDependencies).subtracting(Internals.systemTypes)
+        let frameworkDependenciesSet = Set(frameworkDependencies).subtracting(Internals.systemFrameworks)
+        
+        
+        print("🔎 Type dependencies: \(typeDependenciesSet)")
+        print("📦 Framework dependencies: \(frameworkDependenciesSet)")
     }
 
     func analyze(line: String, regExp: String) throws -> [String] {
@@ -228,7 +236,7 @@ private extension Preparator {
 
             // Process first part of name
             if let item = extract(line: line, match: result, component: "singleName") {
-                if let itemResult = try item.regExpMatches(lineRegExp: RegExpPatterns.singleName).first {
+                if let itemResult = try item.regExpMatches(lineRegExp: RegExpPatterns.singleNamePattern).first {
                     if let name = extract(line: line, match: itemResult, component: "name") {
                         array.append(name)
                     }

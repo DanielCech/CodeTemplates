@@ -1,5 +1,5 @@
 //
-//  SystemTypes.swift
+//  Internals.swift
 //  codeTemplate
 //
 //  Created by Daniel Cech on 30/07/2020.
@@ -7,8 +7,13 @@
 
 import Foundation
 
-enum SystemTypes {
-    static let foundation = [
+enum Internals {
+    static let genericTypes = [
+        "Any",
+        "AnyObject"
+    ]
+    
+    static let foundationTypes = [
         "AffineTransform",
         "NSAffineTransform",
         "Array",
@@ -61,7 +66,7 @@ enum SystemTypes {
         "UUID"
     ]
 
-    static let uikit = [
+    static let uiKitTypes = [
         "UIView",
         "UIStackView",
         "UIScrollView",
@@ -104,4 +109,8 @@ enum SystemTypes {
         "NSDirectionalRectEdge",
         "UIDirectionalRectEdge"
     ]
+    
+    static let systemTypes: Set<String> = Set(genericTypes + foundationTypes + uiKitTypes)
+    
+    static let systemFrameworks = ["Foundation", "UIKit"]
 }

@@ -71,10 +71,19 @@ enum RegExpPatterns {
         )\s*\{
         """#
 
-    static let singleName
+    static let singleNamePattern
         = #"""
         (?xi)
         (?<exact>
+            [A-Z][a-zA-Z0-9]*
+        ).*
+        """#
+    
+    static let importPattern
+        = #"""
+        (?xi)
+        import\s
+        (?<framework>
             [A-Z][a-zA-Z0-9]*
         ).*
         """#
