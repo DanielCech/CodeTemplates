@@ -12,7 +12,7 @@ protocol ParameterDescriptive {
     var description: String { get }
 }
 
-enum BoolParameters: String, CaseIterable, ParameterDescriptive {
+enum BoolParameter: String, CaseIterable, ParameterDescriptive {
     ///  Using scrolling fake navbar
     case fakeNavbar
 
@@ -89,7 +89,7 @@ enum BoolParameters: String, CaseIterable, ParameterDescriptive {
     }
 }
 
-enum StringParameters: String, CaseIterable, ParameterDescriptive {
+enum StringParameter: String, CaseIterable, ParameterDescriptive {
     /// JSON file with template context
     case context
 
@@ -107,6 +107,15 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
 
     /// Location of CodeTemplate
     case scriptPath
+    
+    /// Location of souce code
+    case locationPath
+    
+    /// Location of the project
+    case projectPath
+    
+    /// Location of project source files
+    case sourcesPath
 
     /// The name of created item (decapitalized), Name - capitalized name
     case name
@@ -152,6 +161,12 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
             return "the name of generated screen"
         case .coordinator:
             return "The name of coordinator which is related to the scene"
+        case .locationPath:
+            return "Location of generated feature in project"
+        case .projectPath:
+            return "Location of project"
+        case .sourcesPath:
+            return "Location of project source files"
         }
     }
 
@@ -181,6 +196,12 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
             return "Used in combination with cell name"
         case .coordinator:
             return "The name doesn't contain 'Coordinator' or 'Coordinating'"
+        case .locationPath:
+            return ""
+        case .projectPath:
+            return ""
+        case .sourcesPath:
+            return ""
         }
     }
 
@@ -197,7 +218,7 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
     }
 }
 
-enum StringArrayParameters: String, CaseIterable, ParameterDescriptive {
+enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
     /// Already defined table view cells
     case oldTableViewCells
 

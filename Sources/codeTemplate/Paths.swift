@@ -22,24 +22,24 @@ class Paths {
 
     /// Setup paths from context
     static func setupPaths() throws {
-        if let unwrappedProjectPath = MainContext.optionalStringValue("projectPath") {
+        if let unwrappedProjectPath = MainContext.optionalStringValue(.projectPath) {
             Paths.projectPath = unwrappedProjectPath
         } else {
             throw ScriptError.moreInfoNeeded(message: "projectPath is missing")
         }
 
-        if let unwrappedSourcesPath = MainContext.optionalStringValue("sourcesPath") {
+        if let unwrappedSourcesPath = MainContext.optionalStringValue(.sourcesPath) {
             Paths.sourcesPath = unwrappedSourcesPath
         } else {
             // Derive sources path from project path and project name
-            if let unwrappedProjectName = MainContext.optionalStringValue("projectName") {
+            if let unwrappedProjectName = MainContext.optionalStringValue(.projectName) {
                 Paths.sourcesPath = Paths.projectPath.appendingPathComponent(path: unwrappedProjectName)
             } else {
                 throw ScriptError.moreInfoNeeded(message: "unknown sourcesPath")
             }
         }
 
-        if let unwrappedLocationPath = MainContext.optionalStringValue("locationPath") {
+        if let unwrappedLocationPath = MainContext.optionalStringValue(.locationPath) {
             // If path is absolute
             if unwrappedLocationPath.starts(with: "/") {
                 Paths.locationPath = unwrappedLocationPath
@@ -51,7 +51,7 @@ class Paths {
             throw ScriptError.moreInfoNeeded(message: "locationPath is missing")
         }
 
-        if let unwrappedScriptPath = MainContext.optionalStringValue("scriptPath") {
+        if let unwrappedScriptPath = MainContext.optionalStringValue(.scriptPath) {
             Paths.scriptPath = unwrappedScriptPath
             Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
             Paths.generatedPath = Paths.scriptPath.appendingPathComponent(path: "Generated")

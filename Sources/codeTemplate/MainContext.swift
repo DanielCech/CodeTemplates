@@ -28,16 +28,16 @@ class MainContext {
         moderator = Moderator(description: "Generates a swift app components from templates")
         moderator.usageFormText = "codeTemplate <params>"
 
-        for parameter in BoolParameters.allCases {
+        for parameter in BoolParameter.allCases {
             boolParameters[parameter.rawValue] = moderator.add(.option(parameter.rawValue, description: parameter.description))
         }
 
-        for parameter in StringParameters.allCases {
+        for parameter in StringParameter.allCases {
             stringParameters[parameter.rawValue] = moderator.add(Argument<String?>
                 .optionWithValue(parameter.rawValue, name: parameter.name, description: parameter.description))
         }
 
-        for parameter in StringArrayParameters.allCases {
+        for parameter in StringArrayParameter.allCases {
             stringArrayParameters[parameter.rawValue] = moderator.add(Argument<String?>.singleArgument(name: parameter.rawValue, description: parameter.name).repeat())
         }
     }
@@ -53,7 +53,7 @@ class MainContext {
         }
 
         // Overwrite context with command line parameters
-        for parameter in BoolParameters.allCases {
+        for parameter in BoolParameter.allCases {
             if let commandLineValue = boolParameters[parameter.rawValue]?.value {
                 context[parameter.rawValue] = commandLineValue
             }
@@ -63,7 +63,7 @@ class MainContext {
             }
         }
 
-        for parameter in StringParameters.allCases {
+        for parameter in StringParameter.allCases {
             if let commandLineValue = stringParameters[parameter.rawValue]?.value {
                 context[parameter.rawValue] = commandLineValue
             }
@@ -72,7 +72,7 @@ class MainContext {
             }
         }
 
-        for parameter in StringArrayParameters.allCases {
+        for parameter in StringArrayParameter.allCases {
             if let commandLineValue = stringArrayParameters[parameter.rawValue]?.value {
                 context[parameter.rawValue] = commandLineValue
             }
@@ -82,23 +82,19 @@ class MainContext {
         }
     }
 
-    static func boolValue(_ parameter: String) -> Bool {
-        if let boolValue = context[parameter] as? Bool {
+    static func boolValue(_ parameter: BoolParameter) -> Bool {
+        if let boolValue = context[parameter.rawValue] as? Bool {
             return boolValue
-        }
-
-        guard let boolParameter = BoolParameters(rawValue: parameter) else {
-            fatalError("Unknown bool parameter \(parameter)")
         }
 
         var newValue = ""
 
         while true {
             var description: String
-            if boolParameter.description.isEmpty {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(boolParameter.name)"
+            if parameter.description.isEmpty {
+                description = "\nℹ️  Missing parameter '\(parameter)': \(parameter.name)"
             } else {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(boolParameter.name). \(boolParameter.description)."
+                description = "\nℹ️  Missing parameter '\(parameter)': \(parameter.name). \(parameter.description)."
             }
 
             print(description)
@@ -113,36 +109,32 @@ class MainContext {
         }
 
         let trueOrFalse = (newValue == "t") ? true : false
-        context[parameter] = trueOrFalse
+        context[parameter.rawValue] = trueOrFalse
 
         return trueOrFalse
     }
 
-    static func optionalBoolValue(_ parameter: String) -> Bool? {
-        if let boolValue = context[parameter] as? Bool {
+    static func optionalBoolValue(_ parameter: BoolParameter) -> Bool? {
+        if let boolValue = context[parameter.rawValue] as? Bool {
             return boolValue
         }
 
         return nil
     }
 
-    static func stringValue(_ parameter: String) -> String {
-        if let stringValue = context[parameter] as? String {
+    static func stringValue(_ parameter: StringParameter) -> String {
+        if let stringValue = context[parameter.rawValue] as? String {
             return stringValue
         }
-
-        guard let stringParameter = StringParameters(rawValue: parameter) else {
-            fatalError("Unknown string parameter \(parameter)")
-        }
-
+        
         var newValue = ""
 
         while true {
             var description: String
-            if stringParameter.description.isEmpty {
-                description = "\nℹ️  Missing parameter '\(parameter)':' \(stringParameter.name)"
+            if parameter.description.isEmpty {
+                description = "\nℹ️  Missing parameter '\(parameter)':' \(parameter.name)"
             } else {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(stringParameter.name). \(stringParameter.description)."
+                description = "\nℹ️  Missing parameter '\(parameter)': \(parameter.name). \(parameter.description)."
             }
 
             print(description)
@@ -156,13 +148,13 @@ class MainContext {
             }
         }
 
-        context[parameter] = newValue
+        context[parameter.rawValue] = newValue
 
         return newValue
     }
 
-    static func optionalStringValue(_ parameter: String) -> String? {
-        if let stringValue = context[parameter] as? String {
+    static func optionalStringValue(_ parameter: StringParameter) -> String? {
+        if let stringValue = context[parameter.rawValue] as? String {
             return stringValue
         }
         return nil
@@ -173,7 +165,7 @@ class MainContext {
             return stringArrayValue
         }
 
-        guard let stringArrayParameter = StringArrayParameters(rawValue: parameter) else {
+        guard let stringArrayParameter = StringArrayParameter(rawValue: parameter) else {
             fatalError("Unknown string array parameter \(parameter)")
         }
 
