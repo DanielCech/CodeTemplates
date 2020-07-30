@@ -51,8 +51,7 @@ private extension TemplateCombo {
         try generateViewController(
             context: context,
             viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController",
-            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController",
-            generateSectionType: false
+            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController"
         )
 
         try generateViewCoordinator(context: context)
@@ -77,6 +76,8 @@ private extension TemplateCombo {
             storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-TableView"
         )
 
+        try generateSectionType(context: context)
+
         try generateHeadersAndFooters(context: context)
 
         try generateTableViewCells(context: context, tableViewCellTemplate: "TableViewCell-RxSwift")
@@ -90,6 +91,8 @@ private extension TemplateCombo {
             viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-FormTableView",
             storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-TableView"
         )
+
+        try generateSectionType(context: context)
 
         try generateHeadersAndFooters(context: context)
 
@@ -105,6 +108,8 @@ private extension TemplateCombo {
             storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-CollectionView"
         )
 
+        try generateSectionType(context: context)
+
         try generateCollectionViewCells(context: context, collectionViewCellTemplate: "CollectionViewCell-RxSwift")
 
         try generateViewCoordinator(context: context)
@@ -117,17 +122,15 @@ private extension TemplateCombo {
     func generateViewController(
         context: Context,
         viewControllerTemplate: Template,
-        storyboardTemplate: Template,
-        generateSectionType: Bool = true
+        storyboardTemplate: Template
     ) throws {
         try Generator.shared.generate(generationMode: .template(viewControllerTemplate), context: context, deleteGenerated: true)
         try Generator.shared.generate(generationMode: .template("ViewModelAssembly"), context: context, deleteGenerated: false)
-
-        if generateSectionType {
-            try Generator.shared.generate(generationMode: .template("RxDataSourcesSectionType"), context: context, deleteGenerated: false)
-        }
-
         try Generator.shared.generate(generationMode: .template(storyboardTemplate), context: context, deleteGenerated: false)
+    }
+
+    func generateSectionType(context: Context) throws {
+        try Generator.shared.generate(generationMode: .template("RxDataSourcesSectionType"), context: context, deleteGenerated: false)
     }
 
     func generateHeadersAndFooters(context: Context) throws {

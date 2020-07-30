@@ -29,7 +29,7 @@ class Generator {
             throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
         }
 
-        try Paths.setupPaths(context: context)
+        try Paths.setupPaths()
 
         let modifiedContext = ContextHelper.shared.updateContext(context)
         try Generator.shared.generate(
@@ -192,7 +192,7 @@ private extension Generator {
             var rendered: String
             do {
                 // Stencil expressions {% for %} needs to be placed at the end of last line to prevent extra linespaces in generated code
-                let matches = try! fileString.regExpMatches(lineRegExp: #"\n^\w*\{% for .*%\}$"#)
+                let matches = try! fileString.regExpStringMatches(lineRegExp: #"\n^\w*\{% for .*%\}$"#)
 
                 for match in matches {
                     fileString = fileString.replacingOccurrences(of: match, with: " " + match.suffix(match.count - 1))

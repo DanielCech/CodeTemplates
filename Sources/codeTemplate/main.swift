@@ -6,12 +6,14 @@ import Stencil
 
 var programMode: ProgramMode
 
+var mainContext = MainContext()
+
 do {
     print("⌚️ Processing")
-    
+
     MainContext.setupParameters()
     try MainContext.parseParameters()
-    
+
     switch MainContext.stringValue("mode") {
     case "generate":
         guard let reviewMode = ReviewMode(rawValue: MainContext.stringValue("reviewMode")) else {

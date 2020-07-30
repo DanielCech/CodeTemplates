@@ -1,0 +1,40 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import UIKit
+
+public protocol NibLoadableView: AnyObject, NibNameIdentifiable {
+    func loadNibContent()
+}
+
+public extension NibLoadableView where Self: UIView {
+    static var nibInstance: Self {
+        guard let loadedView = Self.nib.instantiate(withOwner: nil, options: nil).first as? Self else {
+            fatalError("XIB file with identifier: \(identifier) could not be loaded!")
+        }
+
+        return loadedView
+    }
+
+    var nibViewInstance: UIView {
+        guard let view = Self.nib.instantiate(withOwner: self, options: nil).first as? UIView else {
+            fatalError("XIB file with identifier: \(Self.identifier) could not be loaded!")
+        }
+
+        return view
+    }
+
+    var shimmerable: Bool {
+        false
+    }
+
+    func loadNibContent() {
+        let view = nibViewInstance
+        addFilledSubview(view)
+    }
+}

@@ -21,36 +21,37 @@ class Paths {
     static var locationPath: String = "" // harbor-ios/Harbor/...
 
     /// Setup paths from context
-    static func setupPaths(context: Context) throws {
-        if let unwrappedProjectPath = context["projectPath"] as? String {
+    static func setupPaths() throws {
+        if let unwrappedProjectPath = MainContext.optionalStringValue("projectPath") {
             Paths.projectPath = unwrappedProjectPath
         } else {
             throw ScriptError.moreInfoNeeded(message: "projectPath is missing")
         }
 
-        if let unwrappedSourcesPath = context["sourcesPath"] as? String {
+        if let unwrappedSourcesPath = MainContext.optionalStringValue("sourcesPath") {
             Paths.sourcesPath = unwrappedSourcesPath
         } else {
             // Derive sources path from project path and project name
-            if let unwrappedProjectName = context["projectName"] as? String {
+            if let unwrappedProjectName = MainContext.optionalStringValue("projectName") {
                 Paths.sourcesPath = Paths.projectPath.appendingPathComponent(path: unwrappedProjectName)
             } else {
                 throw ScriptError.moreInfoNeeded(message: "unknown sourcesPath")
             }
         }
 
-        if let unwrappedScenePath = context["locationPath"] as? String {
+        if let unwrappedLocationPath = MainContext.optionalStringValue("locationPath") {
             // If path is absolute
-            if unwrappedScenePath.starts(with: "/") {
-                Paths.locationPath = unwrappedScenePath
+            if unwrappedLocationPath.starts(with: "/") {
+                Paths.locationPath = unwrappedLocationPath
             } else {
-                Paths.locationPath = Paths.projectPath.appendingPathComponent(path: unwrappedScenePath)
+                Paths.locationPath = Paths.projectPath.appendingPathComponent(path: unwrappedLocationPath)
             }
         } else {
+            // TODO: check - location path is not sometimes needed
             throw ScriptError.moreInfoNeeded(message: "locationPath is missing")
         }
 
-        if let unwrappedScriptPath = context["scriptPath"] as? String {
+        if let unwrappedScriptPath = MainContext.optionalStringValue("scriptPath") {
             Paths.scriptPath = unwrappedScriptPath
             Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
             Paths.generatedPath = Paths.scriptPath.appendingPathComponent(path: "Generated")

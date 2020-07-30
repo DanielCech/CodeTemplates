@@ -12,39 +12,36 @@ protocol ParameterDescriptive {
     var description: String { get }
 }
 
-
 enum BoolParameters: String, CaseIterable, ParameterDescriptive {
-    
     ///  Using scrolling fake navbar
     case fakeNavbar
-    
+
     /// Support for tableview section headers
     case tableSectionHeaders
-    
+
     /// Table has header
     case tableViewHeader
-    
+
     /// Table has footer
     case tableViewFooter
-    
+
     /// Loads table content from API
     case tableContentFromAPI
-    
+
     /// Table views has white selected state (touch is not visible)
     case whiteCellSelection
-    
+
     /// Shows buttons at the bottom of table in controller
     case bottomView
-    
+
     /// Top alpha gradient
     case topGradientView
-    
+
     /// Bottom alpha gradient
     case bottomGradientView
-    
+
     var name: String {
         switch self {
-            
         case .fakeNavbar:
             return "Use of fake navbar view that collapses after scroll"
         case .tableSectionHeaders:
@@ -65,38 +62,61 @@ enum BoolParameters: String, CaseIterable, ParameterDescriptive {
             return "Use simple view with bottom alpha gradient (for table/collection view screens)"
         }
     }
-    
+
     var description: String { return "" }
+
+    var defaultValue: Bool? {
+        switch self {
+        case .fakeNavbar:
+            return false
+        case .tableSectionHeaders:
+            return false
+        case .tableViewHeader:
+            return false
+        case .tableViewFooter:
+            return false
+        case .tableContentFromAPI:
+            return false
+        case .whiteCellSelection:
+            return true
+        case .bottomView:
+            return false
+        case .topGradientView:
+            return false
+        case .bottomGradientView:
+            return false
+        }
+    }
 }
 
 enum StringParameters: String, CaseIterable, ParameterDescriptive {
     /// JSON file with template context
     case context
-    
+
     /// Current operation mode - code generation, updating templates and template validation
     case mode
-    
+
     /// Code template name
     case template
-    
+
     /// Template category name
     case category
-    
+
     /// Generator result review mode
     case reviewMode
-    
+
     /// Location of CodeTemplate
     case scriptPath
-    
+
     /// The name of created item (decapitalized), Name - capitalized name
     case name
-        
+
     /// The author of project, used in title
     case author
 
     ///  Project name and target name
     case projectName
-    
+
     /// Copyright phrase used in file header
     case copyright
 
@@ -105,7 +125,7 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
 
     /// The name of coordinator which is related to the scene - name doesn't contain "Coordinator" or "Coordinating"
     case coordinator
-    
+
     var name: String {
         switch self {
         case .context:
@@ -128,13 +148,13 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
             return "The name of project"
         case .copyright:
             return "The copyright phrase"
-        case .screen:   // TODO: check
+        case .screen: // TODO: check
             return "the name of generated screen"
         case .coordinator:
             return "The name of coordinator which is related to the scene"
         }
     }
-    
+
     var description: String {
         switch self {
         case .context:
@@ -163,28 +183,39 @@ enum StringParameters: String, CaseIterable, ParameterDescriptive {
             return "The name doesn't contain 'Coordinator' or 'Coordinating'"
         }
     }
+
+    var defaultValue: String? {
+        switch self {
+        case .reviewMode:
+            return "individual"
+        case .scriptPath:
+            // TODO: implement using environment variables
+            return "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate"
+        default:
+            return nil
+        }
+    }
 }
 
 enum StringArrayParameters: String, CaseIterable, ParameterDescriptive {
-    
     /// Already defined table view cells
     case oldTableViewCells
-    
+
     /// Table view cells that need to be generated
     case newTableViewCells
-    
+
     /// All table view cells together
     case tableViewCells
-    
+
     /// Already defined collection view cells
     case oldCollectionViewCells
-    
+
     /// Collection view cells that need to be generated
     case newCollectionViewCells
-    
+
     /// All collection view cells together
     case collectionViewCells
-    
+
     var name: String {
         switch self {
         case .oldTableViewCells:
@@ -201,8 +232,12 @@ enum StringArrayParameters: String, CaseIterable, ParameterDescriptive {
             return "Old and new collection view cells together"
         }
     }
-    
+
     var description: String {
         return ""
+    }
+
+    var defaultValue: [String]? {
+        return nil
     }
 }

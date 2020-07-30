@@ -50,10 +50,16 @@ public extension String {
     }
 
     /// Regular expression matches
-    func regExpMatches(lineRegExp: String) throws -> [String] {
+    func regExpMatches(lineRegExp: String) throws -> [NSTextCheckingResult] {
         let nsrange = NSRange(startIndex..<endIndex, in: self)
         let regex = try NSRegularExpression(pattern: lineRegExp, options: [.anchorsMatchLines])
         let matches = regex.matches(in: self, options: [], range: nsrange)
+        return matches
+    }
+
+    /// Regular expression matches
+    func regExpStringMatches(lineRegExp: String) throws -> [String] {
+        let matches = try regExpMatches(lineRegExp: lineRegExp)
 
         let ranges = matches.map { Range($0.range, in: self)! }
         let substrings = ranges.map { self[$0] }

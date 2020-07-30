@@ -29,7 +29,7 @@ class Preparator {
             throw CodeTemplateError.parameterNotSpecified(message: "name")
         }
 
-        try Paths.setupPaths(context: context)
+        try Paths.setupPaths()
         try prepareTemplateFolder(template: template, category: category)
 
         var deriveFromTemplate = context["deriveFromTemplate"] as? String
@@ -93,6 +93,7 @@ class Preparator {
         let templateDestinationFolder = try Folder(path: templateDestinationPath)
         let copiedFile = try inputFile.copy(to: templateDestinationFolder)
 
+        try analyzeFileDependencies(of: copiedFile)
         try prepareTemplate(for: copiedFile, name: name)
 
         try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
@@ -194,5 +195,65 @@ private extension Preparator {
         try? FileManager.default.createDirectory(atPath: templatePath, withIntermediateDirectories: true, attributes: nil)
         let templateFolder = try Folder(path: templatePath)
         try templateFolder.empty(includingHidden: true)
+    }
+
+    func analyzeFileDependencies(of file: File) throws {
+        let contents = try file.readAsString()
+
+        var matches = [String]()
+        for line in contents.lines() {
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.classPattern))
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.structPattern))
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.enumPattern))
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.protocolPattern))
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.extensionPattern))
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.letPattern))
+            matches.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.varPattern))
+        }
+
+        let matchesSet = Set(matches)
+        print(matchesSet)
+    }
+
+    func analyze(line: String, regExp: String) throws -> [String] {
+        let results = try line.regExpMatches(lineRegExp: regExp)
+        var array = [String]()
+
+        for result in results {
+            // Process comma separated values
+            if let list = extract(line: line, match: result, component: "commalist") {
+                let separated = list.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                array.append(contentsOf: separated)
+            }
+
+            // Process first part of name
+            if let item = extract(line: line, match: result, component: "singleName") {
+                if let itemResult = try item.regExpMatches(lineRegExp: RegExpPatterns.singleName).first {
+                    if let name = extract(line: line, match: itemResult, component: "name") {
+                        array.append(name)
+                    }
+                }
+            }
+
+            // Exact result
+            if let name = extract(line: line, match: result, component: "name") {
+                array.append(name)
+            }
+        }
+
+        return array
+    }
+
+    func extract(line: String, match: NSTextCheckingResult, component: String) -> String? {
+        let nsrange = match.range(withName: component)
+
+        guard
+            nsrange.location != NSNotFound,
+            let range = Range(nsrange, in: line)
+        else {
+            return nil
+        }
+
+        return String(line[range])
     }
 }
