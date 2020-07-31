@@ -53,7 +53,7 @@ enum RegExpPatterns {
         )\s*\{
         """#
 
-    static let varPattern
+    static let varPattern1
         = #"""
         (?xi)
         .*\svar\s.[^:]+:
@@ -61,11 +61,29 @@ enum RegExpPatterns {
             .*
         )\s*\{
         """#
+    
+    static let varPattern2
+        = #"""
+        (?xi)
+        .*\svar\s.[^=]+=
+        (?<singleName>
+            .*
+        )\s*\{
+        """#
 
-    static let letPattern
+    static let letPattern1
         = #"""
         (?xi)
         .*\slet\s.[^:]+:
+        (?<singleName>
+            .*
+        )\s*\{
+        """#
+    
+    static let letPattern2
+        = #"""
+        (?xi)
+        .*\slet\s.[^=]+=
         (?<singleName>
             .*
         )\s*\{

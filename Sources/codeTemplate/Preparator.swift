@@ -209,8 +209,10 @@ private extension Preparator {
             typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.enumPattern))
             typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.protocolPattern))
             typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.extensionPattern))
-            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.letPattern))
-            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.varPattern))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.letPattern1))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.letPattern2))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.varPattern1))
+            typeDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.varPattern2))
             
             frameworkDependencies.append(contentsOf: try analyze(line: line, regExp: RegExpPatterns.importPattern))
         }
