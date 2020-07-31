@@ -99,6 +99,9 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
     /// Code template name
     case template
 
+    /// Combination of templates
+    case templateCombo
+
     /// Template category name
     case category
 
@@ -107,13 +110,13 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// Location of CodeTemplate
     case scriptPath
-    
+
     /// Location of souce code
     case locationPath
-    
+
     /// Location of the project
     case projectPath
-    
+
     /// Location of project source files
     case sourcesPath
 
@@ -167,6 +170,8 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Location of project"
         case .sourcesPath:
             return "Location of project source files"
+        case .templateCombo:
+            return "Combination of templates"
         }
     }
 
@@ -178,12 +183,14 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Possible values: generate, updateAll, updateNew, validate, prepare"
         case .template:
             return ""
+        case .templateCombo:
+            return ""
         case .category:
             return "Use with prepare mode only"
         case .reviewMode:
             return "Possible values: none, individual, overall"
         case .scriptPath:
-            return "The path to codeTemplate script with Generated and Templates folder."
+            return "The path to codeTemplate script with Generate and Templates folder."
         case .name:
             return ""
         case .author:

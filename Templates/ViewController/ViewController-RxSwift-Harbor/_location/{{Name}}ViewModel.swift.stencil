@@ -1,0 +1,122 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+
+enum {{Name}}Selection {
+    case nothing
+    case annuallySubscription
+    case monthlySubsciption
+}
+
+final class {{Name}}ViewModel: ViewModelType {
+    private let selection = BehaviorRelay<{{Name}}Selection>(value: .nothing)
+    private let disposeBag = DisposeBag()
+
+    // MARK: Private properties
+    private let apiService: AppServicing
+    private let inAppPurchaseManager: InAppPurchaseManaging
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(apiService: AppServicing, inAppPurchaseManager: InAppPurchaseManaging) {
+        self.apiService = apiService
+        self.inAppPurchaseManager = inAppPurchaseManager
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {
+        let viewWillAppear: Observable<Void>
+        let annuallySubscriptionToggleSelection: Observable<Void>
+        let monthlySubscriptionToggleSelection: Observable<Void>
+        let actionButtonTapped: Observable<Void>
+    }
+
+    struct Output {
+        let selection: Driver<{{Name}}Selection>
+        let annuallySubscriptionPurchased: Driver<Void>
+        let monthlySubscriptionPurchased: Driver<Void>
+        let purchasesRestored: Driver<Void>
+        let errors: Driver<Error>
+    }
+
+    func transform(input: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+        input.annuallySubscriptionToggleSelection
+            .withUnretained(self)
+            .subscribeNext { viewModel, _ in
+                viewModel.selection.accept((viewModel.selection.value == .annuallySubscription) ? .nothing : .annuallySubscription)
+            }
+            .disposed(by: disposeBag)
+
+        input.monthlySubscriptionToggleSelection
+            .withUnretained(self)
+            .subscribeNext { viewModel, _ in
+                viewModel.selection.accept((viewModel.selection.value == .monthlySubsciption) ? .nothing : .monthlySubsciption)
+            }
+            .disposed(by: disposeBag)
+
+        let annuallySubscriptionPurchased = input.actionButtonTapped
+            .withUnretained(self)
+            .filter { viewModel, _ in
+                viewModel.selection.value == .annuallySubscription
+            }
+            .withUnretained(self)
+            .map { viewModel, _ in
+                viewModel.inAppPurchaseManager.purchase(product: .annuallySubscription)
+            }
+            .flatMap { $0.materialize() }
+            .share()
+
+        let monthlySubscriptionPurchased = input.actionButtonTapped
+            .withUnretained(self)
+            .filter { viewModel, _ in
+                viewModel.selection.value == .monthlySubsciption
+            }
+            .withUnretained(self)
+            .map { viewModel, _ in
+                viewModel.inAppPurchaseManager.purchase(product: .monthlySubscription)
+            }
+            .flatMap { $0.materialize() }
+            .share()
+
+        let purchasesRestored = input.actionButtonTapped
+            .withUnretained(self)
+            .filter { viewModel, _ in
+                viewModel.selection.value == .nothing
+            }
+            .withUnretained(self)
+            .map { viewModel, _ in
+                viewModel.inAppPurchaseManager.getActiveSubscription()
+            }
+            .flatMap { $0.materialize() }
+            .share()
+
+        let errors = Observable.merge(
+            annuallySubscriptionPurchased.errors(),
+            monthlySubscriptionPurchased.errors(),
+            purchasesRestored.errors()
+        )
+
+        return Output(
+            selection: selection.asDriverOnErrorJustComplete(),
+            annuallySubscriptionPurchased: annuallySubscriptionPurchased.elements().asDriverLogError(),
+            monthlySubscriptionPurchased: monthlySubscriptionPurchased.elements().asDriverLogError(),
+            purchasesRestored: purchasesRestored.elements().mapToVoid().asDriverLogError(),
+            errors: errors.asDriverOnErrorJustComplete()
+        )
+    }
+}

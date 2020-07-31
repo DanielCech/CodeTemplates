@@ -1,0 +1,142 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import BonMot
+import RxCocoa
+import RxSwift
+import UIKit
+
+final class {{Name}}ViewController: UIViewController, ViewModelContaining {
+    // MARK: IBOutlets
+    @IBOutlet private var backButton: UIButton!
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var tryHarborLabel: UILabel!
+    @IBOutlet private var annuallySubscriptionButton: UIButton!
+    @IBOutlet private var monthlySubscriptionButton: UIButton!
+    @IBOutlet private var actionButton: UIButton!
+    @IBOutlet private var termsAndConditionsButton: UIButton!
+
+    // MARK: Public Properties
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    weak var coordinator: {{coordinator}}Coordinating!
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var viewModel: {{Name}}ViewModel!
+    var disposeBag: DisposeBag = DisposeBag()
+
+    // MARK: Private Properties
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupView()
+    }
+}
+
+// MARK: - Binding
+
+extension {{Name}}ViewController {
+    func bindToViewModel() {
+        let input = {{Name}}ViewModel.Input(
+            viewWillAppear: rx.sentMessage(#selector(UIViewController.viewWillAppear(_:))).mapToVoid(),
+            annuallySubscriptionToggleSelection: annuallySubscriptionButton.rx.tap.asObservable(),
+            monthlySubscriptionToggleSelection: monthlySubscriptionButton.rx.tap.asObservable(),
+            actionButtonTapped: actionButton.rx.tap.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+
+        output.selection
+            .drive(onNext: { [weak self] selection in
+                guard let self = self else {
+                    return
+                }
+
+                switch selection {
+                case .nothing:
+                    self.actionButton.apply(style: .base(R.string.localizable.manageSubscriptionRestorePurchases().styled(with: .baseButton)))
+                    self.annuallySubscriptionButton.apply(style: .manageSubscriptionButton)
+                    self.monthlySubscriptionButton.apply(style: .manageSubscriptionButton)
+                case .annuallySubscription:
+                    self.actionButton.apply(style: .base(R.string.localizable.manageSubscriptionPurchaseAnnually().styled(with: .baseButton)))
+                    self.annuallySubscriptionButton.apply(style: .manageSubscriptionButtonSelected)
+                    self.monthlySubscriptionButton.apply(style: .manageSubscriptionButton)
+                case .monthlySubsciption:
+                    self.actionButton.apply(style: .base(R.string.localizable.manageSubscriptionPurchaseMonthly().styled(with: .baseButton)))
+                    self.annuallySubscriptionButton.apply(style: .manageSubscriptionButton)
+                    self.monthlySubscriptionButton.apply(style: .manageSubscriptionButtonSelected)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        bindErrors(errors: output.errors)
+    }
+
+    func bindToCoordinator() {
+        backButton.rx.tap.asObservable()
+            .withUnretained(self)
+            .subscribeNext { controler, _ in
+                controler.coordinator.pop()
+            }
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - Private Methods
+
+private extension {{Name}}ViewController {
+    func setupView() {
+        setupIBOutlets()
+        bindToViewModel()
+        bindToCoordinator()
+    }
+
+    func setupIBOutlets() {
+        titleLabel.attributedText = R.string.localizable.subscription().styled(with: .familyAccountsTitle)
+
+        tryHarborLabel.attributedText = R.string.localizable.manageSubscriptionTryHarbor().styled(with: .manageSubscriptionTitle)
+
+        let annualOffTitle = (R.string.localizable.manageSubscriptionOff() + "\n").styled(with: .manageSubscriptionOff)
+        let annualPriceTitle = (R.string.localizable.manageSubscriptionAnnuallyPrice() + "\n").styled(with: .manageSubscriptionPrice)
+        let annualFrequencyTitle = R.string.localizable.manageSubscriptionAnnually().styled(with: .manageSubscriptionFrequency)
+        let annuallySubscriptionTitle = annualOffTitle + annualPriceTitle + annualFrequencyTitle
+
+        let annuallyLabel = UILabel()
+        annuallyLabel.attributedText = annuallySubscriptionTitle
+        annuallyLabel.textAlignment = .center
+        annuallyLabel.numberOfLines = 0
+        annuallyLabel.translatesAutoresizingMaskIntoConstraints = false
+        annuallySubscriptionButton.addSubview(annuallyLabel)
+        annuallyLabel.fillContainer()
+
+        annuallySubscriptionButton.apply(style: .manageSubscriptionButton)
+
+        let monthlyPriceTitle = (R.string.localizable.manageSubscriptionMonthlyPrice() + "\n").styled(with: .manageSubscriptionPrice)
+        let monthlyFrequencyTitle = R.string.localizable.manageSubscriptionMonthly().styled(with: .manageSubscriptionFrequency)
+        let monthlySubscriptionTitle = monthlyPriceTitle + monthlyFrequencyTitle
+
+        let monthlyLabel = UILabel()
+        monthlyLabel.attributedText = monthlySubscriptionTitle
+        monthlyLabel.textAlignment = .center
+        monthlyLabel.numberOfLines = 0
+        monthlyLabel.translatesAutoresizingMaskIntoConstraints = false
+        monthlySubscriptionButton.addSubview(monthlyLabel)
+        monthlyLabel.fillContainer()
+
+        monthlySubscriptionButton.apply(style: .manageSubscriptionButton)
+
+        let termsAndConditionsTitle = R.string.localizable.manageSubscriptionTermsAndConditions().styled(with: .grayTextButton)
+        termsAndConditionsButton.setAttributedTitle(termsAndConditionsTitle, for: .normal)
+    }
+}

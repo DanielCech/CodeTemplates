@@ -35,10 +35,10 @@ public class Validator {
 
         Paths.scriptPath = scriptPath
         Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
-        Paths.validationPath = Paths.scriptPath.appendingPathComponent(path: "Validation")
+        Paths.validatePath = Paths.scriptPath.appendingPathComponent(path: "Validation")
 
         // Empty validation folder
-        let validationFolder = try Folder(path: Paths.validationPath)
+        let validationFolder = try Folder(path: Paths.validatePath)
         try validationFolder.empty(includingHidden: true)
 
         // Load template settings
@@ -84,13 +84,13 @@ public class Validator {
 private extension Validator {
     /// Check particular template combination of enabled switches
     func checkTemplateCombination(template: Template, context: Context) throws {
-        let validationFolder = try Folder(path: Paths.validationPath)
+        let validationFolder = try Folder(path: Paths.validatePath)
 
         try Generator.shared.generate(
             generationMode: .template("SingleViewApp"),
             context: context,
             reviewMode: .none,
-            deleteGenerated: true,
+            deleteGenerate: true,
             outputPath: validationFolder.path
         )
 
@@ -100,7 +100,7 @@ private extension Validator {
             generationMode: .template(template),
             context: context,
             reviewMode: .none,
-            deleteGenerated: false,
+            deleteGenerate: false,
             outputPath: outputFolder.path,
             validationMode: true
         )

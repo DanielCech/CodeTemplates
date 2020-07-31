@@ -10,15 +10,16 @@ import ScriptToolkit
 
 class Paths {
     // CodeTemplates paths
-    static var scriptPath: String = "" // codeTemplate
-    static var templatePath: String = "" // codeTemplate/Templates
-    static var generatedPath: String = "" // codeTemplate/Generated
-    static var validationPath: String = "" // codeTemplate/Validation
+    static var scriptPath: String = ""      // codeTemplate
+    static var templatePath: String = ""    // codeTemplate/Templates
+    static var generatePath: String = ""    // codeTemplate/Generate
+    static var validatePath: String = ""    // codeTemplate/Validate
+    static var preparePath: String = ""     // codeTemplate/Prepare
 
     // Project paths
-    static var projectPath: String = "" // harbor-ios
-    static var sourcesPath: String = "" // harbor-ios/Harbor
-    static var locationPath: String = "" // harbor-ios/Harbor/...
+    static var projectPath: String = ""     // harbor-ios
+    static var sourcesPath: String = ""     // harbor-ios/Harbor
+    static var locationPath: String = ""    // harbor-ios/Harbor/...
 
     /// Setup paths from context
     static func setupPaths() throws {
@@ -54,8 +55,9 @@ class Paths {
         if let unwrappedScriptPath = MainContext.optionalStringValue(.scriptPath) {
             Paths.scriptPath = unwrappedScriptPath
             Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
-            Paths.generatedPath = Paths.scriptPath.appendingPathComponent(path: "Generated")
-            Paths.validationPath = Paths.scriptPath.appendingPathComponent(path: "Validation")
+            Paths.generatePath = Paths.scriptPath.appendingPathComponent(path: "Generate")
+            Paths.validatePath = Paths.scriptPath.appendingPathComponent(path: "Validate")
+            Paths.preparePath = Paths.scriptPath.appendingPathComponent(path: "Prepare")
         } else {
             throw ScriptError.moreInfoNeeded(message: "scriptPath is missing")
         }

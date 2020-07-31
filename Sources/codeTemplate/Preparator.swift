@@ -65,6 +65,8 @@ class Preparator {
         let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
 
         let inputFile = try File(path: projectFile)
+        
+        print("\(inputFile.name):")
 
         // Prepare target folder structure
         var templateDestination: TemplateDestination
@@ -202,43 +204,43 @@ private extension Preparator {
 
         var typeDependencies = [String]()
         var frameworkDependencies = [String]()
-        
+
         for line in contents.lines() {
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.classPattern)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.structPattern)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.enumPattern)
             )
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.protocolPattern)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.extensionPattern)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.letPattern1)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.letPattern2)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.varPattern1)
             )
-            
+
             typeDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.varPattern2)
             )
-            
+
             frameworkDependencies.append(
                 contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.importPattern)
             )
@@ -246,11 +248,8 @@ private extension Preparator {
 
         let typeDependenciesSet = Set(typeDependencies).subtracting(Internals.systemTypes)
         let frameworkDependenciesSet = Set(frameworkDependencies).subtracting(Internals.systemFrameworks)
-        
-        
-        print("🔎 Type dependencies: \(typeDependenciesSet)")
-        print("📦 Framework dependencies: \(frameworkDependenciesSet)")
-    }
 
-    
+        print("    🔎 Type dependencies: \(typeDependenciesSet)")
+        print("    📦 Framework dependencies: \(frameworkDependenciesSet)")
+    }
 }

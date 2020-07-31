@@ -61,7 +61,7 @@ enum RegExpPatterns {
             .*
         )\s*\{
         """#
-    
+
     static let varPattern2
         = #"""
         (?xi)
@@ -79,7 +79,7 @@ enum RegExpPatterns {
             .*
         )\s*\{
         """#
-    
+
     static let letPattern2
         = #"""
         (?xi)
@@ -96,7 +96,7 @@ enum RegExpPatterns {
             [A-Z][a-zA-Z0-9]*
         ).*
         """#
-    
+
     static let importPattern
         = #"""
         (?xi)

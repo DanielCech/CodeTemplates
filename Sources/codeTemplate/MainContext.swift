@@ -126,7 +126,7 @@ class MainContext {
         if let stringValue = context[parameter.rawValue] as? String {
             return stringValue
         }
-        
+
         var newValue = ""
 
         while true {

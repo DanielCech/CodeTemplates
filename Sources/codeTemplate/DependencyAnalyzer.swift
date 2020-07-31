@@ -9,7 +9,7 @@ import Foundation
 
 class DependencyAnalyzer {
     static let shared = DependencyAnalyzer()
-    
+
     func analyze(line: String, regExp: String) throws -> [String] {
         let results = try line.regExpMatches(lineRegExp: regExp)
         var array = [String]()
@@ -51,5 +51,4 @@ class DependencyAnalyzer {
 
         return String(line[range])
     }
-    
 }

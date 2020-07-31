@@ -124,13 +124,13 @@ private extension TemplateCombo {
         viewControllerTemplate: Template,
         storyboardTemplate: Template
     ) throws {
-        try Generator.shared.generate(generationMode: .template(viewControllerTemplate), context: context, deleteGenerated: true)
-        try Generator.shared.generate(generationMode: .template("ViewModelAssembly"), context: context, deleteGenerated: false)
-        try Generator.shared.generate(generationMode: .template(storyboardTemplate), context: context, deleteGenerated: false)
+        try Generator.shared.generate(generationMode: .template(viewControllerTemplate), context: context, deleteGenerate: true)
+        try Generator.shared.generate(generationMode: .template("ViewModelAssembly"), context: context, deleteGenerate: false)
+        try Generator.shared.generate(generationMode: .template(storyboardTemplate), context: context, deleteGenerate: false)
     }
 
     func generateSectionType(context: Context) throws {
-        try Generator.shared.generate(generationMode: .template("RxDataSourcesSectionType"), context: context, deleteGenerated: false)
+        try Generator.shared.generate(generationMode: .template("RxDataSourcesSectionType"), context: context, deleteGenerate: false)
     }
 
     func generateHeadersAndFooters(context: Context) throws {
@@ -139,17 +139,17 @@ private extension TemplateCombo {
         }
 
         if context["sectionHeader"] != nil {
-            try Generator.shared.generate(generationMode: .template("TableViewSectionHeader"), context: context, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("TableViewSectionHeader"), context: context, deleteGenerate: false)
         }
 
         if let header = context["tableViewHeader"] as? Bool, header {
             let modifiedContext = updateComboContext(context, name: name+"Header")
-            try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerate: false)
         }
 
         if let footer = context["tableViewFooter"] as? Bool, footer {
             let modifiedContext = updateComboContext(context, name: name+"Footer")
-            try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerated: false)
+            try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerate: false)
         }
     }
 
@@ -157,7 +157,7 @@ private extension TemplateCombo {
         if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
             for cell in unwrappedNewCells {
                 let modifiedContext = updateComboContext(context, name: cell)
-                try Generator.shared.generate(generationMode: .template(tableViewCellTemplate), context: modifiedContext, deleteGenerated: false)
+                try Generator.shared.generate(generationMode: .template(tableViewCellTemplate), context: modifiedContext, deleteGenerate: false)
             }
         }
     }
@@ -166,7 +166,7 @@ private extension TemplateCombo {
         if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
             for cell in unwrappedNewCells {
                 let modifiedContext = updateComboContext(context, name: cell)
-                try Generator.shared.generate(generationMode: .template(collectionViewCellTemplate), context: modifiedContext, deleteGenerated: false)
+                try Generator.shared.generate(generationMode: .template(collectionViewCellTemplate), context: modifiedContext, deleteGenerate: false)
             }
         }
     }
@@ -182,6 +182,6 @@ private extension TemplateCombo {
 
         var modifiedContext = updateComboContext(context, name: coordinator)
         modifiedContext["controllers"] = [name]
-        try Generator.shared.generate(generationMode: .template("Coordinator-Navigation"), context: modifiedContext, deleteGenerated: false)
+        try Generator.shared.generate(generationMode: .template("Coordinator-Navigation"), context: modifiedContext, deleteGenerate: false)
     }
 }
