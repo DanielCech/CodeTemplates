@@ -9,7 +9,7 @@
 import Swinject
 import UIKit
 
-final class {{Name}}NavigationCoordinator {
+final class {{Name}}Coordinator {
     // MARK: Public properties
     var childCoordinators = [Coordinator]()
     let assembler: Assembler
@@ -30,9 +30,9 @@ final class {{Name}}NavigationCoordinator {
     }
 }
 
-// MARK: - {{Name}}NavigationCoordinatoring
+// MARK: - {{Name}}Coordinatoring
 
-extension {{Name}}NavigationCoordinator: {{Name}}NavigationCoordinatoring {
+extension {{Name}}Coordinator: {{Name}}NavigationCoordinatoring {
     func start() {
         navigationController.pushViewController(
             make{{Name}}ViewController(),
@@ -51,7 +51,7 @@ extension {{Name}}NavigationCoordinator: {{Name}}NavigationCoordinatoring {
 // MARK: - Factories
 
 // Extension is internal to be accessible from test target
-extension {{Name}}NavigationCoordinating {
+extension {{Name}}Coordinating {
   {% for controller in controllers %}
       func make{{controller|pascalCased}}ViewController() -> {{controller|pascalCased}}ViewController {
         let viewController = R.storyboard.{{controller|camelCased}}ViewController.instantiateInitialViewController(
