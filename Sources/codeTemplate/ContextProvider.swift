@@ -1,5 +1,5 @@
 //
-//  MainContext.swift
+//  ContextProvider.swift
 //  codeTemplate
 //
 //  Created by Daniel Cech on 24/07/2020.
@@ -10,13 +10,19 @@ import Foundation
 import Moderator
 import ScriptToolkit
 
-class MainContext {
-    static let shared = MainContext()
+class ContextProvider {
+    static let shared = ContextProvider()
 
     private static var boolParameters = [String: FutureValue<Bool>]()
     private static var stringParameters = [String: FutureValue<String?>]()
     private static var stringArrayParameters = [String: FutureValue<[String]>]()
     private static var help: FutureValue<Bool>!
+    
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/YYYY"
+        return formatter
+    }()
 
     private static var moderator: Moderator!
     private(set) static var context: Context!
@@ -91,130 +97,61 @@ class MainContext {
             exit(0)
         }
     }
+    
+    /// Default operations with context - default content, case processing, ...
+    static func updateContext(_ context: Context) -> Context {
+        var modifiedContext = context
 
-    static func boolValue(_ parameter: BoolParameter) -> Bool {
-        if let boolValue = context[parameter.rawValue] as? Bool {
-            return boolValue
+        if modifiedContext["coordinator"] == nil {
+            modifiedContext["coordinator"] = modifiedContext["name"]
         }
 
-        var newValue = ""
-
-        while true {
-            var description: String
-            if parameter.description.isEmpty {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(parameter.name)"
-            } else {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(parameter.name). \(parameter.description)."
-            }
-
-            print(description)
-            print("❔ Enter '\(parameter)' [tf]: ", terminator: "")
-
-            if let input = readLine(), !input.isEmpty, input == "t" || input == "f" {
-                newValue = input
-                break
-            } else {
-                print("❗️ Incorrect input")
-            }
+        if modifiedContext["target"] == nil {
+            modifiedContext["target"] = modifiedContext["projectName"]
         }
 
-        let trueOrFalse = (newValue == "t") ? true : false
-        context[parameter.rawValue] = trueOrFalse
-
-        return trueOrFalse
-    }
-
-    static func optionalBoolValue(_ parameter: BoolParameter) -> Bool? {
-        if let boolValue = context[parameter.rawValue] as? Bool {
-            return boolValue
+        for key in context.keys {
+            guard let stringValue = context[key] as? String else { continue }
+            modifiedContext[key.pascalCased()] = stringValue.pascalCased()
         }
 
-        return nil
-    }
+        modifiedContext["date"] = dateFormatter.string(from: Date())
 
-    static func stringValue(_ parameter: StringParameter) -> String {
-        if let stringValue = context[parameter.rawValue] as? String {
-            return stringValue
+        // Table view cells
+
+        var tableViewCells = [String]()
+
+        if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String] {
+            tableViewCells.append(contentsOf: unwrappedOldTableViewCells)
         }
 
-        var newValue = ""
-
-        while true {
-            var description: String
-            if parameter.description.isEmpty {
-                description = "\nℹ️  Missing parameter '\(parameter)':' \(parameter.name)"
-            } else {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(parameter.name). \(parameter.description)."
-            }
-
-            print(description)
-            print("❔ Enter '\(parameter)': ", terminator: "")
-
-            if let input = readLine(), !input.isEmpty {
-                newValue = input
-                break
-            } else {
-                print("❗️ Incorrect input")
-            }
+        if let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
+            tableViewCells.append(contentsOf: unwrappedNewTableViewCells)
         }
 
-        context[parameter.rawValue] = newValue
+        modifiedContext["tableViewCells"] = tableViewCells
 
-        return newValue
-    }
+        // Collection view cells
 
-    static func optionalStringValue(_ parameter: StringParameter) -> String? {
-        if let stringValue = context[parameter.rawValue] as? String {
-            return stringValue
-        }
-        return nil
-    }
+        var collectionViewCells = [String]()
 
-    static func stringArrayValue(_ parameter: StringArrayParameter) -> [String] {
-        if let stringArrayValue = context[parameter.rawValue] as? [String] {
-            return stringArrayValue
+        if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String] {
+            collectionViewCells.append(contentsOf: unwrappedOldCollectionViewCells)
         }
 
-        guard let stringArrayParameter = StringArrayParameter(rawValue: parameter.rawValue) else {
-            fatalError("Unknown string array parameter \(parameter)")
+        if let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
+            collectionViewCells.append(contentsOf: unwrappedNewCollectionViewCells)
         }
 
-        var newValue = ""
+        modifiedContext["collectionViewCells"] = collectionViewCells
 
-        while true {
-            var description: String
-            if stringArrayParameter.description.isEmpty {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(stringArrayParameter.name)"
-            } else {
-                description = "\nℹ️  Missing parameter '\(parameter)': \(stringArrayParameter.name). \(stringArrayParameter.description)."
-            }
+        modifiedContext["Screen"] = modifiedContext["Name"]
 
-            print(description)
-            print("❔ Enter '\(parameter)' (comma-separated): ", terminator: "")
-
-            if let input = readLine(), !input.isEmpty {
-                newValue = input
-                break
-            } else {
-                print("❗️ Incorrect input")
-            }
-        }
-
-        let list = newValue.split(separator: ",").map { String($0) }
-        context[parameter.rawValue] = list
-
-        return list
-    }
-
-    static func optionalStringArrayValue(_ parameter: StringArrayParameter) -> [String]? {
-        if let stringArrayValue = context[parameter.rawValue] as? [String] {
-            return stringArrayValue
-        }
-        return nil
+        return modifiedContext
     }
 }
 
-private extension MainContext {
+private extension ContextProvider {
     static func loadContext(fromFile contextFile: String) throws -> Context {
         let contextFile = try File(path: contextFile)
         let contextString = try contextFile.readAsString(encodedAs: .utf8)

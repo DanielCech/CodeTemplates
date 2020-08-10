@@ -31,7 +31,7 @@ class Templates {
 
         var types = [Template: TemplateInfo]()
 
-        let templatesFolder = try Folder(path: Paths.templatePath)
+        let templatesFolder = try Folder(path: mainContext.stringValue(.templatePath))
 
         for categoryFolder in templatesFolder.subfolders {
             if categoryFolder.name == "_Combos" {
@@ -63,7 +63,7 @@ class Templates {
             return templateDerivationsDict
         }
 
-        let derivationsFilePath = Paths.templatePath.appendingPathComponent(path: "derivations.json")
+        let derivationsFilePath = mainContext.stringValue(.templatePath).appendingPathComponent(path: "derivations.json")
 
         let derivationsFile = try File(path: derivationsFilePath)
         let derivationsString = try derivationsFile.readAsString(encodedAs: .utf8)
@@ -92,7 +92,7 @@ class Templates {
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 print(jsonString)
 
-                let derivationsFilePath = Paths.templatePath.appendingPathComponent(path: "derivations.json")
+                let derivationsFilePath = mainContext.stringValue(.templatePath).appendingPathComponent(path: "derivations.json")
                 let derivationsFile = try File(path: derivationsFilePath)
 
                 try derivationsFile.write(jsonString, encoding: .utf8)

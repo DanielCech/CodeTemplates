@@ -119,6 +119,18 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// Location of project source files
     case sourcesPath
+    
+    /// Location of templates - codeTemplate/Templates
+    case templatePath
+    
+    /// Location of folder for generation - codeTemplate/Generate
+    case generatePath
+    
+    /// Location of folder for validation - codeTemplate/Validate
+    case validatePath
+    
+    /// Location of folder for preparation - codeTemplate/Prepare
+    case preparePath
 
     /// The name of created item (decapitalized), Name - capitalized name
     case name
@@ -177,6 +189,14 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Combination of templates"
         case .deriveFromTemplate:
             return "The name of template as origin for template preparation"
+        case .templatePath:
+            return "Location of templates - codeTemplate/Templates"
+        case .generatePath:
+            return "Location of folder for generation - codeTemplate/Generate"
+        case .validatePath:
+            return "Location of folder for validation - codeTemplate/Validate"
+        case .preparePath:
+            return "Location of folder for preparation - codeTemplate/Prepare"
         }
     }
 
@@ -213,6 +233,14 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
         case .projectPath:
             return ""
         case .sourcesPath:
+            return ""
+        case .templatePath:
+            return ""
+        case .generatePath:
+            return ""
+        case .validatePath:
+            return ""
+        case .preparePath:
             return ""
         case .deriveFromTemplate:
             return ""

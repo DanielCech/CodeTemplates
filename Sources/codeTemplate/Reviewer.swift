@@ -42,7 +42,7 @@ class Reviewer {
             break
 
         case .overall:
-            compareTwoItems(first: Paths.generatePath, second: Paths.locationPath)
+            compareTwoItems(first: mainContext.stringValue(.generatePath), second: mainContext.stringValue(.locationPath))
 
         case .individual:
             for processedFile in processedFiles {

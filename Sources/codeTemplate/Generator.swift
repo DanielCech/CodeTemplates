@@ -17,13 +17,11 @@ class Generator {
     var processedFiles = [ProcessedFile]()
 
     /// Generate code using template with context in json file
-    func generateCode(reviewMode: ReviewMode) throws {
-        let context = MainContext.getContext()
-
+    func generateCode(reviewMode: ReviewMode, context: Context = mainContext) throws {
         let generationMode: GenerationMode
-        if let unwrappedTemplate = MainContext.optionalStringValue(.template) {
+        if let unwrappedTemplate = context.optionalStringValue(.template) {
             generationMode = .template(unwrappedTemplate)
-        } else if let unwrappedTemplateCombo = MainContext.optionalStringValue(.templateCombo) {
+        } else if let unwrappedTemplateCombo = context.optionalStringValue(.templateCombo) {
             guard let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) else {
                 throw CodeTemplateError.unknownTemplateCombo(message: unwrappedTemplateCombo)
             }
@@ -34,7 +32,7 @@ class Generator {
 
         try Paths.setupPaths()
 
-        let modifiedContext = ContextHelper.shared.updateContext(context)
+        let modifiedContext = ContextProvider.updateContext(context)
         try Generator.shared.generate(
             generationMode: generationMode,
             context: modifiedContext,
@@ -49,7 +47,7 @@ class Generator {
         context: Context,
         reviewMode: ReviewMode = .none,
         deleteGenerate: Bool = true,
-        outputPath: String = Paths.generatePath,
+        outputPath: String = mainContext.stringValue(.generatePath),
         validationMode: Bool = false
     ) throws {
         switch generationMode {
@@ -57,7 +55,7 @@ class Generator {
 
             let templateCategory = try Templates.shared.templateCategory(for: templateType)
             let templateInfo = try Templates.shared.templateInfo(for: templateType)
-            let templateFolder = try Folder(path: Paths.templatePath).subfolder(at: templateCategory).subfolder(at: templateType)
+            let templateFolder = try Folder(path: mainContext.stringValue(.templatePath)).subfolder(at: templateCategory).subfolder(at: templateType)
 
             // Delete contents of Generate folder
             let generatedFolder = try Folder(path: outputPath)
@@ -65,7 +63,7 @@ class Generator {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let projectFolder = try Folder(path: Paths.projectPath)
+            let projectFolder = try Folder(path: mainContext.stringValue(.projectPath))
 
             try traverse(
                 templatePath: templateFolder.path,
@@ -116,7 +114,7 @@ class Generator {
             try comboType.perform(context: context)
         }
 
-        shell("/usr/local/bin/swiftformat \"\(Paths.scriptPath)\" > /dev/null 2>&1")
+        shell("/usr/local/bin/swiftformat \"\(mainContext.stringValue(.scriptPath))\" > /dev/null 2>&1")
 
         try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
     }
@@ -154,7 +152,7 @@ private extension Generator {
         projectPath: String,
         context: Context,
         templateInfo: TemplateInfo,
-        outputPath: String = Paths.generatePath,
+        outputPath: String = mainContext.stringValue(.generatePath),
         validationMode: Bool = false
     ) throws {
         var modifiedContext = context
@@ -177,7 +175,7 @@ private extension Generator {
 
             // TODO: preferOriginalLocation implementation
             if templateInfo.preferOriginalLocation.contains(file.name) {
-                let projectFolder = try Folder(path: Paths.projectPath)
+                let projectFolder = try Folder(path: mainContext.stringValue(.projectPath))
                 if let foundProjectFile = projectFolder.findFirstFile(name: outputFileName) {
                     projectFile = foundProjectFile.path
                 }
@@ -221,7 +219,7 @@ private extension Generator {
                 try traverse(
                     templatePath: folder.path,
                     generatePath: outputPath,
-                    projectPath: Paths.projectPath,
+                    projectPath: mainContext.stringValue(.projectPath),
                     context: context,
                     templateInfo: templateInfo
                 )
@@ -230,10 +228,10 @@ private extension Generator {
                 if validationMode {
                     baseGeneratePath = outputPath
                 } else {
-                    baseGeneratePath = try generatedFolder.createSubfolder(at: Paths.sourcesPath.lastPathComponent).path
+                    baseGeneratePath = try generatedFolder.createSubfolder(at: mainContext.stringValue(.sourcesPath).lastPathComponent).path
                 }
 
-                baseProjectPath = Paths.sourcesPath
+                baseProjectPath = mainContext.stringValue(.sourcesPath)
 
                 try traverse(
                     templatePath: folder.path,
@@ -244,7 +242,7 @@ private extension Generator {
                 )
 
             case "_location":
-                let subPath = String(Paths.locationPath.suffix(Paths.locationPath.count - Paths.projectPath.count))
+                let subPath = String(mainContext.stringValue(.locationPath).suffix(mainContext.stringValue(.locationPath).count - mainContext.stringValue(.projectPath).count))
 
                 if validationMode {
                     baseGeneratePath = outputPath
@@ -252,7 +250,7 @@ private extension Generator {
                     baseGeneratePath = try generatedFolder.createSubfolder(at: subPath).path
                 }
 
-                baseProjectPath = Paths.locationPath
+                baseProjectPath = mainContext.stringValue(.locationPath)
 
                 try traverse(
                     templatePath: folder.path,

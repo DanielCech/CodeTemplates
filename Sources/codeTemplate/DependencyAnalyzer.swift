@@ -112,7 +112,7 @@ class DependencyAnalyzer {
     }
 
     func findDefinitions(forTypeDependencies dependencies: Set<String>) throws -> [String: String] {
-        let sourcesFolder = try Folder(path: Paths.sourcesPath)
+        let sourcesFolder = try Folder(path: mainContext.stringValue(.sourcesPath))
         var resultsDict = [String: String]()
 
         for sourceFile in sourcesFolder.files.recursive.enumerated() {

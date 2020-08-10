@@ -14,16 +14,16 @@ class Preparator {
 
     var dependencies: Dependencies = (typeDependencies: Set([]), frameworkDependencies: Set([]))
 
-    func prepareTemplate() throws {
-        let template = MainContext.stringValue(.template)
-        let category = MainContext.stringValue(.category)
-        let projectFiles = MainContext.stringArrayValue(.projectFiles)
-        let name = MainContext.stringValue(.name)
+    func prepareTemplate(context: Context = mainContext) throws {
+        let template = mainContext.stringValue(.template)
+        let category = mainContext.stringValue(.category)
+        let projectFiles = mainContext.stringArrayValue(.projectFiles)
+        let name = mainContext.stringValue(.name)
 
         try Paths.setupPaths()
         try prepareTemplateFolder(template: template, category: category)
 
-        var deriveFromTemplate = MainContext.optionalStringValue(.deriveFromTemplate)
+        var deriveFromTemplate = mainContext.optionalStringValue(.deriveFromTemplate)
         if deriveFromTemplate == nil {
             print("🟢 Derive from which template (empty for none): ", terminator: "")
             if let userInput = readLine(), !userInput.isEmpty {
@@ -56,7 +56,7 @@ class Preparator {
         category: String,
         name: String
     ) throws {
-        let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
+        let templatePath = mainContext.stringValue(.templatePath).appendingPathComponent(path: category).appendingPathComponent(path: template)
 
         let inputFile = try File(path: projectFile)
 
@@ -66,15 +66,15 @@ class Preparator {
         var templateDestination: TemplateDestination
         var projectSubPath = projectFile.deletingLastPathComponent.withoutSlash()
 
-        if projectFile.deletingLastPathComponent.lowercased().withoutSlash() == Paths.projectPath.lowercased().withoutSlash() {
+        if projectFile.deletingLastPathComponent.lowercased().withoutSlash() == mainContext.stringValue(.projectPath).lowercased().withoutSlash() {
             templateDestination = .project
-            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - Paths.projectPath.count))
-        } else if projectFile.lowercased().withoutSlash().starts(with: Paths.locationPath.lowercased().withoutSlash()) {
+            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - mainContext.stringValue(.projectPath).count))
+        } else if projectFile.lowercased().withoutSlash().starts(with: mainContext.stringValue(.locationPath).lowercased().withoutSlash()) {
             templateDestination = .location
-            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - Paths.locationPath.count))
-        } else if projectFile.lowercased().withoutSlash().starts(with: Paths.sourcesPath.lowercased().withoutSlash()) {
+            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - mainContext.stringValue(.locationPath).count))
+        } else if projectFile.lowercased().withoutSlash().starts(with: mainContext.stringValue(.sourcesPath).lowercased().withoutSlash()) {
             templateDestination = .sources
-            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - Paths.sourcesPath.count))
+            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - mainContext.stringValue(.sourcesPath).count))
         } else {
             throw CodeTemplateError.invalidProjectFilePath(message: projectFile)
         }
@@ -116,11 +116,11 @@ private extension Preparator {
     ) throws {
         let parentTemplateCategory = try Templates.shared.templateCategory(for: parentTemplate)
 
-        let parentTemplatePath = Paths.templatePath
+        let parentTemplatePath = mainContext.stringValue(.templatePath)
             .appendingPathComponent(path: parentTemplateCategory)
             .appendingPathComponent(path: parentTemplate)
 
-        let templatePath = Paths.templatePath
+        let templatePath = mainContext.stringValue(.templatePath)
             .appendingPathComponent(path: category)
             .appendingPathComponent(path: template)
 
@@ -142,7 +142,7 @@ private extension Preparator {
         }
         """
 
-        let templatePath = Paths.templatePath
+        let templatePath = mainContext.stringValue(.templatePath)
             .appendingPathComponent(path: category)
             .appendingPathComponent(path: template)
 
@@ -194,7 +194,7 @@ private extension Preparator {
 
     func prepareTemplateFolder(template: Template, category: String) throws {
         // Create template folder
-        let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
+        let templatePath = mainContext.stringValue(.templatePath).appendingPathComponent(path: category).appendingPathComponent(path: template)
         try? FileManager.default.createDirectory(atPath: templatePath, withIntermediateDirectories: true, attributes: nil)
         let templateFolder = try Folder(path: templatePath)
         try templateFolder.empty(includingHidden: true)

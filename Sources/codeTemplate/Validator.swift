@@ -33,12 +33,12 @@ public class Validator {
     public func validate(template: Template, scriptPath: String) throws {
         print("🔎 \(template)")
 
-        Paths.scriptPath = scriptPath
-        Paths.templatePath = Paths.scriptPath.appendingPathComponent(path: "Templates")
-        Paths.validatePath = Paths.scriptPath.appendingPathComponent(path: "Validation")
+        mainContext[.scriptPath] = scriptPath
+        mainContext[.templatePath] = mainContext.stringValue(.scriptPath).appendingPathComponent(path: "Templates")
+        mainContext[.validatePath] = mainContext.stringValue(.scriptPath).appendingPathComponent(path: "Validation")
 
         // Empty validation folder
-        let validationFolder = try Folder(path: Paths.validatePath)
+        let validationFolder = try Folder(path: mainContext.stringValue(.validatePath))
         try validationFolder.empty(includingHidden: true)
 
         // Load template settings
@@ -84,7 +84,7 @@ public class Validator {
 private extension Validator {
     /// Check particular template combination of enabled switches
     func checkTemplateCombination(template: Template, context: Context) throws {
-        let validationFolder = try Folder(path: Paths.validatePath)
+        let validationFolder = try Folder(path: mainContext.stringValue(.validatePath))
 
         try Generator.shared.generate(
             generationMode: .template("SingleViewApp"),
@@ -167,6 +167,6 @@ private extension Validator {
             "whiteCellSelection": true
         ]
 
-        return ContextHelper.shared.updateContext(context)
+        return ContextProvider.updateContext(context)
     }
 }

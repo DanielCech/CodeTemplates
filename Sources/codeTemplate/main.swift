@@ -6,43 +6,49 @@ import Stencil
 
 var programMode: ProgramMode
 
-var mainContext = MainContext()
+// The main context for code templates
+var mainContext: Context
 
 do {
-    MainContext.setupParameters()
-    try MainContext.parseParameters()
+    ContextProvider.setupParameters()
+    try ContextProvider.parseParameters()
 
     if CommandLine.argc == 1 {
         print("codeTemplate - Generates a swift app components from templates")
         print("use argument `--help` for documentation")
     }
 
-    MainContext.showUsageInfoIfNeeded()
+    ContextProvider.showUsageInfoIfNeeded()
 
     print("⌚️ Processing")
 
-    switch MainContext.stringValue(.mode) {
+    mainContext = ContextProvider.getContext()
+    mainContext = ContextProvider.updateContext(mainContext)
+    mainContext = try Paths.setupPaths(context: mainContext)
+    
+    switch mainContext.stringValue(.mode) {
     case "generate":
-        guard let reviewMode = ReviewMode(rawValue: MainContext.stringValue(.reviewMode)) else {
+        guard let reviewMode = ReviewMode(rawValue: mainContext.stringValue(.reviewMode)) else {
             throw ScriptError.argumentError(message: "invalid review mode")
         }
 
-        try Generator.shared.generateCode(reviewMode: reviewMode)
+        try Generator.shared.generateCode(reviewMode: reviewMode, context: mainContext)
 
     case "updateAll":
-        try Updater.shared.updateTemplates(updateMode: .all, scriptPath: MainContext.stringValue(.scriptPath))
+        try Updater.shared.updateTemplates(updateMode: .all, scriptPath: mainContext.stringValue(.scriptPath))
 
     case "updateNew":
-        try Updater.shared.updateTemplates(updateMode: .new, scriptPath: MainContext.stringValue(.scriptPath))
+        try Updater.shared.updateTemplates(updateMode: .new, scriptPath: mainContext.stringValue(.scriptPath))
 
     case "validate":
-        if let unwrappedTemplate = MainContext.optionalStringValue(.template) {
+        if let unwrappedTemplate = mainContext.optionalStringValue(.template) {
             try Validator.shared.validate(
                 template: unwrappedTemplate,
-                scriptPath: MainContext.stringValue(.scriptPath)
+                scriptPath: mainContext.stringValue(.scriptPath)
             )
         } else {
-            try Validator.shared.validateTemplates(scriptPath: MainContext.stringValue(.scriptPath))
+            // Validate all templates
+            try Validator.shared.validateTemplates(scriptPath: mainContext.stringValue(.scriptPath))
         }
 
     case "prepare":
