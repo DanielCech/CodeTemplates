@@ -105,10 +105,9 @@ enum RegExpPatterns {
             [A-Z][a-zA-Z0-9]*
         ).*
         """#
-    
-    
+
     // MARK: - Definitions
-    
+
     static func classDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
@@ -119,7 +118,7 @@ enum RegExpPatterns {
         \s*[^\{]*\{
         """#
     }
-    
+
     static func structDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
@@ -130,7 +129,7 @@ enum RegExpPatterns {
         \s*[^\{]*\{
         """#
     }
-    
+
     static func enumDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
@@ -141,7 +140,7 @@ enum RegExpPatterns {
         \s*[^\{]*\{
         """#
     }
-    
+
     static func protocolDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
@@ -152,5 +151,4 @@ enum RegExpPatterns {
         \s*[^\{]*\{
         """#
     }
-    
 }

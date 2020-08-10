@@ -41,7 +41,7 @@ class MainContext {
         for parameter in StringArrayParameter.allCases {
             stringArrayParameters[parameter.rawValue] = moderator.add(Argument<String?>.singleArgument(name: parameter.rawValue, description: parameter.name).repeat())
         }
-        
+
         help = moderator.add(.option("h","help", description: "Show this parameter documentation"))
     }
 
@@ -84,7 +84,7 @@ class MainContext {
             }
         }
     }
-    
+
     static func showUsageInfoIfNeeded() {
         if help.value {
             print(moderator.usagetext)

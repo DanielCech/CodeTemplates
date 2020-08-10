@@ -137,7 +137,7 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// The name of coordinator which is related to the scene - name doesn't contain "Coordinator" or "Coordinating"
     case coordinator
-    
+
     /// The name of template as origin for template preparation
     case deriveFromTemplate
 
@@ -250,7 +250,7 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
 
     /// All collection view cells together
     case collectionViewCells
-    
+
     /// The set of files for template preparation
     case projectFiles
 
@@ -270,7 +270,6 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
             return "Old and new collection view cells together"
         case .projectFiles:
             return "The set of files for template preparation"
-            
         }
     }
 

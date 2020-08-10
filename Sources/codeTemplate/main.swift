@@ -11,14 +11,14 @@ var mainContext = MainContext()
 do {
     MainContext.setupParameters()
     try MainContext.parseParameters()
-    
+
     if CommandLine.argc == 1 {
         print("codeTemplate - Generates a swift app components from templates")
         print("use argument `--help` for documentation")
     }
-    
+
     MainContext.showUsageInfoIfNeeded()
-    
+
     print("⌚️ Processing")
 
     switch MainContext.stringValue(.mode) {
