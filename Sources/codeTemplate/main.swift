@@ -25,7 +25,7 @@ do {
     mainContext = ContextProvider.getContext()
     mainContext = ContextProvider.updateContext(mainContext)
     mainContext = try Paths.setupPaths(context: mainContext)
-    
+
     switch mainContext.stringValue(.mode) {
     case "generate":
         guard let reviewMode = ReviewMode(rawValue: mainContext.stringValue(.reviewMode)) else {

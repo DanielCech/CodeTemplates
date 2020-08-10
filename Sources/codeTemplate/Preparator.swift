@@ -14,13 +14,12 @@ class Preparator {
 
     var dependencies: Dependencies = (typeDependencies: Set([]), frameworkDependencies: Set([]))
 
-    func prepareTemplate(context: Context = mainContext) throws {
+    func prepareTemplate(context _: Context = mainContext) throws {
         let template = mainContext.stringValue(.template)
         let category = mainContext.stringValue(.category)
         let projectFiles = mainContext.stringArrayValue(.projectFiles)
         let name = mainContext.stringValue(.name)
 
-        try Paths.setupPaths()
         try prepareTemplateFolder(template: template, category: category)
 
         var deriveFromTemplate = mainContext.optionalStringValue(.deriveFromTemplate)

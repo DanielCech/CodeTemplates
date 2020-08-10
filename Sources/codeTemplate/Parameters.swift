@@ -119,16 +119,16 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// Location of project source files
     case sourcesPath
-    
+
     /// Location of templates - codeTemplate/Templates
     case templatePath
-    
+
     /// Location of folder for generation - codeTemplate/Generate
     case generatePath
-    
+
     /// Location of folder for validation - codeTemplate/Validate
     case validatePath
-    
+
     /// Location of folder for preparation - codeTemplate/Prepare
     case preparePath
 

@@ -17,7 +17,7 @@ class ContextProvider {
     private static var stringParameters = [String: FutureValue<String?>]()
     private static var stringArrayParameters = [String: FutureValue<[String]>]()
     private static var help: FutureValue<Bool>!
-    
+
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/YYYY"
@@ -82,7 +82,7 @@ class ContextProvider {
         }
 
         for parameter in StringArrayParameter.allCases {
-            if let commandLineValue = stringArrayParameters[parameter.rawValue]?.value {
+            if let commandLineValue = stringArrayParameters[parameter.rawValue]?.value, commandLineValue.count > 0 {
                 context[parameter.rawValue] = commandLineValue
             }
             if context[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
@@ -97,7 +97,7 @@ class ContextProvider {
             exit(0)
         }
     }
-    
+
     /// Default operations with context - default content, case processing, ...
     static func updateContext(_ context: Context) -> Context {
         var modifiedContext = context
@@ -121,11 +121,11 @@ class ContextProvider {
 
         var tableViewCells = [String]()
 
-        if let unwrappedOldTableViewCells = context["oldTableViewCells"] as? [String] {
+        if let unwrappedOldTableViewCells = context.optionalStringArrayValue(.oldTableViewCells) {
             tableViewCells.append(contentsOf: unwrappedOldTableViewCells)
         }
 
-        if let unwrappedNewTableViewCells = context["newTableViewCells"] as? [String] {
+        if let unwrappedNewTableViewCells = context.optionalStringArrayValue(.newTableViewCells) {
             tableViewCells.append(contentsOf: unwrappedNewTableViewCells)
         }
 
@@ -135,11 +135,11 @@ class ContextProvider {
 
         var collectionViewCells = [String]()
 
-        if let unwrappedOldCollectionViewCells = context["oldCollectionViewCells"] as? [String] {
+        if let unwrappedOldCollectionViewCells = context.optionalStringArrayValue(.oldCollectionViewCells) {
             collectionViewCells.append(contentsOf: unwrappedOldCollectionViewCells)
         }
 
-        if let unwrappedNewCollectionViewCells = context["newCollectionViewCells"] as? [String] {
+        if let unwrappedNewCollectionViewCells = context.optionalStringArrayValue(.newCollectionViewCells) {
             collectionViewCells.append(contentsOf: unwrappedNewCollectionViewCells)
         }
 

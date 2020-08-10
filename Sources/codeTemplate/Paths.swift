@@ -9,22 +9,10 @@ import Foundation
 import ScriptToolkit
 
 class Paths {
-    // CodeTemplates paths
-//    static var scriptPath: String = "" // codeTemplate
-//    static var templatePath: String = "" // codeTemplate/Templates
-//    static var generatePath: String = "" // codeTemplate/Generate
-//    static var validatePath: String = "" // codeTemplate/Validate
-//    static var preparePath: String = "" // codeTemplate/Prepare
-
-    // Project paths
-//    static var projectPath: String = "" // harbor-ios
-//    static var sourcesPath: String = "" // harbor-ios/Harbor
-//    static var locationPath: String = "" // harbor-ios/Harbor/...
-
     /// Setup paths from context
     static func setupPaths(context: Context = mainContext) throws -> Context {
         var modifiedContext = context
-        
+
         guard let unwrappedProjectPath = modifiedContext.optionalStringValue(.projectPath) else {
             throw ScriptError.moreInfoNeeded(message: "projectPath is missing")
         }
@@ -58,7 +46,7 @@ class Paths {
         } else {
             throw ScriptError.moreInfoNeeded(message: "scriptPath is missing")
         }
-        
+
         return modifiedContext
     }
 }

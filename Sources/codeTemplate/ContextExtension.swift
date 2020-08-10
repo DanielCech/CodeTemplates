@@ -128,32 +128,32 @@ extension Context {
         }
         return nil
     }
-    
+
     subscript(parameter: BoolParameter) -> Bool? {
         get {
             optionalBoolValue(parameter)
         }
-        
+
         set {
             self[parameter.rawValue] = newValue
         }
     }
-    
+
     subscript(parameter: StringParameter) -> String? {
         get {
             optionalStringValue(parameter)
         }
-        
+
         set {
             self[parameter.rawValue] = newValue
         }
     }
-    
+
     subscript(parameter: StringArrayParameter) -> [String]? {
         get {
             optionalStringArrayValue(parameter)
         }
-        
+
         set {
             self[parameter.rawValue] = newValue
         }

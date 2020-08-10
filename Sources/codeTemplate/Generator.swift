@@ -30,8 +30,6 @@ class Generator {
             throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
         }
 
-        try Paths.setupPaths()
-
         let modifiedContext = ContextProvider.updateContext(context)
         try Generator.shared.generate(
             generationMode: generationMode,
