@@ -23,7 +23,10 @@ class Generator {
         let generationMode: GenerationMode
         if let unwrappedTemplate = MainContext.optionalStringValue(.template) {
             generationMode = .template(unwrappedTemplate)
-        } else if let unwrappedTemplateCombo = MainContext.optionalStringValue(.templateCombo), let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) {
+        } else if let unwrappedTemplateCombo = MainContext.optionalStringValue(.templateCombo) {
+            guard let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) else {
+                throw CodeTemplateError.unknownTemplateCombo(message: unwrappedTemplateCombo)
+            }
             generationMode = .combo(comboType)
         } else {
             throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")

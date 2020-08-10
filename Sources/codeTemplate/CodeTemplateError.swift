@@ -13,6 +13,7 @@ enum CodeTemplateError: Error {
     case stencilTemplateError(message: String)
     case parameterNotSpecified(message: String)
     case invalidProjectFilePath(message: String)
+    case unknownTemplateCombo(message: String)
 }
 
 extension CodeTemplateError: PrintableError {
@@ -27,6 +28,8 @@ extension CodeTemplateError: PrintableError {
             errorDescription = "parameter not specified: \(message)"
         case let .invalidProjectFilePath(message):
             errorDescription = "invalid project file path: \(message)"
+        case let .unknownTemplateCombo(message):
+            errorDescription = "unknown template combo: \(message)"
         }
 
         return prefix + errorDescription
