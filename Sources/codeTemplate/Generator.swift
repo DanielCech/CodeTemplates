@@ -163,7 +163,7 @@ private extension Generator {
 
         // Process files in folder
         for file in templateFolder.files {
-            if file.name.lowercased() == "template.json" || file.name.lowercased().starts(with: "screenshot") { continue }
+            if file.name.lowercased() == "template.json" || file.name.lowercased().starts(with: "screenshot") || file.name.lowercased().starts(with: "description") { continue }
 
             let outputFileName = file.name.generateName(context: context)
             modifiedContext["fileName"] = outputFileName

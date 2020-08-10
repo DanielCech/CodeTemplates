@@ -9,10 +9,17 @@ var programMode: ProgramMode
 var mainContext = MainContext()
 
 do {
-    print("⌚️ Processing")
-
     MainContext.setupParameters()
     try MainContext.parseParameters()
+    
+    if CommandLine.argc == 1 {
+        print("codeTemplate - Generates a swift app components from templates")
+        print("use argument `--help` for documentation")
+    }
+    
+    MainContext.showUsageInfoIfNeeded()
+    
+    print("⌚️ Processing")
 
     switch MainContext.stringValue(.mode) {
     case "generate":
@@ -39,7 +46,7 @@ do {
         }
 
     case "prepare":
-        try Preparator.shared.prepareTemplate(context: MainContext.getContext())
+        try Preparator.shared.prepareTemplate()
 
     default:
         throw ScriptError.argumentError(message: "invalid mode value")

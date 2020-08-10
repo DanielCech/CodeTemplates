@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Manage Subscriptions View Controller-->
+        <!--{{Name}} View Controller-->
         <scene sceneID="T4r-JI-9Pv">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="JmO-xe-2y7" customClass="{{Name}}ViewController" customModule="Harbor" customModuleProvider="target" sceneMemberID="viewController">
@@ -27,77 +27,20 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="manageSubscription" translatesAutoresizingMaskIntoConstraints="NO" id="Lgb-GX-irF">
-                                <rect key="frame" x="106.5" y="51.5" width="201" height="201"/>
-                            </imageView>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kBF-Ob-b30">
-                                <rect key="frame" x="48" y="249" width="318" height="113"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1sL-aI-bf7">
-                                        <rect key="frame" x="0.0" y="0.0" width="155" height="113"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="155" id="G33-gD-sTH"/>
-                                            <constraint firstAttribute="height" constant="113" id="p8V-OC-jXZ"/>
-                                        </constraints>
-                                        <state key="normal" title=" "/>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZqD-Lx-qok">
-                                        <rect key="frame" x="163" y="0.0" width="155" height="113"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="155" id="Cte-O5-w2I"/>
-                                            <constraint firstAttribute="height" constant="113" id="MZl-Mu-AIX"/>
-                                        </constraints>
-                                        <state key="normal" title=" "/>
-                                    </button>
-                                </subviews>
-                            </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9TO-6g-guh">
-                                <rect key="frame" x="186" y="196.5" width="42" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFs-I8-VXe">
-                                <rect key="frame" x="25" y="760" width="364" height="56"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="CYS-jZ-PMu"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mEE-Ob-ltE">
-                                <rect key="frame" x="184" y="819" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" name="App Colors/baseBackground"/>
                         <constraints>
-                            <constraint firstItem="AoL-UG-IwY" firstAttribute="trailing" secondItem="SFs-I8-VXe" secondAttribute="trailing" constant="25" id="5lF-fa-L8l"/>
-                            <constraint firstItem="kBF-Ob-b30" firstAttribute="centerX" secondItem="7gN-ag-HZR" secondAttribute="centerX" id="BRs-pf-RgD"/>
-                            <constraint firstItem="AoL-UG-IwY" firstAttribute="bottom" secondItem="mEE-Ob-ltE" secondAttribute="bottom" constant="13" id="GXv-RI-kpN"/>
-                            <constraint firstItem="Lgb-GX-irF" firstAttribute="centerX" secondItem="7gN-ag-HZR" secondAttribute="centerX" id="OEn-hC-aox"/>
-                            <constraint firstItem="kBF-Ob-b30" firstAttribute="top" secondItem="9TO-6g-guh" secondAttribute="bottom" constant="32" id="TkN-gw-OJs"/>
-                            <constraint firstItem="mEE-Ob-ltE" firstAttribute="centerX" secondItem="7gN-ag-HZR" secondAttribute="centerX" id="VbW-oZ-iP4"/>
-                            <constraint firstItem="Lgb-GX-irF" firstAttribute="top" secondItem="f5d-04-Rrq" secondAttribute="bottom" constant="-36" id="bHR-uC-w0L"/>
-                            <constraint firstItem="SFs-I8-VXe" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" constant="25" id="gAI-E3-CMN"/>
                             <constraint firstItem="f5d-04-Rrq" firstAttribute="centerX" secondItem="7gN-ag-HZR" secondAttribute="centerX" id="gEe-bE-z8B"/>
                             <constraint firstItem="f5d-04-Rrq" firstAttribute="top" secondItem="7gN-ag-HZR" secondAttribute="top" constant="67" id="mTw-aT-iLc"/>
                             <constraint firstItem="0tK-Ra-Vvm" firstAttribute="top" secondItem="7gN-ag-HZR" secondAttribute="top" constant="46" id="pbt-Kd-Z4u"/>
                             <constraint firstItem="0tK-Ra-Vvm" firstAttribute="leading" secondItem="AoL-UG-IwY" secondAttribute="leading" constant="20" id="qLB-rd-pQW"/>
-                            <constraint firstItem="mEE-Ob-ltE" firstAttribute="top" secondItem="SFs-I8-VXe" secondAttribute="bottom" constant="3" id="qxP-oT-7Ds"/>
-                            <constraint firstItem="9TO-6g-guh" firstAttribute="top" secondItem="Lgb-GX-irF" secondAttribute="bottom" constant="-56" id="sKO-Wy-e1c"/>
-                            <constraint firstItem="9TO-6g-guh" firstAttribute="centerX" secondItem="7gN-ag-HZR" secondAttribute="centerX" id="wek-li-amc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="AoL-UG-IwY"/>
                     </view>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="actionButton" destination="SFs-I8-VXe" id="n80-E2-ZVV"/>
-                        <outlet property="annuallySubscriptionButton" destination="1sL-aI-bf7" id="lsz-yT-kFs"/>
                         <outlet property="backButton" destination="0tK-Ra-Vvm" id="Bvb-5e-0li"/>
-                        <outlet property="monthlySubscriptionButton" destination="ZqD-Lx-qok" id="SSz-6C-oEk"/>
-                        <outlet property="termsAndConditionsButton" destination="mEE-Ob-ltE" id="FWk-IM-gui"/>
                         <outlet property="titleLabel" destination="f5d-04-Rrq" id="YGf-tJ-7If"/>
-                        <outlet property="tryHarborLabel" destination="9TO-6g-guh" id="vUe-cd-RiJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kdE-uS-H20" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -107,7 +50,6 @@
     </scenes>
     <resources>
         <image name="backButton" width="64" height="64"/>
-        <image name="manageSubscription" width="201" height="201"/>
         <namedColor name="App Colors/baseBackground">
             <color red="0.97647058823529409" green="0.96862745098039216" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

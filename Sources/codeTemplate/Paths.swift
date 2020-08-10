@@ -10,16 +10,16 @@ import ScriptToolkit
 
 class Paths {
     // CodeTemplates paths
-    static var scriptPath: String = ""      // codeTemplate
-    static var templatePath: String = ""    // codeTemplate/Templates
-    static var generatePath: String = ""    // codeTemplate/Generate
-    static var validatePath: String = ""    // codeTemplate/Validate
-    static var preparePath: String = ""     // codeTemplate/Prepare
+    static var scriptPath: String = "" // codeTemplate
+    static var templatePath: String = "" // codeTemplate/Templates
+    static var generatePath: String = "" // codeTemplate/Generate
+    static var validatePath: String = "" // codeTemplate/Validate
+    static var preparePath: String = "" // codeTemplate/Prepare
 
     // Project paths
-    static var projectPath: String = ""     // harbor-ios
-    static var sourcesPath: String = ""     // harbor-ios/Harbor
-    static var locationPath: String = ""    // harbor-ios/Harbor/...
+    static var projectPath: String = "" // harbor-ios
+    static var sourcesPath: String = "" // harbor-ios/Harbor
+    static var locationPath: String = "" // harbor-ios/Harbor/...
 
     /// Setup paths from context
     static func setupPaths() throws {

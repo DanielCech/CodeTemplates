@@ -16,6 +16,7 @@ class MainContext {
     private static var boolParameters = [String: FutureValue<Bool>]()
     private static var stringParameters = [String: FutureValue<String?>]()
     private static var stringArrayParameters = [String: FutureValue<[String]>]()
+    private static var help: FutureValue<Bool>!
 
     private static var moderator: Moderator!
     private(set) static var context: Context!
@@ -40,6 +41,8 @@ class MainContext {
         for parameter in StringArrayParameter.allCases {
             stringArrayParameters[parameter.rawValue] = moderator.add(Argument<String?>.singleArgument(name: parameter.rawValue, description: parameter.name).repeat())
         }
+        
+        help = moderator.add(.option("h","help", description: "Show this parameter documentation"))
     }
 
     static func parseParameters() throws {
@@ -48,7 +51,7 @@ class MainContext {
         if let contextFileValue = stringParameters["context"], let contextFile = contextFileValue.value {
             context = try loadContext(fromFile: contextFile)
         } else {
-            print("⚠️  Context is missing")
+            if !help.value { print("⚠️  Context is missing") }
             context = [:]
         }
 
@@ -79,6 +82,13 @@ class MainContext {
             if context[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
                 context[parameter.rawValue] = defaultValue
             }
+        }
+    }
+    
+    static func showUsageInfoIfNeeded() {
+        if help.value {
+            print(moderator.usagetext)
+            exit(0)
         }
     }
 
@@ -160,12 +170,12 @@ class MainContext {
         return nil
     }
 
-    static func stringArrayValue(_ parameter: String) -> [String] {
-        if let stringArrayValue = context[parameter] as? [String] {
+    static func stringArrayValue(_ parameter: StringArrayParameter) -> [String] {
+        if let stringArrayValue = context[parameter.rawValue] as? [String] {
             return stringArrayValue
         }
 
-        guard let stringArrayParameter = StringArrayParameter(rawValue: parameter) else {
+        guard let stringArrayParameter = StringArrayParameter(rawValue: parameter.rawValue) else {
             fatalError("Unknown string array parameter \(parameter)")
         }
 
@@ -191,13 +201,13 @@ class MainContext {
         }
 
         let list = newValue.split(separator: ",").map { String($0) }
-        context[parameter] = list
+        context[parameter.rawValue] = list
 
         return list
     }
 
-    static func optionalStringArrayValue(_ parameter: String) -> [String]? {
-        if let stringArrayValue = context[parameter] as? [String] {
+    static func optionalStringArrayValue(_ parameter: StringArrayParameter) -> [String]? {
+        if let stringArrayValue = context[parameter.rawValue] as? [String] {
             return stringArrayValue
         }
         return nil

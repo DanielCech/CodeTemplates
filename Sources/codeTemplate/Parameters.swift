@@ -40,7 +40,7 @@ enum BoolParameter: String, CaseIterable, ParameterDescriptive {
     /// Bottom alpha gradient
     case bottomGradientView
 
-    var name: String {
+    var description: String {
         switch self {
         case .fakeNavbar:
             return "Use of fake navbar view that collapses after scroll"
@@ -63,7 +63,7 @@ enum BoolParameter: String, CaseIterable, ParameterDescriptive {
         }
     }
 
-    var description: String { return "" }
+    var name: String { return "" }
 
     var defaultValue: Bool? {
         switch self {
@@ -137,6 +137,9 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// The name of coordinator which is related to the scene - name doesn't contain "Coordinator" or "Coordinating"
     case coordinator
+    
+    /// The name of template as origin for template preparation
+    case deriveFromTemplate
 
     var name: String {
         switch self {
@@ -172,6 +175,8 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Location of project source files"
         case .templateCombo:
             return "Combination of templates"
+        case .deriveFromTemplate:
+            return "The name of template as origin for template preparation"
         }
     }
 
@@ -209,6 +214,8 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return ""
         case .sourcesPath:
             return ""
+        case .deriveFromTemplate:
+            return ""
         }
     }
 
@@ -243,6 +250,9 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
 
     /// All collection view cells together
     case collectionViewCells
+    
+    /// The set of files for template preparation
+    case projectFiles
 
     var name: String {
         switch self {
@@ -258,6 +268,9 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
             return "List of collectionViewCells that should be prepared"
         case .collectionViewCells:
             return "Old and new collection view cells together"
+        case .projectFiles:
+            return "The set of files for template preparation"
+            
         }
     }
 

@@ -12,27 +12,16 @@ import ScriptToolkit
 class Preparator {
     public static let shared = Preparator()
 
-    func prepareTemplate(context: Context) throws {
-        guard let template = context["template"] as? String else {
-            throw CodeTemplateError.parameterNotSpecified(message: "template")
-        }
-
-        guard let category = context["category"] as? String else {
-            throw CodeTemplateError.parameterNotSpecified(message: "category")
-        }
-
-        guard let projectFiles = context["projectFiles"] as? [String] else {
-            throw CodeTemplateError.parameterNotSpecified(message: "projectFiles")
-        }
-
-        guard let name = context["name"] as? String else {
-            throw CodeTemplateError.parameterNotSpecified(message: "name")
-        }
+    func prepareTemplate() throws {
+        let template = MainContext.stringValue(.template)
+        let category = MainContext.stringValue(.category)
+        let projectFiles = MainContext.stringArrayValue(.projectFiles)
+        let name = MainContext.stringValue(.name)
 
         try Paths.setupPaths()
         try prepareTemplateFolder(template: template, category: category)
 
-        var deriveFromTemplate = context["deriveFromTemplate"] as? String
+        var deriveFromTemplate = MainContext.optionalStringValue(.deriveFromTemplate)
         if deriveFromTemplate == nil {
             print("🟢 Derive from which template (empty for none): ", terminator: "")
             if let userInput = readLine(), !userInput.isEmpty {
@@ -49,8 +38,7 @@ class Preparator {
                 forFile: projectFile,
                 template: template,
                 category: category,
-                name: name,
-                context: context
+                name: name
             )
         }
     }
@@ -59,13 +47,12 @@ class Preparator {
         forFile projectFile: String,
         template: Template,
         category: String,
-        name: String,
-        context _: Context
+        name: String
     ) throws {
         let templatePath = Paths.templatePath.appendingPathComponent(path: category).appendingPathComponent(path: template)
 
         let inputFile = try File(path: projectFile)
-        
+
         print("\(inputFile.name):")
 
         // Prepare target folder structure
@@ -95,7 +82,7 @@ class Preparator {
         let templateDestinationFolder = try Folder(path: templateDestinationPath)
         let copiedFile = try inputFile.copy(to: templateDestinationFolder)
 
-        try analyzeFileDependencies(of: copiedFile)
+        try DependencyAnalyzer.shared.analyzeFileDependencies(of: copiedFile)
         try prepareTemplate(for: copiedFile, name: name)
 
         try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
@@ -199,57 +186,5 @@ private extension Preparator {
         try templateFolder.empty(includingHidden: true)
     }
 
-    func analyzeFileDependencies(of file: File) throws {
-        let contents = try file.readAsString()
-
-        var typeDependencies = [String]()
-        var frameworkDependencies = [String]()
-
-        for line in contents.lines() {
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.classPattern)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.structPattern)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.enumPattern)
-            )
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.protocolPattern)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.extensionPattern)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.letPattern1)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.letPattern2)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.varPattern1)
-            )
-
-            typeDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.varPattern2)
-            )
-
-            frameworkDependencies.append(
-                contentsOf: try DependencyAnalyzer.shared.analyze(line: line, regExp: RegExpPatterns.importPattern)
-            )
-        }
-
-        let typeDependenciesSet = Set(typeDependencies).subtracting(Internals.systemTypes)
-        let frameworkDependenciesSet = Set(frameworkDependencies).subtracting(Internals.systemFrameworks)
-
-        print("    🔎 Type dependencies: \(typeDependenciesSet)")
-        print("    📦 Framework dependencies: \(frameworkDependenciesSet)")
-    }
+    
 }
