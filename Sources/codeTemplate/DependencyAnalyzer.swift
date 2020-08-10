@@ -8,10 +8,12 @@
 import Foundation
 import Files
 
+typealias Dependencies = (typeDependencies: Set<String>, frameworkDependencies: Set<String>)
+
 class DependencyAnalyzer {
     static let shared = DependencyAnalyzer()
     
-    func analyzeFileDependencies(of file: File) throws {
+    func analyzeFileDependencies(of file: File) throws -> Dependencies {
         let contents = try file.readAsString()
 
         var typeDependencies = [String]()
@@ -63,6 +65,8 @@ class DependencyAnalyzer {
 
         print("    🔎 Type dependencies: \(typeDependenciesSet)")
         print("    📦 Framework dependencies: \(frameworkDependenciesSet)")
+        
+        return (typeDependencies: typeDependenciesSet, frameworkDependencies: frameworkDependenciesSet)
     }
 
     func analyze(line: String, regExp: String) throws -> [String] {
@@ -105,5 +109,36 @@ class DependencyAnalyzer {
         }
 
         return String(line[range])
+    }
+    
+    func findDefinitions(forTypeDependencies dependencies: Set<String>) throws -> [String: String] {
+        let sourcesFolder = try Folder(path: Paths.sourcesPath)
+        var resultsDict = [String: String]()
+        
+        for sourceFile in sourcesFolder.files.recursive.enumerated() {
+            // Skip binary files
+            guard let contents = try? sourceFile.element.readAsString() else { continue }
+            
+            for line in contents.lines() {
+                for dependency in dependencies {
+                    let classResult = try line.regExpMatches(lineRegExp: RegExpPatterns.classDefinitionPattern(name: dependency)).first
+                    let structResult = try line.regExpMatches(lineRegExp: RegExpPatterns.structDefinitionPattern(name: dependency)).first
+                    let enumResult = try line.regExpMatches(lineRegExp: RegExpPatterns.enumDefinitionPattern(name: dependency)).first
+                    let protocolResult = try line.regExpMatches(lineRegExp: RegExpPatterns.protocolDefinitionPattern(name: dependency)).first
+                    
+                    if (classResult ?? structResult ?? enumResult ?? protocolResult) != nil {
+                        resultsDict[dependency] = sourceFile.element.path
+                    }
+                }
+            }
+            
+        }
+        
+        print("resultDict: \(resultsDict)")
+        return resultsDict
+    }
+    
+    func createPodfile(forFrameworkDependencies dependencies: Set<String>) throws {
+        
     }
 }

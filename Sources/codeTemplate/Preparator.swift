@@ -11,6 +11,8 @@ import ScriptToolkit
 
 class Preparator {
     public static let shared = Preparator()
+    
+    var dependencies: Dependencies = (typeDependencies: Set([]), frameworkDependencies: Set([]))
 
     func prepareTemplate() throws {
         let template = MainContext.stringValue(.template)
@@ -41,6 +43,11 @@ class Preparator {
                 name: name
             )
         }
+        
+        print("dependencies: \(dependencies)\n")
+        
+        _ = try DependencyAnalyzer.shared.findDefinitions(forTypeDependencies: dependencies.typeDependencies)
+        try DependencyAnalyzer.shared.createPodfile(forFrameworkDependencies: dependencies.typeDependencies)
     }
 
     func prepareTemplate(
@@ -82,7 +89,14 @@ class Preparator {
         let templateDestinationFolder = try Folder(path: templateDestinationPath)
         let copiedFile = try inputFile.copy(to: templateDestinationFolder)
 
-        try DependencyAnalyzer.shared.analyzeFileDependencies(of: copiedFile)
+        let fileDependencies = try DependencyAnalyzer.shared.analyzeFileDependencies(of: copiedFile)
+        
+        dependencies.typeDependencies = dependencies.typeDependencies.union(fileDependencies.typeDependencies)
+        dependencies.frameworkDependencies = dependencies.typeDependencies.union(fileDependencies.frameworkDependencies)
+        
+        // TODO: temporary !!!
+        return
+        
         try prepareTemplate(for: copiedFile, name: name)
 
         try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
