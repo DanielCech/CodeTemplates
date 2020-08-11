@@ -1,201 +1,275 @@
 //
 //  Preparator.swift
-//  codeTemplate
+//  CodeTemplates
 //
-//  Created by Daniel Cech on 17/07/2020.
+//  Created by Daniel Cech on 13/06/2020.
 //
 
 import Files
 import Foundation
+import PathKit
 import ScriptToolkit
+import Stencil
 
 class Preparator {
-    public static let shared = Preparator()
+    static let shared = Preparator()
 
-    var dependencies: Dependencies = (typeDependencies: Set([]), frameworkDependencies: Set([]))
+    var processedFiles = [ProcessedFile]()
 
-    func prepareTemplate() throws {
-        let template = mainContext.stringValue(.template)
-        let category = mainContext.stringValue(.category)
-        let projectFiles = mainContext.stringArrayValue(.projectFiles)
-        let name = mainContext.stringValue(.name)
-
-        try prepareTemplateFolder(template: template, category: category)
-
-        var deriveFromTemplate = mainContext.optionalStringValue(.deriveFromTemplate)
-        if deriveFromTemplate == nil {
-            print("🟢 Derive from which template (empty for none): ", terminator: "")
-            if let userInput = readLine(), !userInput.isEmpty {
-                try Templates.shared.updateTemplateDerivations(template: template, deriveFromTemplate: userInput)
-                deriveFromTemplate = userInput
-                try createTemplateJSON(template: template, category: category, deriveFromTemplate: deriveFromTemplate!)
-            } else {
-                try createEmptyTemplateJSON(template: template, category: category)
+    /// Generate code using template with context in json file
+    func generateCode(reviewMode: ReviewMode, context: Context = mainContext) throws {
+        let generationMode: GenerationMode
+        if let unwrappedTemplate = context.optionalStringValue(.template) {
+            generationMode = .template(unwrappedTemplate)
+        } else if let unwrappedTemplateCombo = context.optionalStringValue(.templateCombo) {
+            guard let comboType = TemplateCombo(rawValue: unwrappedTemplateCombo) else {
+                throw CodeTemplateError.unknownTemplateCombo(message: unwrappedTemplateCombo)
             }
+            generationMode = .combo(comboType)
+        } else {
+            throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
         }
 
-        for projectFile in projectFiles {
-            try prepareTemplate(
-                forFile: projectFile,
-                template: template,
-                category: category,
-                name: name
-            )
-        }
-
-        print("dependencies: \(dependencies)\n")
-
-        _ = try DependencyAnalyzer.shared.findDefinitions(forTypeDependencies: dependencies.typeDependencies)
-        try DependencyAnalyzer.shared.createPodfile(forFrameworkDependencies: dependencies.typeDependencies)
+        let modifiedContext = ContextProvider.updateContext(context)
+        try Preparator.shared.generate(
+            generationMode: generationMode,
+            context: modifiedContext,
+            reviewMode: reviewMode,
+            deleteGenerate: true
+        )
     }
 
-    func prepareTemplate(
-        forFile projectFile: String,
-        template: Template,
-        category: String,
-        name: String
+    /// Generate code using particular template
+    func generate(
+        generationMode: GenerationMode,
+        context: Context,
+        reviewMode: ReviewMode = .none,
+        deleteGenerate: Bool = true,
+        outputPath: String = mainContext.stringValue(.generatePath),
+        validationMode: Bool = false
     ) throws {
-        let templatePath = mainContext.stringValue(.templatePath).appendingPathComponent(path: category).appendingPathComponent(path: template)
+        switch generationMode {
+        case let .template(templateType):
 
-        let inputFile = try File(path: projectFile)
+            let templateCategory = try Templates.shared.templateCategory(for: templateType)
+            let templateInfo = try Templates.shared.templateInfo(for: templateType)
+            let templateFolder = try Folder(path: mainContext.stringValue(.templatePath)).subfolder(at: templateCategory).subfolder(at: templateType)
 
-        print("\(inputFile.name):")
+            // Delete contents of Generate folder
+            let generatedFolder = try Folder(path: outputPath)
+            if deleteGenerate {
+                try generatedFolder.empty(includingHidden: true)
+            }
 
-        // Prepare target folder structure
-        var templateDestination: TemplateDestination
-        var projectSubPath = projectFile.deletingLastPathComponent.withoutSlash()
+            let projectFolder = try Folder(path: mainContext.stringValue(.projectPath))
 
-        if projectFile.deletingLastPathComponent.lowercased().withoutSlash() == mainContext.stringValue(.projectPath).lowercased().withoutSlash() {
-            templateDestination = .project
-            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - mainContext.stringValue(.projectPath).count))
-        } else if projectFile.lowercased().withoutSlash().starts(with: mainContext.stringValue(.locationPath).lowercased().withoutSlash()) {
-            templateDestination = .location
-            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - mainContext.stringValue(.locationPath).count))
-        } else if projectFile.lowercased().withoutSlash().starts(with: mainContext.stringValue(.sourcesPath).lowercased().withoutSlash()) {
-            templateDestination = .sources
-            projectSubPath = String(projectSubPath.suffix(projectSubPath.count - mainContext.stringValue(.sourcesPath).count))
-        } else {
-            throw CodeTemplateError.invalidProjectFilePath(message: projectFile)
+            try traverse(
+                templatePath: templateFolder.path,
+                generatePath: generatedFolder.path,
+                projectPath: projectFolder.path,
+                context: context,
+                templateInfo: templateInfo,
+                outputPath: outputPath,
+                validationMode: validationMode
+            )
+
+            // Generate also template dependencies
+            for dependency in templateInfo.dependencies {
+                var dependencyName = dependency
+
+                // Conditional dependency syntax: "template:condition1,condition2,..."; true if any of conditions is true
+                if dependency.contains(":") {
+                    let parts = dependency.split(separator: ":")
+                    dependencyName = String(parts.first!)
+                    let conditions = parts.last!.split(separator: ",")
+
+                    var overallValue = false
+                    for condition in conditions {
+                        if let conditionValue = context[String(condition)] as? Bool, conditionValue {
+                            overallValue = true
+                            break
+                        }
+                    }
+
+                    // Dependency has not fullfilled conditions
+                    if !overallValue {
+                        continue
+                    }
+                }
+
+                try generate(
+                    generationMode: .template(dependencyName),
+                    context: context,
+
+                    reviewMode: .none,
+                    deleteGenerate: false,
+                    outputPath: outputPath,
+                    validationMode: validationMode
+                )
+            }
+
+        case let .combo(comboType):
+            try comboType.perform(context: context)
         }
 
-        let templateSubPath = templatePath.appendingPathComponent(path: templateDestination.rawValue)
-        try? FileManager.default.createDirectory(atPath: templateSubPath, withIntermediateDirectories: true, attributes: nil)
+        shell("/usr/local/bin/swiftformat \"\(mainContext.stringValue(.scriptPath))\" > /dev/null 2>&1")
 
-//        if !projectSubPath.isEmpty {
-        let templateDestinationPath = templateSubPath.appendingPathComponent(path: projectSubPath)
-        try? FileManager.default.createDirectory(atPath: templateDestinationPath, withIntermediateDirectories: true, attributes: nil)
-
-        let templateDestinationFolder = try Folder(path: templateDestinationPath)
-        let copiedFile = try inputFile.copy(to: templateDestinationFolder)
-
-        let fileDependencies = try DependencyAnalyzer.shared.analyzeFileDependencies(of: copiedFile)
-
-        dependencies.typeDependencies = dependencies.typeDependencies.union(fileDependencies.typeDependencies)
-        dependencies.frameworkDependencies = dependencies.typeDependencies.union(fileDependencies.frameworkDependencies)
-
-        // TODO: temporary !!!
-        //  return
-
-        try prepareTemplate(for: copiedFile, name: name)
-
-        try copiedFile.rename(to: copiedFile.name.prepareName(name: name), keepExtension: false)
-
-//        let copiedFile = try file.copy(to: generatedFolder)
-//        try copiedFile.rename(to: outputFileName)
-//            continue
-//        }
+        try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
     }
 }
 
 private extension Preparator {
-    func createTemplateJSON(
-        template: Template,
-        category: String,
-        deriveFromTemplate parentTemplate: Template
-    ) throws {
-        let parentTemplateCategory = try Templates.shared.templateCategory(for: parentTemplate)
+    /// Definition of stencil environment with support of custom filters
+    func stencilEnvironment(templateFolder: Folder) -> Environment {
+        let ext = Extension()
 
-        let parentTemplatePath = mainContext.stringValue(.templatePath)
-            .appendingPathComponent(path: parentTemplateCategory)
-            .appendingPathComponent(path: parentTemplate)
+        ext.registerFilter("camelCased") { (value: Any?) in
+            if let value = value as? String {
+                return value.camelCased()
+            }
 
-        let templatePath = mainContext.stringValue(.templatePath)
-            .appendingPathComponent(path: category)
-            .appendingPathComponent(path: template)
+            return value
+        }
 
-        let parentTemplateFolder = try Folder(path: parentTemplatePath)
-        let templareFolder = try Folder(path: templatePath)
+        ext.registerFilter("pascalCased") { (value: Any?) in
+            if let value = value as? String {
+                return value.pascalCased()
+            }
 
-        let parentTemplateJSON = try parentTemplateFolder.file(named: "templare.json")
-        try parentTemplateJSON.copy(to: templareFolder)
+            return value
+        }
+
+        let environment = Environment(loader: FileSystemLoader(paths: [Path(templateFolder.path)]), extensions: [ext])
+        return environment
     }
 
-    func createEmptyTemplateJSON(
-        template: Template,
-        category: String
+    /// Recursive traverse thru template, generated and project folders
+    func traverse(
+        templatePath: String,
+        generatePath: String,
+        projectPath: String,
+        context: Context,
+        templateInfo: TemplateInfo,
+        outputPath: String = mainContext.stringValue(.generatePath),
+        validationMode: Bool = false
     ) throws {
-        let json = """
-        {
-          "context": {},
-          "switches": []
-        }
-        """
-
-        let templatePath = mainContext.stringValue(.templatePath)
-            .appendingPathComponent(path: category)
-            .appendingPathComponent(path: template)
+        var modifiedContext = context
 
         let templateFolder = try Folder(path: templatePath)
-        let jsonFile = try templateFolder.createFile(named: "template.json")
-        try jsonFile.write(json, encoding: .utf8)
-    }
+        let generatedFolder = try Folder(path: generatePath)
 
-    func prepareTemplate(for file: File, name: String) throws {
-        let contents = try file.readAsString()
-        var newContents = contents
-        var comment = ""
+        let environment = stencilEnvironment(templateFolder: templateFolder)
 
-        if file.extension?.lowercased() == "swift" {
-            for line in contents.lines() {
-                if line.starts(with: "//") {
-                    comment += line + "\n"
-                } else {
-                    let newComment =
-                        """
-                        //
-                        //  {{fileName}}
-                        //  {{projectName}}
-                        //
-                        //  Created by {{author}} on {{date}}.
-                        //  {{copyright}}
-                        //
+        // Process files in folder
+        for file in templateFolder.files {
+            if file.name.lowercased() == "template.json" || file.name.lowercased().starts(with: "screenshot") || file.name.lowercased().starts(with: "description") { continue }
 
-                        """
-                    newContents = newContents.replacingOccurrences(of: comment, with: newComment)
-                    break
+            let outputFileName = file.name.generateName(context: context)
+            modifiedContext["fileName"] = outputFileName
+
+            let templateFile = templatePath.appendingPathComponent(path: file.name)
+            let generatedFile = generatePath.appendingPathComponent(path: outputFileName)
+            var projectFile = projectPath.appendingPathComponent(path: outputFileName)
+
+            // TODO: preferOriginalLocation implementation
+            if templateInfo.preferOriginalLocation.contains(file.name) {
+                let projectFolder = try Folder(path: mainContext.stringValue(.projectPath))
+                if let foundProjectFile = projectFolder.findFirstFile(name: outputFileName) {
+                    projectFile = foundProjectFile.path
                 }
             }
-        } else {
-            newContents = contents
+
+            // Directly copy binary file
+            guard var fileString = try? file.readAsString() else {
+                let copiedFile = try file.copy(to: generatedFolder)
+                try copiedFile.rename(to: outputFileName)
+                continue
+            }
+
+            let outputFile = try generatedFolder.createFile(named: outputFileName)
+
+            var rendered: String
+            do {
+                // Stencil expressions {% for %} needs to be placed at the end of last line to prevent extra linespaces in generated code
+                let matches = try! fileString.regExpStringMatches(lineRegExp: #"\n^\w*\{% for .*%\}$"#)
+
+                for match in matches {
+                    fileString = fileString.replacingOccurrences(of: match, with: " " + match.suffix(match.count - 1))
+                }
+
+                rendered = try environment.renderTemplate(string: fileString, context: modifiedContext)
+            } catch {
+                throw CodeTemplateError.stencilTemplateError(message: "\(templateFolder.path): \(file.name): \(error.localizedDescription)")
+            }
+
+            try outputFile.write(rendered)
+
+            processedFiles.append((templateFile: templateFile, generatedFile: generatedFile, projectFile: projectFile))
         }
 
-        newContents = newContents.replacingOccurrences(of: name.camelCased(), with: "{{name}}")
-        newContents = newContents.replacingOccurrences(of: name.pascalCased(), with: "{{Name}}")
+        // Process subfolders
+        for folder in templateFolder.subfolders {
+            var baseGeneratePath: String
+            var baseProjectPath: String
 
-        // Generalize coordinator
-        newContents = newContents.stringByReplacingMatches(
-            pattern: "var coordinator: (.*)Coordinating!",
-            withTemplate: "var coordinator: {{coordinator}}Coordinating!"
-        )
+            switch folder.name {
+            case "_project":
+                try traverse(
+                    templatePath: folder.path,
+                    generatePath: outputPath,
+                    projectPath: mainContext.stringValue(.projectPath),
+                    context: context,
+                    templateInfo: templateInfo
+                )
 
-        try file.write(newContents)
-    }
+            case "_sources":
+                if validationMode {
+                    baseGeneratePath = outputPath
+                } else {
+                    baseGeneratePath = try generatedFolder.createSubfolder(at: mainContext.stringValue(.sourcesPath).lastPathComponent).path
+                }
 
-    func prepareTemplateFolder(template: Template, category: String) throws {
-        // Create template folder
-        let templatePath = mainContext.stringValue(.templatePath).appendingPathComponent(path: category).appendingPathComponent(path: template)
-        try? FileManager.default.createDirectory(atPath: templatePath, withIntermediateDirectories: true, attributes: nil)
-        let templateFolder = try Folder(path: templatePath)
-        try templateFolder.empty(includingHidden: true)
+                baseProjectPath = mainContext.stringValue(.sourcesPath)
+
+                try traverse(
+                    templatePath: folder.path,
+                    generatePath: baseGeneratePath,
+                    projectPath: baseProjectPath,
+                    context: context,
+                    templateInfo: templateInfo
+                )
+
+            case "_location":
+                let subPath = String(mainContext.stringValue(.locationPath).suffix(mainContext.stringValue(.locationPath).count - mainContext.stringValue(.projectPath).count))
+
+                if validationMode {
+                    baseGeneratePath = outputPath
+                } else {
+                    baseGeneratePath = try generatedFolder.createSubfolder(at: subPath).path
+                }
+
+                baseProjectPath = mainContext.stringValue(.locationPath)
+
+                try traverse(
+                    templatePath: folder.path,
+                    generatePath: baseGeneratePath,
+                    projectPath: baseProjectPath,
+                    context: context,
+                    templateInfo: templateInfo
+                )
+
+            default:
+                let outputFolder = folder.name.generateName(context: context)
+                let generatedSubFolder = try generatedFolder.createSubfolder(at: outputFolder)
+
+                try traverse(
+                    templatePath: folder.path,
+                    generatePath: generatedSubFolder.path,
+                    projectPath: projectPath.appendingPathComponent(path: outputFolder),
+                    context: context,
+                    templateInfo: templateInfo
+                )
+            }
+        }
     }
 }
