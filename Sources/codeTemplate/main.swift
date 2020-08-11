@@ -24,13 +24,15 @@ do {
 
     mainContext = ContextProvider.getContext()
     mainContext = ContextProvider.updateContext(mainContext)
-    mainContext = try Paths.setupPaths(context: mainContext)
+    mainContext = try Paths.setupScriptPaths(context: mainContext)
 
     switch mainContext.stringValue(.mode) {
     case "generate":
         guard let reviewMode = ReviewMode(rawValue: mainContext.stringValue(.reviewMode)) else {
             throw ScriptError.argumentError(message: "invalid review mode")
         }
+
+        mainContext = try Paths.setupProjectPaths(context: mainContext)
 
         try Generator.shared.generateCode(reviewMode: reviewMode, context: mainContext)
 
@@ -41,17 +43,19 @@ do {
         try Updater.shared.updateTemplates(updateMode: .new, scriptPath: mainContext.stringValue(.scriptPath))
 
     case "validate":
+        mainContext[.projectPath] = mainContext[.generatePath]
+        mainContext[.locationPath] = mainContext[.projectPath]?.appendingPathComponent(path: "Template")
+        mainContext[.sourcesPath] = mainContext[.locationPath]
+
         if let unwrappedTemplate = mainContext.optionalStringValue(.template) {
-            try Validator.shared.validate(
-                template: unwrappedTemplate,
-                scriptPath: mainContext.stringValue(.scriptPath)
-            )
+            try Validator.shared.validate(template: unwrappedTemplate)
         } else {
             // Validate all templates
-            try Validator.shared.validateTemplates(scriptPath: mainContext.stringValue(.scriptPath))
+            try Validator.shared.validateTemplates()
         }
 
     case "prepare":
+        mainContext = try Paths.setupProjectPaths(context: mainContext)
         try Preparator.shared.prepareTemplate()
 
     default:

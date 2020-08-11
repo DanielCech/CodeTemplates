@@ -9,8 +9,8 @@ import Foundation
 import ScriptToolkit
 
 class Paths {
-    /// Setup paths from context
-    static func setupPaths(context: Context = mainContext) throws -> Context {
+    /// Setup paths for project
+    static func setupProjectPaths(context: Context = mainContext) throws -> Context {
         var modifiedContext = context
 
         guard let unwrappedProjectPath = modifiedContext.optionalStringValue(.projectPath) else {
@@ -37,6 +37,13 @@ class Paths {
             // TODO: check - location path is not sometimes needed
             throw ScriptError.moreInfoNeeded(message: "locationPath is missing")
         }
+
+        return modifiedContext
+    }
+
+    /// Setup paths for script
+    static func setupScriptPaths(context: Context = mainContext) throws -> Context {
+        var modifiedContext = context
 
         if let unwrappedScriptPath = mainContext.optionalStringValue(.scriptPath) {
             modifiedContext[.templatePath] = unwrappedScriptPath.appendingPathComponent(path: "Templates")

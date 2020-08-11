@@ -153,6 +153,9 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
     /// The name of template as origin for template preparation
     case deriveFromTemplate
 
+    /// The name of API service (without the Service title)
+    case apiService
+
     var name: String {
         switch self {
         case .context:
@@ -197,6 +200,8 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Location of folder for validation - codeTemplate/Validate"
         case .preparePath:
             return "Location of folder for preparation - codeTemplate/Prepare"
+        case .apiService:
+            return "The name of API Servvice - we can have multiple names with multiple targets"
         }
     }
 
@@ -244,6 +249,8 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return ""
         case .deriveFromTemplate:
             return ""
+        case .apiService:
+            return ""
         }
     }
 
@@ -254,6 +261,8 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
         case .scriptPath:
             // TODO: implement using environment variables
             return "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate"
+        case .apiService:
+            return "api"
         default:
             return nil
         }

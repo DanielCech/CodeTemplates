@@ -14,7 +14,7 @@ class Preparator {
 
     var dependencies: Dependencies = (typeDependencies: Set([]), frameworkDependencies: Set([]))
 
-    func prepareTemplate(context _: Context = mainContext) throws {
+    func prepareTemplate() throws {
         let template = mainContext.stringValue(.template)
         let category = mainContext.stringValue(.category)
         let projectFiles = mainContext.stringArrayValue(.projectFiles)

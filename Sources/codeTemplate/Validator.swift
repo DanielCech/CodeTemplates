@@ -23,19 +23,15 @@ public class Validator {
     public static let shared = Validator()
 
     /// Validate all templates
-    public func validateTemplates(scriptPath: String) throws {
+    public func validateTemplates() throws {
         for template in try Templates.shared.templateTypes().keys {
-            try validate(template: template, scriptPath: scriptPath)
+            try validate(template: template)
         }
     }
 
     /// Validate particular template
-    public func validate(template: Template, scriptPath: String) throws {
+    public func validate(template: Template) throws {
         print("🔎 \(template)")
-
-        mainContext[.scriptPath] = scriptPath
-        mainContext[.templatePath] = mainContext.stringValue(.scriptPath).appendingPathComponent(path: "Templates")
-        mainContext[.validatePath] = mainContext.stringValue(.scriptPath).appendingPathComponent(path: "Validation")
 
         // Empty validation folder
         let validationFolder = try Folder(path: mainContext.stringValue(.validatePath))
@@ -148,14 +144,12 @@ private extension Validator {
     func defaultContext() -> Context {
         let context: Context = [
             "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",
-            "projectPath": "/Users/danielcech/Documents/[Development]/[Projects]/harbor-iOS",
-            "locationPath": "Scenes/HouseholdScene/EmergencyContacts/EditEmergencyContact",
 
             "name": "test",
             "Name": "Test",
 
             "author": "Daniel Cech",
-            "projectName": "Test",
+            "projectName": "Template",
             "copyright": "Copyright © 2020 STRV. All rights reserved.",
 
             "fakeNavbar": false,
