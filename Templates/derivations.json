@@ -4,7 +4,7 @@
 
 
     "ViewController": ["ViewController-RxSwift", "HalfModalContainerViewController", "HalfModalContainerViewController-RxSwift", "ScreenListViewController"],
-    "ViewController-RxSwift": ["ViewControllerRxSwiftWithTableView", "ViewController-RxSwift-CollectionView"],
+    "ViewController-RxSwift": ["ViewController-RxSwift-TableView", "ViewController-RxSwift-CollectionView"],
     "ViewController-RxSwift-TableView": ["ViewController-RxSwift-FormTableView"],
 
 
