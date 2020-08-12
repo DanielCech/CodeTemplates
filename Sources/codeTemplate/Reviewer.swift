@@ -36,7 +36,11 @@ class Reviewer {
     static let shared = Reviewer()
 
     /// Review generated files - in one of two modes - overall or individual (each file separately)
-    func review(mode: ReviewMode, processedFiles: [ProcessedFile]) throws {
+    func review(processedFiles: [ProcessedFile], context: Context = mainContext) throws {
+        guard let mode = ReviewMode(rawValue: context.stringValue(.reviewMode)) else {
+            throw CodeTemplateError.invalidReviewMode(message: context.stringValue(.reviewMode))
+        }
+        
         switch mode {
         case .none:
             break

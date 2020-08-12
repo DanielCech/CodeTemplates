@@ -58,35 +58,35 @@ class ContextProvider {
             context = try loadContext(fromFile: contextFile)
         } else {
             if !help.value { print("⚠️  Context is missing") }
-            context = [:]
+            context = Context()
         }
 
         // Overwrite context with command line parameters
         for parameter in BoolParameter.allCases {
             if let commandLineValue = boolParameters[parameter.rawValue]?.value {
-                context[parameter.rawValue] = commandLineValue
+                context.dictionary[parameter.rawValue] = commandLineValue
             }
 
-            if context[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
-                context[parameter.rawValue] = defaultValue
+            if context.dictionary[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
+                context.dictionary[parameter.rawValue] = defaultValue
             }
         }
 
         for parameter in StringParameter.allCases {
             if let commandLineValue = stringParameters[parameter.rawValue]?.value {
-                context[parameter.rawValue] = commandLineValue
+                context.dictionary[parameter.rawValue] = commandLineValue
             }
-            if context[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
-                context[parameter.rawValue] = defaultValue
+            if context.dictionary[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
+                context.dictionary[parameter.rawValue] = defaultValue
             }
         }
 
         for parameter in StringArrayParameter.allCases {
             if let commandLineValue = stringArrayParameters[parameter.rawValue]?.value, commandLineValue.count > 0 {
-                context[parameter.rawValue] = commandLineValue
+                context.dictionary[parameter.rawValue] = commandLineValue
             }
-            if context[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
-                context[parameter.rawValue] = defaultValue
+            if context.dictionary[parameter.rawValue] == nil, let defaultValue = parameter.defaultValue {
+                context.dictionary[parameter.rawValue] = defaultValue
             }
         }
     }
@@ -99,23 +99,22 @@ class ContextProvider {
     }
 
     /// Default operations with context - default content, case processing, ...
-    static func updateContext(_ context: Context) -> Context {
-        var modifiedContext = context
+    static func updateContext(_ context: Context) {
 
-        if modifiedContext["coordinator"] == nil {
-            modifiedContext["coordinator"] = modifiedContext["name"]
+        if context[.coordinator] == nil {
+            context[.coordinator] = context[.name]
         }
 
-        if modifiedContext["target"] == nil {
-            modifiedContext["target"] = modifiedContext["projectName"]
+        if context[.target] == nil {
+            context[.target] = context[.projectName]
+        }
+        
+        for key in context.dictionary.keys {
+            guard let stringValue = context.dictionary[key] as? String else { continue }
+            context.dictionary[key.pascalCased()] = stringValue.pascalCased()
         }
 
-        for key in context.keys {
-            guard let stringValue = context[key] as? String else { continue }
-            modifiedContext[key.pascalCased()] = stringValue.pascalCased()
-        }
-
-        modifiedContext["date"] = dateFormatter.string(from: Date())
+        context[.date] = dateFormatter.string(from: Date())
 
         // Table view cells
 
@@ -129,7 +128,7 @@ class ContextProvider {
             tableViewCells.append(contentsOf: unwrappedNewTableViewCells)
         }
 
-        modifiedContext["tableViewCells"] = tableViewCells
+        context[.tableViewCells] = tableViewCells
 
         // Collection view cells
 
@@ -143,11 +142,7 @@ class ContextProvider {
             collectionViewCells.append(contentsOf: unwrappedNewCollectionViewCells)
         }
 
-        modifiedContext["collectionViewCells"] = collectionViewCells
-
-        modifiedContext["Screen"] = modifiedContext["Name"]
-
-        return modifiedContext
+        context[.collectionViewCells] = collectionViewCells
     }
 }
 
@@ -158,10 +153,10 @@ private extension ContextProvider {
         let contextData = Data(contextString.utf8)
 
         // make sure this JSON is in the format we expect
-        guard let context = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
+        guard let contextDictionary = try JSONSerialization.jsonObject(with: contextData, options: []) as? [String: Any] else {
             throw ScriptError.generalError(message: "Deserialization error")
         }
 
-        return context
+        return Context(dictionary: contextDictionary)
     }
 }

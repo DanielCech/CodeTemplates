@@ -35,8 +35,8 @@ public extension String {
     /// File name modification based on substitutions from context
     func generateName(context: Context) -> String {
         var newName = replacingOccurrences(of: ".stencil", with: "")
-        for key in context.keys {
-            guard let stringValue = context[key] as? String else { continue }
+        for key in context.dictionary.keys {
+            guard let stringValue = context.dictionary[key] as? String else { continue }
             newName = newName.replacingOccurrences(of: "{{\(key)}}", with: stringValue)
         }
         return newName

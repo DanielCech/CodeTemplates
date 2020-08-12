@@ -14,6 +14,7 @@ enum CodeTemplateError: Error {
     case parameterNotSpecified(message: String)
     case invalidProjectFilePath(message: String)
     case unknownTemplateCombo(message: String)
+    case invalidReviewMode(message: String)
 }
 
 extension CodeTemplateError: PrintableError {
@@ -30,6 +31,8 @@ extension CodeTemplateError: PrintableError {
             errorDescription = "invalid project file path: \(message)"
         case let .unknownTemplateCombo(message):
             errorDescription = "unknown template combo: \(message)"
+        case let .invalidReviewMode(message):
+            errorDescription = "invalid review mode: \(message)"
         }
 
         return prefix + errorDescription

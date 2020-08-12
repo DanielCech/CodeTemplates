@@ -125,8 +125,9 @@ class DependencyAnalyzer {
                     let structResult = try line.regExpMatches(lineRegExp: RegExpPatterns.structDefinitionPattern(name: dependency)).first
                     let enumResult = try line.regExpMatches(lineRegExp: RegExpPatterns.enumDefinitionPattern(name: dependency)).first
                     let protocolResult = try line.regExpMatches(lineRegExp: RegExpPatterns.protocolDefinitionPattern(name: dependency)).first
+                    let typealiasResult = try line.regExpMatches(lineRegExp: RegExpPatterns.typealiasDefinitionPattern(name: dependency)).first
 
-                    if (classResult ?? structResult ?? enumResult ?? protocolResult) != nil {
+                    if (classResult ?? structResult ?? enumResult ?? protocolResult ?? typealiasResult) != nil {
                         resultsDict[dependency] = sourceFile.element.path
                     }
                 }

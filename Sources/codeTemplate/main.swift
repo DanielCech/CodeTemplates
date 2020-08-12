@@ -23,18 +23,13 @@ do {
     print("⌚️ Processing")
 
     mainContext = ContextProvider.getContext()
-    mainContext = ContextProvider.updateContext(mainContext)
-    mainContext = try Paths.setupScriptPaths(context: mainContext)
+    ContextProvider.updateContext(mainContext)
+    try Paths.setupScriptPaths(context: mainContext)
 
     switch mainContext.stringValue(.mode) {
     case "generate":
-        guard let reviewMode = ReviewMode(rawValue: mainContext.stringValue(.reviewMode)) else {
-            throw ScriptError.argumentError(message: "invalid review mode")
-        }
-
-        mainContext = try Paths.setupProjectPaths(context: mainContext)
-
-        try Generator.shared.generateCode(reviewMode: reviewMode, context: mainContext)
+        try Paths.setupProjectPaths(context: mainContext)
+        try Generator.shared.generateCode(context: mainContext)
 
     case "updateAll":
         try Updater.shared.updateTemplates(updateMode: .all, scriptPath: mainContext.stringValue(.scriptPath))
@@ -55,8 +50,8 @@ do {
         }
 
     case "prepare":
-        mainContext = try Paths.setupProjectPaths(context: mainContext)
-        try Preparator.shared.prepareTemplate()
+        try Paths.setupProjectPaths(context: mainContext)
+        //try Preparator.shared.prepareTemplate()
 
     default:
         throw ScriptError.argumentError(message: "invalid mode value")

@@ -38,7 +38,7 @@ public class Validator {
         try validationFolder.empty(includingHidden: true)
 
         // Load template settings
-        var context = defaultContext()
+        let context = defaultContext()
         let templateInfo = try Templates.shared.templateInfo(for: template)
 
         if templateInfo.compilable == false {
@@ -49,8 +49,8 @@ public class Validator {
         print("✂️ template \(template):")
 
         // Update default context with settings context
-        for key in templateInfo.context.keys {
-            context[key] = templateInfo.context[key]
+        for key in templateInfo.context.dictionary.keys {
+            context.dictionary[key] = templateInfo.context.dictionary[key]
         }
 
         // Series of switches values - all combinations
@@ -60,10 +60,10 @@ public class Validator {
             for (switchIndex, switchElement) in templateInfo.switches.enumerated() {
                 let unsignedSwitchBit: UInt32 = 1 << switchIndex
                 if (unsignedIndex & unsignedSwitchBit) > 0 {
-                    context[switchElement] = true
+                    context.dictionary[switchElement] = true
                     print("    \(switchElement): true")
                 } else {
-                    context[switchElement] = false
+                    context.dictionary[switchElement] = false
                     print("    \(switchElement): false")
                 }
             }
@@ -85,7 +85,6 @@ private extension Validator {
         try Generator.shared.generate(
             generationMode: .template("SingleViewApp"),
             context: context,
-            reviewMode: .none,
             deleteGenerate: true,
             outputPath: validationFolder.path
         )
@@ -95,7 +94,6 @@ private extension Validator {
         try Generator.shared.generate(
             generationMode: .template(template),
             context: context,
-            reviewMode: .none,
             deleteGenerate: false,
             outputPath: outputFolder.path,
             validationMode: true
@@ -142,25 +140,30 @@ private extension Validator {
 
     /// Default context used for template validation
     func defaultContext() -> Context {
-        let context: Context = [
-            "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",
+        let context = Context(
+            dictionary: [
+                "scriptPath": "/Users/danielcech/Documents/[Development]/[Projects]/codeTemplate",
 
-            "name": "test",
-            "Name": "Test",
+                "name": "test",
+                "Name": "Test",
 
-            "author": "Daniel Cech",
-            "projectName": "Template",
-            "copyright": "Copyright © 2020 STRV. All rights reserved.",
+                "author": "Daniel Cech",
+                "projectName": "Template",
+                "copyright": "Copyright © 2020 STRV. All rights reserved.",
 
-            "fakeNavbar": false,
-            "sectionHeaders": false,
+                "fakeNavbar": false,
+                "sectionHeaders": false,
 
-            "newTableViewCells": ["textField"],
-            "tableContentFromAPI": false,
+                "newTableViewCells": ["textField"],
+                "tableContentFromAPI": false,
 
-            "whiteCellSelection": true
-        ]
+                "whiteCellSelection": true
+            ]
+        )
+        
+        ContextProvider.updateContext(context)
+        try? Paths.setupScriptPaths(context: context)
 
-        return ContextProvider.updateContext(context)
+        return context
     }
 }

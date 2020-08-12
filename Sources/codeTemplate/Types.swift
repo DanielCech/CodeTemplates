@@ -7,9 +7,6 @@
 
 import Foundation
 
-/// Context is dictionary like structure that contains all info for code generation using template
-public typealias Context = [String: Any]
-
 /// Tuple of template file, generated file and project file that are related to the same file
 public typealias ProcessedFile = (templateFile: String, generatedFile: String, projectFile: String)
 

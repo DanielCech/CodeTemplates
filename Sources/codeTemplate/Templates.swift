@@ -134,7 +134,7 @@ class Templates {
             dependencies: (info["dependencies"] as? [String]) ?? [],
             completeness: (info["completeness"] as? Int) ?? 0,
             compilable: (info["compilable"] as? Bool) ?? true,
-            context: (info["context"] as? Context) ?? [:],
+            context: Context(dictionary: (info["context"] as? [String: Any]) ?? [:]),
             switches: (info["switches"] as? [String]) ?? [],
             preferOriginalLocation: (info["preferOriginalLocation"] as? [String]) ?? []
         )

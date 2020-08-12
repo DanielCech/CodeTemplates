@@ -8,8 +8,8 @@
 import Foundation
 
 extension Context {
-    mutating func boolValue(_ parameter: BoolParameter) -> Bool {
-        if let boolValue = self[parameter.rawValue] as? Bool {
+    func boolValue(_ parameter: BoolParameter) -> Bool {
+        if let boolValue = dictionary[parameter.rawValue] as? Bool {
             return boolValue
         }
 
@@ -35,21 +35,21 @@ extension Context {
         }
 
         let trueOrFalse = (newValue == "t") ? true : false
-        self[parameter.rawValue] = trueOrFalse
+        dictionary[parameter.rawValue] = trueOrFalse
 
         return trueOrFalse
     }
 
     func optionalBoolValue(_ parameter: BoolParameter) -> Bool? {
-        if let boolValue = self[parameter.rawValue] as? Bool {
+        if let boolValue = dictionary[parameter.rawValue] as? Bool {
             return boolValue
         }
 
         return nil
     }
 
-    mutating func stringValue(_ parameter: StringParameter) -> String {
-        if let stringValue = self[parameter.rawValue] as? String {
+    func stringValue(_ parameter: StringParameter) -> String {
+        if let stringValue = dictionary[parameter.rawValue] as? String {
             return stringValue
         }
 
@@ -74,20 +74,20 @@ extension Context {
             }
         }
 
-        self[parameter.rawValue] = newValue
+        dictionary[parameter.rawValue] = newValue
 
         return newValue
     }
 
     func optionalStringValue(_ parameter: StringParameter) -> String? {
-        if let stringValue = self[parameter.rawValue] as? String {
+        if let stringValue = dictionary[parameter.rawValue] as? String {
             return stringValue
         }
         return nil
     }
 
-    mutating func stringArrayValue(_ parameter: StringArrayParameter) -> [String] {
-        if let stringArrayValue = self[parameter.rawValue] as? [String] {
+    func stringArrayValue(_ parameter: StringArrayParameter) -> [String] {
+        if let stringArrayValue = dictionary[parameter.rawValue] as? [String] {
             return stringArrayValue
         }
 
@@ -117,13 +117,13 @@ extension Context {
         }
 
         let list = newValue.split(separator: ",").map { String($0) }
-        self[parameter.rawValue] = list
+        dictionary[parameter.rawValue] = list
 
         return list
     }
 
     func optionalStringArrayValue(_ parameter: StringArrayParameter) -> [String]? {
-        if let stringArrayValue = self[parameter.rawValue] as? [String] {
+        if let stringArrayValue = dictionary[parameter.rawValue] as? [String] {
             return stringArrayValue
         }
         return nil
@@ -135,7 +135,7 @@ extension Context {
         }
 
         set {
-            self[parameter.rawValue] = newValue
+            dictionary[parameter.rawValue] = newValue
         }
     }
 
@@ -145,7 +145,7 @@ extension Context {
         }
 
         set {
-            self[parameter.rawValue] = newValue
+            dictionary[parameter.rawValue] = newValue
         }
     }
 
@@ -155,7 +155,7 @@ extension Context {
         }
 
         set {
-            self[parameter.rawValue] = newValue
+            dictionary[parameter.rawValue] = newValue
         }
     }
 }

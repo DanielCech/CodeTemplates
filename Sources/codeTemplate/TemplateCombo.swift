@@ -37,9 +37,9 @@ public enum TemplateCombo: String {
 
     /// Modification of context for combo generation
     func updateComboContext(_ context: Context, name: String) -> Context {
-        var modifiedContext = context
-        modifiedContext["name"] = name.camelCased()
-        modifiedContext["Name"] = name.pascalCased()
+        let modifiedContext = Context(fromContext: context)
+        modifiedContext.dictionary["name"] = name.camelCased()
+        modifiedContext.dictionary["Name"] = name.pascalCased()
         return modifiedContext
     }
 }
@@ -50,8 +50,8 @@ private extension TemplateCombo {
     func sceneViewControllerCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController",
-            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController"
+            viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController",
+            storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController"
         )
 
         try generateViewCoordinator(context: context)
@@ -60,8 +60,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift",
-            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController"
+            viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController-RxSwift",
+            storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController"
         )
 
         try generateTableViewCells(context: context, tableViewCellTemplate: "TableViewCell-RxSwift")
@@ -72,8 +72,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithTableViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-TableView",
-            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-TableView"
+            viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController-RxSwift-TableView",
+            storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-TableView"
         )
 
         try generateSectionType(context: context)
@@ -88,8 +88,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithFormTableViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-FormTableView",
-            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-TableView"
+            viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController-RxSwift-FormTableView",
+                storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-TableView"
         )
 
         try generateSectionType(context: context)
@@ -104,8 +104,8 @@ private extension TemplateCombo {
     func sceneViewControllerRxSwiftWithCollectionViewCombo(context: Context) throws {
         try generateViewController(
             context: context,
-            viewControllerTemplate: (context["viewControllerTemplate"] as? String) ?? "ViewController-RxSwift-CollectionView",
-            storyboardTemplate: (context["storyboardTemplate"] as? String) ?? "Storyboard-ViewController-CollectionView"
+            viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController-RxSwift-CollectionView",
+                storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-CollectionView"
         )
 
         try generateSectionType(context: context)
@@ -134,27 +134,25 @@ private extension TemplateCombo {
     }
 
     func generateHeadersAndFooters(context: Context) throws {
-        guard let name = context["name"] as? String else {
-            throw CodeTemplateError.parameterNotSpecified(message: "name")
-        }
+        let name = context.stringValue(.name)
 
-        if context["sectionHeader"] != nil {
+        if context[.tableSectionHeaders] != nil {
             try Generator.shared.generate(generationMode: .template("TableViewSectionHeader"), context: context, deleteGenerate: false)
         }
 
-        if let header = context["tableViewHeader"] as? Bool, header {
+        if context[.tableViewHeader] == true {
             let modifiedContext = updateComboContext(context, name: name+"Header")
             try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerate: false)
         }
 
-        if let footer = context["tableViewFooter"] as? Bool, footer {
+        if context[.tableViewFooter] == true {
             let modifiedContext = updateComboContext(context, name: name+"Footer")
             try Generator.shared.generate(generationMode: .template("View"), context: modifiedContext, deleteGenerate: false)
         }
     }
 
     func generateTableViewCells(context: Context, tableViewCellTemplate: Template) throws {
-        if let unwrappedNewCells = context["newTableViewCells"] as? [String] {
+        if let unwrappedNewCells = context[.newTableViewCells] {
             for cell in unwrappedNewCells {
                 let modifiedContext = updateComboContext(context, name: cell)
                 try Generator.shared.generate(generationMode: .template(tableViewCellTemplate), context: modifiedContext, deleteGenerate: false)
@@ -163,7 +161,7 @@ private extension TemplateCombo {
     }
 
     func generateCollectionViewCells(context: Context, collectionViewCellTemplate: Template) throws {
-        if let unwrappedNewCells = context["newCollectionViewCells"] as? [String] {
+        if let unwrappedNewCells = context[.newCollectionViewCells] {
             for cell in unwrappedNewCells {
                 let modifiedContext = updateComboContext(context, name: cell)
                 try Generator.shared.generate(generationMode: .template(collectionViewCellTemplate), context: modifiedContext, deleteGenerate: false)
@@ -172,16 +170,10 @@ private extension TemplateCombo {
     }
 
     func generateViewCoordinator(context: Context) throws {
-        guard let coordinator = context["Coordinator"] as? String else {
-            return
-        }
-
-        guard let name = context["name"] as? String else {
-            throw CodeTemplateError.parameterNotSpecified(message: "name")
-        }
-
-        var modifiedContext = updateComboContext(context, name: coordinator)
-        modifiedContext["controllers"] = [name]
+        guard let coordinator = context[.coordinator] else { return }
+        
+        let modifiedContext = updateComboContext(context, name: coordinator)            // TODO: check the name and suffix Coordinator, Coordinating
+        modifiedContext[.controllers] = [context.stringValue(.name)]
         try Generator.shared.generate(generationMode: .template("Coordinator-Navigation"), context: modifiedContext, deleteGenerate: false)
     }
 }

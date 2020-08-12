@@ -155,6 +155,21 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// The name of API service (without the Service title)
     case apiService
+    
+    /// The name of currently professed file - automatically generated
+    case fileName
+    
+    /// The current project target - automatically generated
+    case target
+    
+    /// The current date - automatically generated
+    case date
+    
+    /// Specification of view controller template for template combo
+    case viewControllerTemplate
+    
+    /// Specification of storyboard template for template combo
+    case storyboardTemplate
 
     var name: String {
         switch self {
@@ -202,6 +217,16 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Location of folder for preparation - codeTemplate/Prepare"
         case .apiService:
             return "The name of API Servvice - we can have multiple names with multiple targets"
+        case .fileName:
+            return "The name of currently professed file - automatically generated"
+        case .target:
+            return "The current project target - automatically generated"
+        case .date:
+            return "Current date - automatically generated"
+        case .viewControllerTemplate:
+            return "Specification of view controller template for template combo"
+        case .storyboardTemplate:
+            return "Specification of storyboard template for template combo"
         }
     }
 
@@ -233,23 +258,7 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
             return "Used in combination with cell name"
         case .coordinator:
             return "The name doesn't contain 'Coordinator' or 'Coordinating'"
-        case .locationPath:
-            return ""
-        case .projectPath:
-            return ""
-        case .sourcesPath:
-            return ""
-        case .templatePath:
-            return ""
-        case .generatePath:
-            return ""
-        case .validatePath:
-            return ""
-        case .preparePath:
-            return ""
-        case .deriveFromTemplate:
-            return ""
-        case .apiService:
+        default:
             return ""
         }
     }
@@ -290,6 +299,9 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
 
     /// The set of files for template preparation
     case projectFiles
+    
+    /// The set of view controllers that are handled by view coordinator
+    case controllers
 
     var name: String {
         switch self {
@@ -307,6 +319,8 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
             return "Old and new collection view cells together"
         case .projectFiles:
             return "The set of files for template preparation"
+        case .controllers:
+            return "The set of view controllers that are handled by view coordinator"
         }
     }
 

@@ -17,7 +17,7 @@ class Generator {
     var processedFiles = [ProcessedFile]()
 
     /// Generate code using template with context in json file
-    func generateCode(reviewMode: ReviewMode, context: Context = mainContext) throws {
+    func generateCode(context: Context = mainContext) throws {
         let generationMode: GenerationMode
         if let unwrappedTemplate = context.optionalStringValue(.template) {
             generationMode = .template(unwrappedTemplate)
@@ -29,12 +29,10 @@ class Generator {
         } else {
             throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
         }
-
-        let modifiedContext = ContextProvider.updateContext(context)
+        
         try Generator.shared.generate(
             generationMode: generationMode,
-            context: modifiedContext,
-            reviewMode: reviewMode,
+            context: context,
             deleteGenerate: true
         )
     }
@@ -43,7 +41,6 @@ class Generator {
     func generate(
         generationMode: GenerationMode,
         context: Context,
-        reviewMode: ReviewMode = .none,
         deleteGenerate: Bool = true,
         outputPath: String = mainContext.stringValue(.generatePath),
         validationMode: Bool = false
@@ -85,7 +82,7 @@ class Generator {
 
                     var overallValue = false
                     for condition in conditions {
-                        if let conditionValue = context[String(condition)] as? Bool, conditionValue {
+                        if let conditionValue = context.dictionary[String(condition)] as? Bool, conditionValue {
                             overallValue = true
                             break
                         }
@@ -100,8 +97,6 @@ class Generator {
                 try generate(
                     generationMode: .template(dependencyName),
                     context: context,
-
-                    reviewMode: .none,
                     deleteGenerate: false,
                     outputPath: outputPath,
                     validationMode: validationMode
@@ -114,7 +109,7 @@ class Generator {
 
         shell("/usr/local/bin/swiftformat \"\(mainContext.stringValue(.scriptPath))\" > /dev/null 2>&1")
 
-        try Reviewer.shared.review(mode: reviewMode, processedFiles: processedFiles)
+        try Reviewer.shared.review(processedFiles: processedFiles, context: context)
     }
 }
 
@@ -153,7 +148,7 @@ private extension Generator {
         outputPath: String = mainContext.stringValue(.generatePath),
         validationMode: Bool = false
     ) throws {
-        var modifiedContext = context
+        let modifiedContext = Context(fromContext: context)
 
         let templateFolder = try Folder(path: templatePath)
         let generatedFolder = try Folder(path: generatePath)
@@ -165,7 +160,7 @@ private extension Generator {
             if file.name.lowercased() == "template.json" || file.name.lowercased().starts(with: "screenshot") || file.name.lowercased().starts(with: "description") { continue }
 
             let outputFileName = file.name.generateName(context: context)
-            modifiedContext["fileName"] = outputFileName
+            modifiedContext[.fileName] = outputFileName
 
             let templateFile = templatePath.appendingPathComponent(path: file.name)
             let generatedFile = generatePath.appendingPathComponent(path: outputFileName)
@@ -197,7 +192,7 @@ private extension Generator {
                     fileString = fileString.replacingOccurrences(of: match, with: " " + match.suffix(match.count - 1))
                 }
 
-                rendered = try environment.renderTemplate(string: fileString, context: modifiedContext)
+                rendered = try environment.renderTemplate(string: fileString, context: modifiedContext.dictionary)
             } catch {
                 throw CodeTemplateError.stencilTemplateError(message: "\(templateFolder.path): \(file.name): \(error.localizedDescription)")
             }
