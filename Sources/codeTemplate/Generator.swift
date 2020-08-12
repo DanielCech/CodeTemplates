@@ -59,7 +59,6 @@ class Generator {
 }
 
 private extension Generator {
-    
     /// Generation of particular template
     func generateTemplate(
         templateType: Template,
@@ -91,11 +90,11 @@ private extension Generator {
         // Generate also template dependencies
         try generateTemplateDependencies(templateInfo: templateInfo, validationMode: validationMode, context: context)
     }
-    
+
     /// Generation of template dependencies
     func generateTemplateDependencies(
         templateInfo: TemplateInfo,
-        validationMode: Bool,
+        validationMode _: Bool,
         context: Context
     ) throws {
         // Generate also template dependencies
@@ -122,15 +121,10 @@ private extension Generator {
                 }
             }
 
-            try generate(
-                generationMode: .template(dependencyName),
-                context: context,
-                deleteGenerate: false,
-                validationMode: validationMode
-            )
+            try generateTemplate(templateType: dependencyName, context: context)
         }
     }
-    
+
     /// Definition of stencil environment with support of custom filters
     func stencilEnvironment(templateFolder: Folder) -> Environment {
         let ext = Extension()
@@ -194,7 +188,7 @@ private extension Generator {
             )
         }
     }
-    
+
     func traverseProcessFile(
         context: Context,
         file: File,
@@ -211,13 +205,13 @@ private extension Generator {
         }
 
         let outputFileName = file.name.generateName(context: context)
-        
+
         let modifiedContext = Context(fromContext: context)
         modifiedContext[.fileName] = outputFileName
 
         let generatedFolder = try Folder(path: generatePath)
         let templateFolder = try Folder(path: templatePath)
-        
+
         let templateFile = templatePath.appendingPathComponent(path: file.name)
         let generatedFile = generatePath.appendingPathComponent(path: outputFileName)
         var projectFile = projectPath.appendingPathComponent(path: outputFileName)
@@ -257,7 +251,7 @@ private extension Generator {
 
         processedFiles.append((templateFile: templateFile, generatedFile: generatedFile, projectFile: projectFile))
     }
-    
+
     func traverseProcessSubfolder(
         context: Context,
         folder: Folder,
