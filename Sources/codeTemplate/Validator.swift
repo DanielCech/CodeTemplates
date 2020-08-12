@@ -82,20 +82,21 @@ private extension Validator {
     func checkTemplateCombination(template: Template, context: Context) throws {
         let validationFolder = try Folder(path: context.stringValue(.validatePath))
 
+        let modifiedContext = Context(fromContext: context)
+        modifiedContext[.generatePath] = modifiedContext[.validatePath]
+
         try Generator.shared.generate(
             generationMode: .template("SingleViewApp"),
-            context: context,
-            deleteGenerate: true,
-            outputPath: validationFolder.path
+            context: modifiedContext,
+            deleteGenerate: true
         )
 
         let outputFolder = try validationFolder.subfolder(named: "Template")
 
         try Generator.shared.generate(
             generationMode: .template(template),
-            context: context,
+            context: modifiedContext,
             deleteGenerate: false,
-            outputPath: outputFolder.path,
             validationMode: true
         )
 
