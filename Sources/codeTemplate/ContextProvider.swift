@@ -100,7 +100,6 @@ class ContextProvider {
 
     /// Default operations with context - default content, case processing, ...
     static func updateContext(_ context: Context) {
-
         if context[.coordinator] == nil {
             context[.coordinator] = context[.name]
         }
@@ -108,7 +107,7 @@ class ContextProvider {
         if context[.target] == nil {
             context[.target] = context[.projectName]
         }
-        
+
         for key in context.dictionary.keys {
             guard let stringValue = context.dictionary[key] as? String else { continue }
             context.dictionary[key.pascalCased()] = stringValue.pascalCased()

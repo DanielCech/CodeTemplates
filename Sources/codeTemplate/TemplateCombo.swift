@@ -89,7 +89,7 @@ private extension TemplateCombo {
         try generateViewController(
             context: context,
             viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController-RxSwift-FormTableView",
-                storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-TableView"
+            storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-TableView"
         )
 
         try generateSectionType(context: context)
@@ -105,7 +105,7 @@ private extension TemplateCombo {
         try generateViewController(
             context: context,
             viewControllerTemplate: context[.viewControllerTemplate] ?? "ViewController-RxSwift-CollectionView",
-                storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-CollectionView"
+            storyboardTemplate: context[.storyboardTemplate] ?? "Storyboard-ViewController-CollectionView"
         )
 
         try generateSectionType(context: context)
@@ -171,8 +171,8 @@ private extension TemplateCombo {
 
     func generateViewCoordinator(context: Context) throws {
         guard let coordinator = context[.coordinator] else { return }
-        
-        let modifiedContext = updateComboContext(context, name: coordinator)            // TODO: check the name and suffix Coordinator, Coordinating
+
+        let modifiedContext = updateComboContext(context, name: coordinator) // TODO: check the name and suffix Coordinator, Coordinating
         modifiedContext[.controllers] = [context.stringValue(.name)]
         try Generator.shared.generate(generationMode: .template("Coordinator-Navigation"), context: modifiedContext, deleteGenerate: false)
     }

@@ -39,7 +39,7 @@ class Paths {
 
     /// Setup paths for script
     static func setupScriptPaths(context: Context = mainContext) throws {
-        if let unwrappedScriptPath = mainContext.optionalStringValue(.scriptPath) {
+        if let unwrappedScriptPath = context.optionalStringValue(.scriptPath) {
             context[.templatePath] = unwrappedScriptPath.appendingPathComponent(path: "Templates")
             context[.generatePath] = unwrappedScriptPath.appendingPathComponent(path: "Generate")
             context[.validatePath] = unwrappedScriptPath.appendingPathComponent(path: "Validate")

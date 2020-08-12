@@ -155,19 +155,19 @@ enum StringParameter: String, CaseIterable, ParameterDescriptive {
 
     /// The name of API service (without the Service title)
     case apiService
-    
+
     /// The name of currently professed file - automatically generated
     case fileName
-    
+
     /// The current project target - automatically generated
     case target
-    
+
     /// The current date - automatically generated
     case date
-    
+
     /// Specification of view controller template for template combo
     case viewControllerTemplate
-    
+
     /// Specification of storyboard template for template combo
     case storyboardTemplate
 
@@ -299,7 +299,7 @@ enum StringArrayParameter: String, CaseIterable, ParameterDescriptive {
 
     /// The set of files for template preparation
     case projectFiles
-    
+
     /// The set of view controllers that are handled by view coordinator
     case controllers
 

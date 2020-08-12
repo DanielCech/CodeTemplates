@@ -151,7 +151,7 @@ enum RegExpPatterns {
         \s*[^\{]*\{
         """#
     }
-    
+
     static func typealiasDefinitionPattern(name: String) -> String {
         #"""
         (?xi)

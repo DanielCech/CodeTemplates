@@ -29,7 +29,7 @@ class Generator {
         } else {
             throw ScriptError.moreInfoNeeded(message: "template or templateCombo are not specified or invalid")
         }
-        
+
         try Generator.shared.generate(
             generationMode: generationMode,
             context: context,
@@ -50,7 +50,7 @@ class Generator {
 
             let templateCategory = try Templates.shared.templateCategory(for: templateType)
             let templateInfo = try Templates.shared.templateInfo(for: templateType)
-            let templateFolder = try Folder(path: mainContext.stringValue(.templatePath)).subfolder(at: templateCategory).subfolder(at: templateType)
+            let templateFolder = try Folder(path: context.stringValue(.templatePath)).subfolder(at: templateCategory).subfolder(at: templateType)
 
             // Delete contents of Generate folder
             let generatedFolder = try Folder(path: outputPath)
@@ -58,7 +58,7 @@ class Generator {
                 try generatedFolder.empty(includingHidden: true)
             }
 
-            let projectFolder = try Folder(path: mainContext.stringValue(.projectPath))
+            let projectFolder = try Folder(path: context.stringValue(.projectPath))
 
             try traverse(
                 templatePath: templateFolder.path,
@@ -107,7 +107,7 @@ class Generator {
             try comboType.perform(context: context)
         }
 
-        shell("/usr/local/bin/swiftformat \"\(mainContext.stringValue(.scriptPath))\" > /dev/null 2>&1")
+        shell("/usr/local/bin/swiftformat \"\(context.stringValue(.scriptPath))\" > /dev/null 2>&1")
 
         try Reviewer.shared.review(processedFiles: processedFiles, context: context)
     }
@@ -168,7 +168,7 @@ private extension Generator {
 
             // TODO: preferOriginalLocation implementation
             if templateInfo.preferOriginalLocation.contains(file.name) {
-                let projectFolder = try Folder(path: mainContext.stringValue(.projectPath))
+                let projectFolder = try Folder(path: context.stringValue(.projectPath))
                 if let foundProjectFile = projectFolder.findFirstFile(name: outputFileName) {
                     projectFile = foundProjectFile.path
                 }
@@ -212,7 +212,7 @@ private extension Generator {
                 try traverse(
                     templatePath: folder.path,
                     generatePath: outputPath,
-                    projectPath: mainContext.stringValue(.projectPath),
+                    projectPath: context.stringValue(.projectPath),
                     context: context,
                     templateInfo: templateInfo
                 )
@@ -221,10 +221,10 @@ private extension Generator {
                 if validationMode {
                     baseGeneratePath = outputPath
                 } else {
-                    baseGeneratePath = try generatedFolder.createSubfolder(at: mainContext.stringValue(.sourcesPath).lastPathComponent).path
+                    baseGeneratePath = try generatedFolder.createSubfolder(at: context.stringValue(.sourcesPath).lastPathComponent).path
                 }
 
-                baseProjectPath = mainContext.stringValue(.sourcesPath)
+                baseProjectPath = context.stringValue(.sourcesPath)
 
                 try traverse(
                     templatePath: folder.path,
@@ -235,7 +235,7 @@ private extension Generator {
                 )
 
             case "_location":
-                let subPath = String(mainContext.stringValue(.locationPath).suffix(mainContext.stringValue(.locationPath).count - mainContext.stringValue(.projectPath).count))
+                let subPath = String(context.stringValue(.locationPath).suffix(context.stringValue(.locationPath).count - context.stringValue(.projectPath).count))
 
                 if validationMode {
                     baseGeneratePath = outputPath
@@ -243,7 +243,7 @@ private extension Generator {
                     baseGeneratePath = try generatedFolder.createSubfolder(at: subPath).path
                 }
 
-                baseProjectPath = mainContext.stringValue(.locationPath)
+                baseProjectPath = context.stringValue(.locationPath)
 
                 try traverse(
                     templatePath: folder.path,

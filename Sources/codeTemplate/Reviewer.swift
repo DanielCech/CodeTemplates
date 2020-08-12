@@ -40,13 +40,13 @@ class Reviewer {
         guard let mode = ReviewMode(rawValue: context.stringValue(.reviewMode)) else {
             throw CodeTemplateError.invalidReviewMode(message: context.stringValue(.reviewMode))
         }
-        
+
         switch mode {
         case .none:
             break
 
         case .overall:
-            compareTwoItems(first: mainContext.stringValue(.generatePath), second: mainContext.stringValue(.locationPath))
+            compareTwoItems(first: context.stringValue(.generatePath), second: context.stringValue(.locationPath))
 
         case .individual:
             for processedFile in processedFiles {
