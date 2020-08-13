@@ -1,0 +1,39 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+
+typealias {{Name}}SectionModel = SectionModel<String?, {{Name}}Section>
+
+final class {{Name}}ViewModel: ViewModelType {
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {}
+
+    struct Output {
+        let {{name}}Sections: Driver<[{{Name}}SectionModel]>
+    }
+
+    func transform(input _: {{Name}}ViewModel.Input) -> {{Name}}ViewModel.Output {
+        let sectionItems = HouseholdMemberType.allCases.map { {{Name}}Section.member($0) }
+        let models: [{{Name}}SectionModel] = [{{Name}}SectionModel(model: R.string.localizable.addMemberTitle(), items: sectionItems)]
+        let {{name}}Output = Driver<[{{Name}}SectionModel]>.just(models)
+
+        return Output({{name}}Sections: {{name}}Output)
+    }
+}

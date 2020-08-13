@@ -1,0 +1,123 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxDataSources
+import RxSwift
+import UIKit
+
+final class {{Name}}ViewController: UIViewController, ViewModelContaining {
+    // MARK: - IBOutlets
+
+    @IBOutlet private var closeButton: UIButton!
+    @IBOutlet private var {{name}}TableView: UITableView!
+
+    // MARK: - Public Properties
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    weak var coordinator: {{coordinator}}Coordinating!
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
+    var viewModel: {{Name}}ViewModel!
+    var disposeBag: DisposeBag = DisposeBag()
+
+    // MARK: Private Properties
+    private lazy var dataSource = RxTableViewSectionedReloadDataSource<{{Name}}SectionModel>(configureCell: { _, tableView, indexPath, item -> UITableViewCell in
+        switch item {
+        case let .member(member):
+            let cell: AddSheetTableViewCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.setup(with: member)
+            return cell
+        }
+    })
+
+    // MARK: - Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    @objc func handleTap(_: UITapGestureRecognizer) {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+// MARK: - Binding
+
+extension {{Name}}ViewController {
+    func bindToView() {
+        {{name}}TableView
+            .rx.setDelegate(self)
+            .disposed(by: disposeBag)
+    }
+
+    func bindToViewModel() {
+        let output = viewModel.transform(input: .init())
+        output.{{name}}Sections.drive({{name}}TableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+    }
+
+    func bindToCoordinator() {
+        {{name}}TableView.rx.modelSelected({{Name}}Section.self)
+            .bind(onNext: { [weak self] section in
+                switch section {
+                case let .member(memberType):
+                    self?.coordinator.showEditHouseholdMember(
+                        controllerMode: .addMember,
+                        memberType: memberType
+                    )
+                }
+            })
+            .disposed(by: disposeBag)
+
+        closeButton.rx.tap.asObservable().subscribeNext { [weak self] _ in
+            self?.coordinator.dismissPresentedWithAppear()
+        }.disposed(by: disposeBag)
+    }
+}
+
+// MARK: - Private Methods
+
+private extension {{Name}}ViewController {
+    func setupView() {
+        setupIBOutlets()
+        bindToView()
+        bindToViewModel()
+        bindToCoordinator()
+    }
+
+    func setupIBOutlets() {
+        closeButton.apply(style: .closeButton)
+        {{name}}TableView.separatorStyle = .none
+        {{name}}TableView.rowHeight = UITableView.automaticDimension
+        {{name}}TableView.estimatedSectionHeaderHeight = 50
+        {{name}}TableView.showsVerticalScrollIndicator = false
+        {{name}}TableView.sectionHeaderHeight = UITableView.automaticDimension
+
+        {{name}}TableView.register(AddSheetTableViewCell.self)
+        {{name}}TableView.registerHeaderFooterView(SimpleSectionHeader.self)
+    }
+}
+
+// MARK: - UITableViewDelegate
+
+extension {{Name}}ViewController: UITableViewDelegate {
+    func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let sectionTitle = dataSource.sectionModels[section].model else {
+            return nil
+        }
+
+        let headerView: SimpleSectionHeader = {{name}}TableView.dequeueReusableHeaderFooterView()
+        headerView.setup(title: sectionTitle, topSpace: 18, bottomSpace: 0)
+        return headerView
+    }
+}

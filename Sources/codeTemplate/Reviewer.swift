@@ -84,7 +84,7 @@ private extension Reviewer {
             return false
         }
     }
-    
+
     func checkDirectoryExistence(filePath: String, title: String) throws {
         let projectDestinationPath = filePath.deletingLastPathComponent
         if !FileManager.default.directoryExists(atPath: projectDestinationPath) {

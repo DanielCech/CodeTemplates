@@ -1,0 +1,13 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import UIKit
+
+enum {{Name}}Section {
+    case member(HouseholdMemberType)
+}

@@ -119,40 +119,39 @@ class DependencyAnalyzer {
             // Only swift files
             guard sourceFile.element.extension?.lowercased() == "swift" else { continue }
             guard let contents = try? sourceFile.element.readAsString() else { continue }
-            
+
             print(sourceFile.element.path[sourcesFolder.path.count...])
 
             for line in contents.lines() {
                 for dependency in dependencies {
-                    
                     let classResult = try patternMatch(
                         line: line,
                         dependency: dependency,
                         easyCheck: "class ",
                         patternGenerator: RegExpPatterns.classDefinitionPattern
                     )
-                    
+
                     let structResult = try patternMatch(
                         line: line,
                         dependency: dependency,
                         easyCheck: "struct ",
                         patternGenerator: RegExpPatterns.structDefinitionPattern
                     )
-                    
+
                     let enumResult = try patternMatch(
                         line: line,
                         dependency: dependency,
                         easyCheck: "enum ",
                         patternGenerator: RegExpPatterns.enumDefinitionPattern
                     )
-                    
+
                     let protocolResult = try patternMatch(
                         line: line,
                         dependency: dependency,
                         easyCheck: "protocol ",
                         patternGenerator: RegExpPatterns.protocolDefinitionPattern
                     )
-                    
+
                     let typealiasResult = try patternMatch(
                         line: line,
                         dependency: dependency,
@@ -171,7 +170,7 @@ class DependencyAnalyzer {
     }
 
     func createPodfile(forFrameworkDependencies _: Set<String>) throws {}
-    
+
     func patternMatch(line: String, dependency: String, easyCheck: String, patternGenerator: (String) -> String) throws -> NSTextCheckingResult? {
         if !line.contains(easyCheck) { return nil }
         return try line.regExpMatches(lineRegExp: patternGenerator(dependency)).first

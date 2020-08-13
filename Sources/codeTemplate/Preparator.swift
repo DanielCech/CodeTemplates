@@ -26,8 +26,8 @@ class Preparator {
             context: context,
             deletePrepare: deletePrepare
         )
-        
-        //shell("/usr/local/bin/swiftformat \"\(context.stringValue(.scriptPath))\" > /dev/null 2>&1")
+
+        // shell("/usr/local/bin/swiftformat \"\(context.stringValue(.scriptPath))\" > /dev/null 2>&1")
 
         try Reviewer.shared.review(processedFiles: processedFiles, context: context)
     }
@@ -45,7 +45,7 @@ private extension Preparator {
         let name = mainContext.stringValue(.name)
 
         try prepareTemplateFolder(template: template, category: category)
-        
+
         var deriveFromTemplate = mainContext.optionalStringValue(.deriveFromTemplate)
         if deriveFromTemplate == nil {
             print("🟢 Derive from which template (empty for none): ", terminator: "")
@@ -57,12 +57,12 @@ private extension Preparator {
                 try createEmptyTemplateJSON(template: template, category: category)
             }
         }
-        
+
         // Delete contents of Prepare folder
         let prepareFolder = try Folder(path: context.stringValue(.preparePath))
         if deletePrepare {
             try prepareFolder.empty(includingHidden: true)
-            
+
             // Reset dependencies
             dependencies = (typeDependencies: Set([]), frameworkDependencies: Set([]))
         }
@@ -83,15 +83,14 @@ private extension Preparator {
         print("🔎 Searching for type dependencies definitions:")
         let result = try DependencyAnalyzer.shared.findDefinitions(forTypeDependencies: dependencies.typeDependencies)
         print("🔎 Searching done\n")
-        
+
         print("⚠️ Unprocessed dependencies:")
         let list = result.values
         print(list)
-        
 
         try DependencyAnalyzer.shared.createPodfile(forFrameworkDependencies: dependencies.frameworkDependencies)
     }
-    
+
     func prepareTemplate(
         context: Context,
         projectFilePath: String,
@@ -134,7 +133,7 @@ private extension Preparator {
 
         let prepareDestinationFolder = try Folder(path: prepareDestinationPath)
         let prepareCopiedFile = try projectFile.copy(to: prepareDestinationFolder)
-    
+
         let fileDependencies = try DependencyAnalyzer.shared.analyzeFileDependencies(of: prepareCopiedFile)
 
         dependencies.typeDependencies = dependencies.typeDependencies.union(fileDependencies.typeDependencies)
@@ -147,12 +146,11 @@ private extension Preparator {
 
         let preparedFileNewName = prepareCopiedFile.name.prepareName(name: name)
         try prepareCopiedFile.rename(to: preparedFileNewName, keepExtension: false)
-        
+
         let templateFile = templateDestinationPath.appendingPathComponent(path: preparedFileNewName)
         let preparedFile = prepareDestinationPath.appendingPathComponent(path: preparedFileNewName)
-        
+
         processedFiles.append((templateFile: templateFile, middleFile: preparedFile, projectFile: projectFilePath))
-        
 
 //        let copiedFile = try file.copy(to: generatedFolder)
 //        try copiedFile.rename(to: outputFileName)
@@ -160,7 +158,6 @@ private extension Preparator {
 //        }
     }
 
-    
     /// Definition of stencil environment with support of custom filters
     func stencilEnvironment(templateFolder: Folder) -> Environment {
         let ext = Extension()
@@ -366,6 +363,9 @@ private extension Preparator {
         category: String,
         deriveFromTemplate parentTemplate: Template
     ) throws {
+        // Temporary json to prevent error
+        try createEmptyTemplateJSON(template: template, category: category)
+
         let parentTemplateCategory = try Templates.shared.templateCategory(for: parentTemplate)
 
         let parentTemplatePath = mainContext.stringValue(.templatePath)
@@ -379,7 +379,9 @@ private extension Preparator {
         let parentTemplateFolder = try Folder(path: parentTemplatePath)
         let templareFolder = try Folder(path: templatePath)
 
-        let parentTemplateJSON = try parentTemplateFolder.file(named: "templare.json")
+        try deleteTemplateJSON(template: template, category: category)
+
+        let parentTemplateJSON = try parentTemplateFolder.file(named: "template.json")
         try parentTemplateJSON.copy(to: templareFolder)
     }
 
@@ -399,8 +401,23 @@ private extension Preparator {
             .appendingPathComponent(path: template)
 
         let templateFolder = try Folder(path: templatePath)
+
+        if templateFolder.containsFile(named: "template.json") {
+            return
+        }
+
         let jsonFile = try templateFolder.createFile(named: "template.json")
         try jsonFile.write(json, encoding: .utf8)
+    }
+
+    func deleteTemplateJSON(template: Template, category: String) throws {
+        let templatePath = mainContext.stringValue(.templatePath)
+            .appendingPathComponent(path: category)
+            .appendingPathComponent(path: template)
+
+        let templateFolder = try Folder(path: templatePath)
+        let templateFile = try templateFolder.file(named: "template.json")
+        try templateFile.delete()
     }
 
     func prepareTemplate(for file: File, name: String) throws {
