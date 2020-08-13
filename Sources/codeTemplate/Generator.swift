@@ -121,7 +121,7 @@ private extension Generator {
                 }
             }
 
-            try generateTemplate(templateType: dependencyName, context: context)
+            try generateTemplate(templateType: dependencyName, context: context, deleteGenerate: false)
         }
     }
 
