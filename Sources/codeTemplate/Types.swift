@@ -8,7 +8,7 @@
 import Foundation
 
 /// Tuple of template file, generated file and project file that are related to the same file
-public typealias ProcessedFile = (templateFile: String, generatedFile: String, projectFile: String)
+public typealias ProcessedFile = (templateFile: String, middleFile: String, projectFile: String)
 
 /// Review mode after code generation
 public enum ReviewMode: String {

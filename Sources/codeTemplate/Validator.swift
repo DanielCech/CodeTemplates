@@ -86,16 +86,16 @@ private extension Validator {
         modifiedContext[.generatePath] = modifiedContext[.validatePath]
 
         try Generator.shared.generate(
-            generationMode: .template("SingleViewApp"),
             context: modifiedContext,
+            generationMode: .template("SingleViewApp"),
             deleteGenerate: true
         )
 
         let outputFolder = try validationFolder.subfolder(named: "Template")
 
         try Generator.shared.generate(
-            generationMode: .template(template),
             context: modifiedContext,
+            generationMode: .template(template),
             deleteGenerate: false,
             validationMode: true
         )

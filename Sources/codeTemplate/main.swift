@@ -51,7 +51,7 @@ do {
 
     case "prepare":
         try Paths.setupProjectPaths(context: mainContext)
-        // try Preparator.shared.prepareTemplate()
+        try Preparator.shared.prepareTemplate(context: mainContext)
 
     default:
         throw ScriptError.argumentError(message: "invalid mode value")

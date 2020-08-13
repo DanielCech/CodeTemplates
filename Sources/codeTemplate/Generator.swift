@@ -31,16 +31,16 @@ class Generator {
         }
 
         try Generator.shared.generate(
-            generationMode: generationMode,
             context: context,
+            generationMode: generationMode,
             deleteGenerate: true
         )
     }
 
     /// Generate code using particular template
     func generate(
-        generationMode: GenerationMode,
         context: Context,
+        generationMode: GenerationMode,
         deleteGenerate: Bool = true,
         validationMode: Bool = false
     ) throws {
@@ -249,7 +249,7 @@ private extension Generator {
 
         try outputFile.write(rendered)
 
-        processedFiles.append((templateFile: templateFile, generatedFile: generatedFile, projectFile: projectFile))
+        processedFiles.append((templateFile: templateFile, middleFile: generatedFile, projectFile: projectFile))
     }
 
     func traverseProcessSubfolder(

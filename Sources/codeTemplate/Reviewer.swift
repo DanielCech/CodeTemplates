@@ -51,22 +51,17 @@ class Reviewer {
         case .individual:
             for processedFile in processedFiles {
                 if try sameContents(processedFile) {
-                    print("🧷 " + processedFile.generatedFile.lastPathComponent + ": same content, skipping\n")
+                    print("🧷 " + processedFile.middleFile.lastPathComponent + ": same content, skipping\n")
                     continue
                 }
 
-                compareThreeItems(first: processedFile.templateFile, second: processedFile.generatedFile, third: processedFile.projectFile)
+                compareThreeItems(first: processedFile.templateFile, second: processedFile.middleFile, third: processedFile.projectFile)
 
-                print("🧷 " + processedFile.generatedFile.lastPathComponent + ":")
+                print("🧷 " + processedFile.middleFile.lastPathComponent + ":")
 
                 // Check whether project folder exists
-                let projectDestinationPath = processedFile.projectFile.deletingLastPathComponent
-                if !FileManager.default.directoryExists(atPath: projectDestinationPath) {
-                    print("    🟢 Project subfolder does not exist. Create? [yN] ", terminator: "")
-                    if readLine() == "y" {
-                        try FileManager.default.createDirectory(atPath: projectDestinationPath, withIntermediateDirectories: true, attributes: nil)
-                    }
-                }
+                try checkDirectoryExistence(filePath: processedFile.projectFile, title: "Project")
+                try checkDirectoryExistence(filePath: processedFile.templateFile, title: "Template")
 
                 print("    🟢 Press enter to continue...")
                 _ = readLine()
@@ -78,7 +73,7 @@ class Reviewer {
 private extension Reviewer {
     func sameContents(_ files: ProcessedFile) throws -> Bool {
         do {
-            let generatedFile = try File(path: files.generatedFile)
+            let generatedFile = try File(path: files.middleFile)
             let generatedFileData = try generatedFile.read()
 
             let projectFile = try File(path: files.projectFile)
@@ -87,6 +82,16 @@ private extension Reviewer {
             return generatedFileData == projectFileData
         } catch {
             return false
+        }
+    }
+    
+    func checkDirectoryExistence(filePath: String, title: String) throws {
+        let projectDestinationPath = filePath.deletingLastPathComponent
+        if !FileManager.default.directoryExists(atPath: projectDestinationPath) {
+            print("    🟢 \(title) subfolder does not exist. Create? [yN] ", terminator: "")
+            if readLine() == "y" {
+                try FileManager.default.createDirectory(atPath: projectDestinationPath, withIntermediateDirectories: true, attributes: nil)
+            }
         }
     }
 }
