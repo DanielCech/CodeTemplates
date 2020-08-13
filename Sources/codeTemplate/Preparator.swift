@@ -77,12 +77,19 @@ private extension Preparator {
             )
         }
 
-        print("dependencies: \(dependencies)\n")
+        print("\n⚙️ Type dependencies: \(Array(dependencies.typeDependencies))")
+        print("\n⚙️ Framework dependencies: \(Array(dependencies.frameworkDependencies))\n")
 
-//        let result = try DependencyAnalyzer.shared.findDefinitions(forTypeDependencies: dependencies.typeDependencies)
-//        print(result)
-//        
-//        try DependencyAnalyzer.shared.createPodfile(forFrameworkDependencies: dependencies.frameworkDependencies)
+        print("🔎 Searching for type dependencies definitions:")
+        let result = try DependencyAnalyzer.shared.findDefinitions(forTypeDependencies: dependencies.typeDependencies)
+        print("🔎 Searching done\n")
+        
+        print("⚠️ Unprocessed dependencies:")
+        let list = result.values
+        print(list)
+        
+
+        try DependencyAnalyzer.shared.createPodfile(forFrameworkDependencies: dependencies.frameworkDependencies)
     }
     
     func prepareTemplate(

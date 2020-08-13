@@ -111,7 +111,7 @@ enum RegExpPatterns {
     static func classDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
-        .*\sclass\s
+        .*class\s
         """#
         + name +
         #"""
@@ -122,7 +122,7 @@ enum RegExpPatterns {
     static func structDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
-        .*\sstruct\s
+        .*struct\s
         """#
         + name +
         #"""
@@ -133,7 +133,7 @@ enum RegExpPatterns {
     static func enumDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
-        .*\senum\s
+        .*enum\s
         """#
         + name +
         #"""
@@ -144,7 +144,7 @@ enum RegExpPatterns {
     static func protocolDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
-        .*\sprotocol\s
+        .*protocol\s
         """#
         + name +
         #"""
@@ -155,7 +155,7 @@ enum RegExpPatterns {
     static func typealiasDefinitionPattern(name: String) -> String {
         #"""
         (?xi)
-        .*\stypealias\s
+        .*typealias\s
         """#
         + name +
         #"""
