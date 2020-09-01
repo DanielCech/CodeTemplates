@@ -1,0 +1,14 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import Foundation
+
+enum {{Name}}Section {
+    case textField(TextFieldCellConfiguration)
+    case avatar(AvatarTableViewCellConfiguration)
+}

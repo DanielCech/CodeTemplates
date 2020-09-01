@@ -83,7 +83,7 @@ class Templates {
         if templateDerivationsDict.isEmpty {
             _ = try templateDerivations()
         }
-        
+
         if var array = templateDerivationsDict[deriveFromTemplate] {
             array.append(template)
             templateDerivationsDict[deriveFromTemplate] = array

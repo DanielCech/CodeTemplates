@@ -1,0 +1,225 @@
+//
+//  {{fileName}}
+//  {{projectName}}
+//
+//  Created by {{author}} on {{date}}.
+//  {{copyright}}
+//
+
+import RxCocoa
+import RxSwift
+
+final class {{Name}}ViewModel: ViewModelType {
+    enum ControllerMode {
+        case addMember
+        case editMember(HouseholdMember)
+    }
+
+    // MARK: Private properties
+
+    private let apiService: HouseholdServicing
+    private var member: HouseholdMember?
+    private var memberType: HouseholdMemberType
+    private var controllerMode: ControllerMode
+    private var defaultValidationStatus: ValidationStatus {
+        member == nil ? .error(nil) : .normal
+    }
+
+    // MARK: Lifecycle
+
+    deinit {
+        print("Deinit \(self)")
+    }
+
+    init(apiService: HouseholdServicing, controllerMode: ControllerMode, memberType: HouseholdMemberType) {
+        self.apiService = apiService
+        self.controllerMode = controllerMode
+        self.memberType = memberType
+
+        switch controllerMode {
+        case let .editMember(member):
+            self.member = member
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - Input / output transformation
+
+extension {{Name}}ViewModel {
+    struct Input {
+        let viewWillAppear: Observable<Void>
+        let saveTapped: Observable<Void>
+        let deleteTapped: Observable<Void>
+    }
+
+    struct Output {
+        let items: Driver<[{{Name}}Section]>
+        let titleLabel: Driver<NSAttributedString>
+        let isInputValid: Driver<Bool>
+        let deleted: Driver<Void>
+        let saved: Driver<HouseholdMemberResponse>
+        let errors: Driver<Error>
+        let controllerMode: Driver<ControllerMode>
+    }
+
+    func transform(input: Input) -> Output {
+        let avatarId = BehaviorRelay<Int>(value: member?.avatar?.id ?? 1)
+        let firstNameText = BehaviorRelay<String>(value: member?.firstName ?? "")
+        let dateOfBirthText = BehaviorRelay<String>(value: member?.dateOfBirth ?? "")
+        let phoneText = BehaviorRelay<String>(value: member?.phone ?? "")
+        let healthInformationText = BehaviorRelay<String>(value: member?.healthInformation ?? "")
+
+        var configurations: [TextFieldCellConfiguration] = [
+            createFirstNameConfiguration(text: firstNameText),
+            createDateOfBirthConfiguration(text: dateOfBirthText),
+            createHealthInformationConfiguration(text: healthInformationText)
+        ]
+
+        switch memberType {
+        case .user, .kid, .other:
+            configurations.insert(createPhoneConfiguration(text: phoneText), at: 2)
+        default:
+            break
+        }
+
+        var items: [{{Name}}Section] = configurations.map { .textField($0) }
+        items.insert(.avatar(createAvatarConfiguration(avatarId: avatarId)), at: 0)
+
+        let updateCreate = input.saveTapped
+            .map { _ -> Observable<HouseholdMemberResponse> in
+                switch self.controllerMode {
+                case .addMember:
+                    let creteRequest = CreateHouseholdMemberRequest(
+                        memberType: self.memberType.stringValue,
+                        firstName: firstNameText.value,
+                        dateOfBirth: dateOfBirthText.value,
+                        phone: phoneText.value.mapToNil(),
+                        healthInformation: healthInformationText.value.mapToNil(),
+                        avatarId: avatarId.value
+                    )
+                    return self.apiService.createHouseholdMember(member: creteRequest)
+
+                default:
+                    let updateRequest = UpdateHouseholdMemberRequest(
+                        firstName: firstNameText.value,
+                        dateOfBirth: dateOfBirthText.value,
+                        phone: phoneText.value.mapToNil(),
+                        healthInformation: healthInformationText.value.mapToNil(),
+                        avatarId: avatarId.value
+                    )
+                    // swiftlint:disable:next force_unwrapping
+                    return self.apiService.updateHouseholdMember(memberId: self.member!.id, member: updateRequest)
+                }
+            }
+            .flatMapLatest { $0.materialize() }
+            .share()
+
+        let delete = input.deleteTapped
+            // swiftlint:disable:next force_unwrapping
+            .map { self.apiService.deleteHouseholdMember(memberId: self.member!.id) }
+            .flatMap { $0.materialize() }
+            .share()
+
+        let correctInput = Observable
+            .combineLatest(configurations.map { $0.validationStatus.asObservable() })
+            .map { statuses in
+                statuses.allSatisfy { $0 == .normal || $0 == .validated }
+            }
+
+        let errors = Observable.merge(delete.errors(), updateCreate.errors())
+
+        return Output(
+            items: Driver<[{{Name}}Section]>.just(items),
+            titleLabel: .just(getTitle().styled(with: .dashboardSection)),
+            isInputValid: correctInput.asDriverOnErrorJustComplete(),
+            deleted: delete.elements().asDriverLogError(),
+            saved: updateCreate.elements().asDriverLogError(),
+            errors: errors.asDriverOnErrorJustComplete(),
+            controllerMode: .just(controllerMode)
+        )
+    }
+}
+
+// MARK: - Factories
+
+private extension {{Name}}ViewModel {
+    func createAvatarConfiguration(avatarId: BehaviorRelay<Int>) -> AvatarTableViewCellConfiguration {
+        .init(
+            title: R.string.localizable.householdAddMemberFormChooseAvatar(),
+            avatars: AvatarManager.avatars,
+            selectedAvatarId: avatarId
+        )
+    }
+
+    func createFirstNameConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.householdAddMemberFormFirstName(),
+            placeholder: R.string.localizable.householdAddMemberFormFirstName(),
+            keyboardType: .default,
+            autocapitalization: .words,
+            validation: .required(MaxLengthInput.fullname.rawValue),
+            text: text,
+            validationStatus: BehaviorRelay<ValidationStatus>(value: defaultValidationStatus)
+        )
+    }
+
+    func createDateOfBirthConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.householdAddMemberFormDateOfBirth(),
+            placeholder: R.string.localizable.householdAddMemberFormDateOfBirthPlaceholder(),
+            valueType: .date(member?.dateOfBirth),
+            keyboardType: .default,
+            validation: .birthday,
+            text: text,
+            validationStatus: BehaviorRelay<ValidationStatus>(value: defaultValidationStatus)
+        )
+    }
+
+    func createPhoneConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.householdAddMemberFormPhoneNumber(),
+            placeholder: R.string.localizable.householdAddMemberFormPhoneNumberPlaceholder(),
+            keyboardType: .phonePad,
+            autocapitalization: .none,
+            validation: .phone,
+            text: text
+        )
+    }
+
+    func createHealthInformationConfiguration(text: BehaviorRelay<String>) -> TextFieldCellConfiguration {
+        .init(
+            title: R.string.localizable.householdAddMemberFormHealthInformation(),
+            placeholder: R.string.localizable.householdAddMemberFormHealthInformationPlaceholder(),
+            keyboardType: .default,
+            autocapitalization: .sentences,
+            validation: .none,
+            text: text
+        )
+    }
+}
+
+private extension {{Name}}ViewModel {
+    func getTitle() -> String {
+        switch controllerMode {
+        case .addMember:
+            return getTitleByMemberType()
+        case let .editMember(member):
+            return member.firstName
+        }
+    }
+
+    func getTitleByMemberType() -> String {
+        switch memberType {
+        case .user:
+            return R.string.localizable.householdAddMemberSheetPartner()
+        case .kid:
+            return R.string.localizable.householdAddMemberSheetChildren()
+        case .pet:
+            return R.string.localizable.householdAddMemberSheetPetAndAnimals()
+        case .other:
+            return R.string.localizable.householdAddMemberSheetOther()
+        }
+    }
+}
